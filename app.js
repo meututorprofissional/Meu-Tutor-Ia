@@ -4,7 +4,7 @@ const empty=()=>({topics:[],cards:[],attempts:[]});
 let db=load(), currentCard=null, answerShown=false, lastCardId=null, quizRun=null;
 
 function load(){try{return {...empty(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return empty()}}
-function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));if(window.syncTutorData)window.syncTutorData(db);render()}
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function date(d){return new Date(d).toLocaleDateString('pt-BR')}
@@ -91,6 +91,7 @@ function renderCard(){
    feedback.innerHTML='<strong>'+(isCorrect?'✅ Correto!':'❌ Não foi dessa vez.')+'</strong><p>'+esc(card.explanation||card.back)+'</p>';
    db.attempts.unshift({id:id(),topicId:card.topicId,type:'flashcard-quiz',rating:isCorrect?'good':'practice',question:card.front,answer:opts[selected]||'',expectedAnswer:card.back,reflection:card.explanation||'',date:new Date().toISOString()});
    localStorage.setItem(KEY,JSON.stringify(db));
+   if(window.syncTutorData)window.syncTutorData(db);
    const next=el.querySelector('#quizNext');if(next)next.disabled=false;
   });
   const next=el.querySelector('#quizNext');
