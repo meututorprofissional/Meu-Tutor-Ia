@@ -183,6 +183,16 @@ function render(){
  document.getElementById('statPractice').textContent=practice;
  document.getElementById('statReviews').textContent=due;
 
+ const today=new Date();
+ today.setHours(0,0,0,0);
+ const weekDays=Array.from({length:7},(_,i)=>{const d=new Date(today);d.setDate(today.getDate()-6+i);return d;});
+ const weekAttempts=db.attempts.filter(a=>a.date&&new Date(a.date)>=weekDays[0]&&new Date(a.date)<new Date(today.getTime()+86400000));
+ const activeDays=weekDays.filter(d=>weekAttempts.some(a=>new Date(a.date).toDateString()===d.toDateString())).length;
+ document.getElementById('statWeekActivities').textContent=weekAttempts.length;
+ document.getElementById('statWeekDays').textContent=activeDays;
+ document.getElementById('statWeekQuizzes').textContent=weekAttempts.filter(a=>a.type==='quiz'||a.type==='flashcard-quiz').length;
+ document.getElementById('weekActivityList').innerHTML=weekDays.map(d=>{const items=weekAttempts.filter(a=>new Date(a.date).toDateString()===d.toDateString());const label=d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});return '<div class="item"><strong>'+esc(label)+'</strong><p>'+items.length+' atividade(s) registrada(s)</p><span class="muted">'+items.filter(a=>a.type==='study').length+' estudo(s) · '+items.filter(a=>a.type==='quiz'||a.type==='flashcard-quiz').length+' teste(s) · '+items.filter(a=>a.type==='flashcard').length+' revisão(ões) de cartão</span></div>'}).join('');
+
  const reviews=db.cards.filter(c=>!c.nextReview||new Date(c.nextReview)<=new Date());
 
  document.getElementById('reviewList').innerHTML=reviews.length?reviews.map(c=>`<div class="item"><strong>${esc(c.front)}</strong><span class="muted">${esc(topicName(c.topicId))} · ${c.nextReview?'revisão programada':'ainda não revisado'}</span></div>`).join(''):'<div class="success">Nenhuma revisão de cartão vencida agora. Você pode continuar estudando ou fazer um teste de recordação.</div>';
