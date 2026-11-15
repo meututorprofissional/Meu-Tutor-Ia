@@ -155,7 +155,7 @@
     client.auth.signInWithOAuth({provider, options:{redirectTo:location.origin + location.pathname}});
   }
   const homeProfileButton = el('homeProfileButton');
-  if (homeProfileButton) homeProfileButton.onclick = () => el('profile') && document.querySelector('nav [data-screen="profile"]')?.click();
+  if (homeProfileButton) homeProfileButton.onclick = () => { if (typeof go === 'function') go('profile'); };
   if (el('profileGoogle')) el('profileGoogle').onclick = () => startOAuth('google');
   if (el('profileFacebook')) el('profileFacebook').onclick = () => startOAuth('facebook');
   if (el('profileSignOut')) el('profileSignOut').onclick = async () => {
