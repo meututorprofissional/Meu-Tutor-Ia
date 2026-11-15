@@ -35,9 +35,7 @@
     const notes = byId('notes').value.trim();
 
     if (!topic) {
-      throw new Error(
-        'Informe o assunto que você quer estudar.'
-      );
+      throw new Error('Informe o assunto que você quer estudar.');
     }
 
     if (originalSource.length > 12000 || notes.length > 4000) {
@@ -60,7 +58,7 @@
           topic +
           '. Gere perguntas objetivas e respostas explicativas. ' +
           'Não invente informações específicas. Se o assunto exigir contexto, ' +
-          use conhecimento geral confiável e formule cartões adequados para revisão.';
+          'use conhecimento geral confiável e formule cartões adequados para revisão.';
       }
     } else if (!source) {
       throw new Error(
@@ -153,12 +151,11 @@
   async function run(task) {
     if (!endpoint) {
       status(
-        'A integração ainda está desativada. Configure o Cloudflare Worker e a URL em ai-config.js; não coloque uma chave de API neste arquivo.'
+        'A integração está desativada. Confira a URL do Cloudflare Worker em ai-config.js. Nunca coloque a chave da API neste arquivo.'
       );
       return;
     }
 
-    // A criação de flashcards não depende de uma análise anterior.
     if (task !== 'analyze' && task !== 'activities' && !analyzed) {
       status(
         'Primeiro analise o material e confira o que a IA entendeu.'
@@ -210,13 +207,10 @@
       byId('aiAnalyze').disabled = false;
       byId('aiTeach').disabled = !analyzed;
       byId('aiSummary').disabled = !analyzed;
-
-      // Mantém a criação de flashcards disponível mesmo sem análise.
       byId('aiActivities').disabled = false;
     }
   }
 
-  // Aceita diferentes nomes de campos que a IA pode retornar.
   function normalizeCard(card, index) {
     if (!card || typeof card !== 'object') {
       return null;
@@ -280,7 +274,7 @@
             </div>
           `)
           .join('')
-      : '<p class="muted">A IA não retornou cartões com pergunta e resposta preenchidas. Confira a resposta da API e tente novamente.</p>';
+      : '<p class="muted">A IA não retornou cartões válidos. Confira a resposta do servidor e tente novamente.</p>';
 
     byId('aiSaveCards').disabled = !selectedCards.length;
   }
@@ -290,7 +284,7 @@
   byId('aiSummary').addEventListener('click', () => run('summary'));
   byId('aiActivities').addEventListener('click', () => run('activities'));
 
-  // Libera o botão de atividades logo ao iniciar a página.
+  // Permite criar flashcards sem análise anterior.
   byId('aiActivities').disabled = false;
 
   byId('aiSaveCards').addEventListener('click', () => {
