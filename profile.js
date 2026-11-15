@@ -158,11 +158,11 @@
       const oldText = JSON.stringify(local);
       const newText = JSON.stringify(combined);
       if (oldText !== newText) localStorage.setItem(DATA_KEY, newText);
-      const displayName = profile().name || row?.display_name || session.user.user_metadata?.full_name || session.user.user_metadata?.name;
+      const displayName = row?.display_name || profile().name || session.user.user_metadata?.full_name || session.user.user_metadata?.name;
       const savedProfile = profile();
       const cloudAvatarPath = row?.avatar_path || null;
-      if ((displayName && !savedProfile.name) || savedProfile.avatarUserId !== session.user.id || savedProfile.avatarPath !== cloudAvatarPath) {
-        saveProfile({ ...savedProfile, ...(displayName && !savedProfile.name ? {name:displayName} : {}), avatarPath:cloudAvatarPath, avatarUserId:session.user.id });
+      if ((displayName && savedProfile.name !== displayName) || savedProfile.avatarUserId !== session.user.id || savedProfile.avatarPath !== cloudAvatarPath) {
+        saveProfile({ ...savedProfile, ...(displayName && savedProfile.name !== displayName ? {name:displayName} : {}), avatarPath:cloudAvatarPath, avatarUserId:session.user.id });
       }
       if (!cloudHas || oldText !== newText) {
         const { error: upsertError } = await client.from('user_study_data').upsert({
