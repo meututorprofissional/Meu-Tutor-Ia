@@ -391,19 +391,18 @@
       return {front,back,options,correctIndex,explanation:String(card.explanation??card.explicacao??card.justification??card.justificativa??back).trim()};
     }
     function prepareOptions(){
-      generated.forEach((card,index)=>{
-        if(card.options.length>=2&&card.correctIndex>=0&&card.correctIndex<card.options.length){
-          const answer=card.options[card.correctIndex];
-          card.options=card.options.slice().sort(()=>Math.random()-.5);
-          card.correctIndex=card.options.findIndex(v=>v===answer);
-          return;
-        }
-        const others=generated.filter((other,i)=>i!==index&&other.back.toLowerCase()!==card.back.toLowerCase()).map(other=>other.back);
-        card.options=[card.back,...others].filter((v,i,all)=>all.findIndex(x=>x.toLowerCase()===v.toLowerCase())===i).slice(0,4);
-        card.correctIndex=0;
-        const answer=card.back;
-        card.options=card.options.sort(()=>Math.random()-.5);
-        card.correctIndex=card.options.findIndex(v=>v===answer);
+      // Nunca montar alternativas usando respostas de perguntas diferentes.
+      // Somente quizzes com quatro opções distintas e uma resposta correta.
+      generated=generated.filter(card=>{
+        if(card.options.length!==4)return false;
+        const options=card.options.map(value=>String(value).trim());
+        if(options.some(value=>!value))return false;
+        if(new Set(options.map(value=>value.toLocaleLowerCase('pt-BR'))).size!==4)return false;
+        const matches=options.map((value,index)=>value.toLocaleLowerCase('pt-BR')===card.back.toLocaleLowerCase('pt-BR')?index:-1).filter(index=>index>=0);
+        if(matches.length!==1)return false;
+        card.options=options;
+        card.correctIndex=matches[0];
+        return true;
       });
     }
     function renderPreview(){
@@ -428,16 +427,18 @@
         const batches=count===15?[10,5]:[count];
         for(const batchCount of batches){
           const source=topicRecord.source
-            ?'Crie exatamente '+batchCount+' flashcards para um quiz de múltipla escolha em português brasileiro, usando o material abaixo. Cada cartão deve ter front (pergunta), back (resposta correta), options (4 alternativas incluindo a correta), correctIndex (índice de 0 a 3 da correta dentro de options) e explanation (explicação curta). As alternativas erradas devem ser plausíveis, mas incorretas segundo o material. Retorne os cartões em flashcards e evite duplicatas.\n\nMATERIAL:\n'+topicRecord.source
-            :'Crie exatamente '+batchCount+' flashcards para um quiz de múltipla escolha em português brasileiro sobre "'+topic+'". Cada cartão deve ter front (pergunta), back (resposta correta), options (4 alternativas incluindo a correta), correctIndex (índice de 0 a 3 da correta dentro de options) e explanation (explicação curta). As alternativas erradas devem ser plausíveis, mas incorretas. Retorne os cartões em flashcards e evite duplicatas.';
+            ?'Crie exatamente '+batchCount+' flashcards para um quiz de múltipla escolha em português brasileiro, usando o material abaixo. Cada cartão deve ter front (pergunta), back (resposta correta), options (4 alternativas incluindo a correta), correctIndex (índice de 0 a 3 da correta dentro de options) e explanation (explicação curta). As quatro alternativas devem ser completas, distintas, da mesma categoria da resposta (por exemplo, quatro cidades para uma pergunta sobre cidade), com exatamente uma correta e três distratores plausíveis. Não use respostas de outras perguntas como distratores. Retorne os cartões em flashcards e evite duplicatas.\n\nMATERIAL:\n'+topicRecord.source
+            :'Crie exatamente '+batchCount+' flashcards para um quiz de múltipla escolha em português brasileiro sobre "'+topic+'". Cada cartão deve ter front (pergunta), back (resposta correta), options (4 alternativas incluindo a correta), correctIndex (índice de 0 a 3 da correta dentro de options) e explanation (explicação curta). As quatro alternativas devem ser completas, distintas, da mesma categoria da resposta (por exemplo, quatro cidades para uma pergunta sobre cidade), com exatamente uma correta e três distratores plausíveis. Não use respostas de outras perguntas como distratores. Retorne os cartões em flashcards e evite duplicatas.';
           const response=await fetch(endpoint.replace(/\/$/,'')+'/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'activities',topic,source,notes:topicRecord.notes||''})});
           const data=await response.json().catch(()=>({}));
           if(!response.ok)throw new Error(data.error||'Falha na solicitação ('+response.status+').');
           extractCards(data).map(normalize).filter(Boolean).forEach(card=>{if(generated.length<count&&!generated.some(old=>old.front.toLowerCase()===card.front.toLowerCase()))generated.push(card)});
         }
         if(!generated.length)throw new Error('A IA não retornou perguntas válidas. Tente novamente.');
-        prepareOptions();review.hidden=false;renderPreview();
-        message.textContent='Quiz pronto! Salvando os cartões e iniciando a prática automaticamente…';
+        prepareOptions();
+        if(!generated.length)throw new Error('A IA não forneceu quatro alternativas válidas para nenhuma pergunta. Tente gerar novamente.');
+        review.hidden=false;renderPreview();
+        message.textContent=generated.length<count?'A IA gerou '+generated.length+' de '+count+' perguntas com quatro alternativas válidas. Salvando e iniciando a prática…':'Quiz pronto! Salvando os cartões e iniciando a prática automaticamente…';
         saveButton.click();
       }catch(error){message.textContent='Não foi possível gerar o quiz: '+error.message}
       finally{createButton.disabled=false}
