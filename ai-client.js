@@ -391,19 +391,17 @@
       return {front,back,options,correctIndex,explanation:String(card.explanation??card.explicacao??card.justification??card.justificativa??back).trim()};
     }
     function sameAnswerCategory(card){
-      const question=card.front.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim();
-      const answers=card.options.map(v=>v.trim());
-      const date=/\\b(?:\\d{1,2}\\s+de\\s+\\w+|\\d{4}|\\d{1,2}\\/\\d{1,2})\\b/i;
-      const place=/^(?:em\\s+)?[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ' -]{2,}(?:,\\s*[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ' -]{2,}|\\s*[-–]\\s*[A-Za-zÀ-ÿ]{2,}|\\s+\\((?:[A-Za-zÀ-ÿ ]+)\\))\\.?$/u;
-      if(/^(onde|em que (cidade|estado|pais|local)|qual (cidade|estado|pais|local))\\b/.test(question)){
-        // Exigir nomes de locais identificáveis, evitando nomes de pessoas, datas e respostas truncadas.
-        return answers.every(v=>!date.test(v)&&place.test(v));
+      const question=card.front.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+      const answers=card.options.map(v=>String(v).trim());
+      const date=/\b(?:\d{1,2}\s+de\s+\w+|\d{4}|\d{1,2}\/\d{1,2})\b/i;
+      if(/^(onde|em que (cidade|estado|pais|local)|qual (cidade|estado|pais|local))\b/.test(question)){
+        return answers.every(v=>v.length>=5&&!date.test(v)&&!/\d/.test(v));
       }
-      if(/^(quando|em que (ano|data|dia|mes)|qual (ano|data))\\b/.test(question)){
+      if(/^(quando|em que (ano|data|dia|mes)|qual (ano|data))\b/.test(question)){
         return answers.every(v=>date.test(v));
       }
-      if(/^(quantos|quantas|qual (quantidade|numero))\\b/.test(question)){
-        return answers.every(v=>/\\d/.test(v));
+      if(/^(quantos|quantas|qual (quantidade|numero))\b/.test(question)){
+        return answers.every(v=>/\d/.test(v));
       }
       return true;
     }
@@ -440,6 +438,7 @@
       if(!topicRecord){message.textContent='Escolha um assunto cadastrado. Para criar um assunto novo, registre-o primeiro em Meu estudo.';topicSelect.focus();return}
       if(!endpoint){message.textContent='A conexão com a IA não está configurada. Confira ai-config.js.';return}
       generated=[];renderPreview();review.hidden=true;createButton.disabled=true;saveButton.disabled=true;
+      message.hidden=false;
       message.textContent='A IA está criando as perguntas e alternativas do quiz. Aguarde…';
       try{
         const batches=count===15?[10,5]:[count];
@@ -454,7 +453,7 @@
         }
         if(!generated.length)throw new Error('A IA não retornou perguntas válidas. Tente novamente.');
         prepareOptions();
-        if(!generated.length)throw new Error('As alternativas retornadas não passaram na validação. Nenhum cartão foi salvo. Tente gerar novamente.');
+        if(!generated.length)throw new Error('A IA retornou alternativas inválidas. Nenhum cartão foi salvo. Tente novamente ou use outro assunto.');
         review.hidden=false;renderPreview();
         message.textContent=generated.length<count?'A IA gerou '+generated.length+' de '+count+' perguntas que passaram na validação. Confira antes de salvar…':'Quiz pronto! Confira as perguntas e toque em Salvar para começar.';
         // Aguardar confirmação do estudante antes de salvar novos cartões.
