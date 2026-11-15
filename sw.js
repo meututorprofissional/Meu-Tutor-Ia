@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v10-proximo-cartao';
+const CACHE_VERSION = 'meu-tutor-ia-v11-flashcards-ia';
 
 const APP_FILES = [
   './',
