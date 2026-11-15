@@ -390,6 +390,23 @@
       if(correctIndex<0)correctIndex=options.findIndex(v=>v.toLowerCase()===back.toLowerCase());
       return {front,back,options,correctIndex,explanation:String(card.explanation??card.explicacao??card.justification??card.justificativa??back).trim()};
     }
+    function sameAnswerCategory(card){
+      const question=card.front.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim();
+      const answers=card.options.map(v=>v.trim());
+      const date=/\\b(?:\\d{1,2}\\s+de\\s+\\w+|\\d{4}|\\d{1,2}\\/\\d{1,2})\\b/i;
+      const place=/^(?:em\\s+)?[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ' -]{2,}(?:,\\s*[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ' -]{2,}|\\s*[-–]\\s*[A-Za-zÀ-ÿ]{2,}|\\s+\\((?:[A-Za-zÀ-ÿ ]+)\\))\\.?$/u;
+      if(/^(onde|em que (cidade|estado|pais|local)|qual (cidade|estado|pais|local))\\b/.test(question)){
+        // Exigir nomes de locais identificáveis, evitando nomes de pessoas, datas e respostas truncadas.
+        return answers.every(v=>!date.test(v)&&place.test(v));
+      }
+      if(/^(quando|em que (ano|data|dia|mes)|qual (ano|data))\\b/.test(question)){
+        return answers.every(v=>date.test(v));
+      }
+      if(/^(quantos|quantas|qual (quantidade|numero))\\b/.test(question)){
+        return answers.every(v=>/\\d/.test(v));
+      }
+      return true;
+    }
     function prepareOptions(){
       // Nunca montar alternativas usando respostas de perguntas diferentes.
       // Somente quizzes com quatro opções distintas e uma resposta correta.
@@ -400,6 +417,7 @@
         if(new Set(options.map(value=>value.toLocaleLowerCase('pt-BR'))).size!==4)return false;
         const matches=options.map((value,index)=>value.toLocaleLowerCase('pt-BR')===card.back.toLocaleLowerCase('pt-BR')?index:-1).filter(index=>index>=0);
         if(matches.length!==1)return false;
+        if(!sameAnswerCategory(card))return false;
         card.options=options;
         card.correctIndex=matches[0];
         return true;
@@ -436,10 +454,10 @@
         }
         if(!generated.length)throw new Error('A IA não retornou perguntas válidas. Tente novamente.');
         prepareOptions();
-        if(!generated.length)throw new Error('A IA não forneceu quatro alternativas válidas para nenhuma pergunta. Tente gerar novamente.');
+        if(!generated.length)throw new Error('As alternativas retornadas não passaram na validação. Nenhum cartão foi salvo. Tente gerar novamente.');
         review.hidden=false;renderPreview();
-        message.textContent=generated.length<count?'A IA gerou '+generated.length+' de '+count+' perguntas com quatro alternativas válidas. Salvando e iniciando a prática…':'Quiz pronto! Salvando os cartões e iniciando a prática automaticamente…';
-        saveButton.click();
+        message.textContent=generated.length<count?'A IA gerou '+generated.length+' de '+count+' perguntas que passaram na validação. Confira antes de salvar…':'Quiz pronto! Confira as perguntas e toque em Salvar para começar.';
+        // Aguardar confirmação do estudante antes de salvar novos cartões.
       }catch(error){message.textContent='Não foi possível gerar o quiz: '+error.message}
       finally{createButton.disabled=false}
     });
