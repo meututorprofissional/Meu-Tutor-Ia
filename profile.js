@@ -48,8 +48,11 @@
     const nameInput = el('profileName');
     if (nameInput) nameInput.value = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || '';
     setText('profileEmail', session?.user?.email || 'Perfil local neste dispositivo');
+    const initial = name.trim().charAt(0).toUpperCase() || '👤';
     const avatar = el('profileAvatar');
-    if (avatar) avatar.textContent = name.trim().charAt(0).toUpperCase() || '👤';
+    if (avatar) avatar.textContent = initial;
+    const homeAvatar = el('homeProfileAvatar');
+    if (homeAvatar) homeAvatar.textContent = initial;
     const google = el('profileGoogle'), facebook = el('profileFacebook');
     const signOut = el('profileSignOut'), sync = el('profileSyncNow');
     if (google) google.hidden = Boolean(session);
@@ -151,6 +154,8 @@
     }
     client.auth.signInWithOAuth({provider, options:{redirectTo:location.origin + location.pathname}});
   }
+  const homeProfileButton = el('homeProfileButton');
+  if (homeProfileButton) homeProfileButton.onclick = () => el('profile') && document.querySelector('nav [data-screen="profile"]')?.click();
   if (el('profileGoogle')) el('profileGoogle').onclick = () => startOAuth('google');
   if (el('profileFacebook')) el('profileFacebook').onclick = () => startOAuth('facebook');
   if (el('profileSignOut')) el('profileSignOut').onclick = async () => {
