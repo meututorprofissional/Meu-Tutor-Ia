@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v34-checkbox-right';
+const CACHE_VERSION = 'meu-tutor-ia-v35-refresh-assets';
 
 const APP_FILES = [
   './',
@@ -9,6 +9,7 @@ const APP_FILES = [
   './updates.js',
   './manifest.json',
   './icon.svg',
+  './icon-192.png',
   './ai-config.js',
   './ai-client.js',
   './auth-config.js',
@@ -72,20 +73,17 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // Arquivos do aplicativo: buscar a versão atual na rede primeiro.
+  // Em caso de falha de conexão, manter o funcionamento offline pelo cache.
   event.respondWith(
-    caches.match(req).then(cached => {
-      const network = fetch(req)
-        .then(response => {
-          if (response && response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE_VERSION)
-              .then(cache => cache.put(req, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-
-      return cached || network;
-    })
+    fetch(req)
+      .then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.put(req, copy)));
+        }
+        return response;
+      })
+      .catch(() => caches.match(req))
   );
 });
