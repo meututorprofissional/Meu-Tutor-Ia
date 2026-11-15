@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v14-ordem-flashcards';
+const CACHE_VERSION = 'meu-tutor-ia-v15-perfil-conta';
 
 const APP_FILES = [
   './',
@@ -10,7 +10,9 @@ const APP_FILES = [
   './manifest.json',
   './icon.svg',
   './ai-config.js',
-  './ai-client.js'
+  './ai-client.js',
+  './auth-config.js',
+  './profile.js'
 ];
 
 self.addEventListener('install', event => {
