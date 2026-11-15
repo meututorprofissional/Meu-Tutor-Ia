@@ -110,9 +110,16 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 </section>
 <section id="profile" class="screen">
 <div class="panel"><h2>👤 Meu perfil</h2><p class="muted">Personalize seu perfil e prepare sua conta para acessar seus estudos em outros dispositivos.</p>
-<div class="row" style="align-items:center"><div style="width:68px;height:68px;flex:0 0 68px;border-radius:50%;display:grid;place-items:center;background:#eef2ff;color:#4338ca;font-size:2rem" id="profileAvatar" aria-hidden="true">👤</div><div style="flex:1"><strong id="profileDisplayName">Estudante</strong><p class="muted" id="profileEmail">Perfil local neste dispositivo</p></div></div>
+<div class="row" style="align-items:center"><div style="width:68px;height:68px;flex:0 0 68px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#eef2ff;color:#4338ca;font-size:2rem" id="profileAvatar" aria-hidden="true">👤</div><div style="flex:1"><strong id="profileDisplayName">Estudante</strong><p class="muted" id="profileEmail">Perfil local neste dispositivo</p></div></div>
 <label for="profileName">Como quer ser chamado?</label><input id="profileName" maxlength="80" placeholder="Digite seu nome">
-<button id="saveProfileName" style="margin-top:10px">Salvar nome</button><p id="profileLocalStatus" class="muted" role="status" aria-live="polite"></p></div>
+<button id="saveProfileName" style="margin-top:10px">Salvar nome</button>
+<hr>
+<label for="profilePhotoInput">Foto de perfil ou GIF animado</label>
+<input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+<p class="muted">Escolha uma imagem do celular ou computador. Aceita JPG, PNG, WebP e GIF animado de até 5 MB. Para sincronizar entre dispositivos, entre na sua conta.</p>
+<div class="row"><button id="removeProfilePhoto" class="secondary" type="button" hidden>Remover foto</button></div>
+<p id="profilePhotoStatus" class="muted" role="status" aria-live="polite"></p>
+<p id="profileLocalStatus" class="muted" role="status" aria-live="polite"></p></div>
 <div class="panel"><h2>🔐 Sua conta</h2><p class="muted">Entre para associar seu perfil aos estudos salvos na nuvem. O login só ficará disponível depois de configurar o projeto de autenticação do aplicativo.</p>
 <div class="row"><button id="profileGoogle" type="button">Continuar com Google</button><button id="profileFacebook" class="secondary" type="button">Continuar com Facebook</button></div>
 <p id="authStatus" class="notice" role="status" aria-live="polite">A conta ainda precisa ser configurada pelo administrador. Seus estudos atuais continuam salvos neste navegador.</p>
