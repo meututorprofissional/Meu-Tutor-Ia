@@ -49,6 +49,15 @@ function date(d){return new Date(d).toLocaleDateString('pt-BR')}
 function topicName(tid){return db.topics.find(t=>t.id===tid)?.name||'Assunto sem nome'}
 function go(name){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===name));document.querySelectorAll('nav [data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));render()}
 
+// Navegação delegada como proteção extra para cliques e toques em telas móveis.
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-screen], [data-go], #homeProfileButton');
+  if (!button) return;
+  const screen = button.dataset.screen || button.dataset.go || (button.id === 'homeProfileButton' ? 'profile' : '');
+  if (!screen || !document.getElementById(screen)) return;
+  go(screen);
+}, true);
+
 document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>go(b.dataset.screen));
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 
