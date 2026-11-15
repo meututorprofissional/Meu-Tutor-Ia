@@ -44,6 +44,7 @@
   let avatarRenderId = 0;
   async function renderAvatar(path, initial = '👤') {
     const renderId = ++avatarRenderId;
+    let avatarLoadError = null;
     const nodes = [el('profileAvatar'), el('homeProfileAvatar')].filter(Boolean);
     let signedUrl = '';
     if (path && client && session?.user?.id) {
@@ -51,10 +52,13 @@
         const { data, error } = await client.storage.from('profile-avatars').createSignedUrl(path, 3600);
         if (!error) signedUrl = data?.signedUrl || '';
       } catch (error) {
+        avatarLoadError = error;
         console.warn('Meu Tutor IA: não foi possível carregar a foto de perfil', error);
       }
     }
+    if (path && !signedUrl && !avatarLoadError) avatarLoadError = new Error('O link temporário da imagem não foi gerado.');
     if (renderId !== avatarRenderId) return;
+    if (path && !signedUrl) setText('profilePhotoStatus', 'A imagem está registrada, mas não carregou. ' + (avatarLoadError?.message || 'Tente novamente.'));
     nodes.forEach(node => {
       node.replaceChildren();
       if (signedUrl) {
@@ -188,7 +192,7 @@
   if (nameButton) nameButton.onclick = async () => {
     const name = (el('profileName')?.value || '').trim();
     if (!name) { setText('profileLocalStatus', 'Digite um nome antes de salvar.'); return; }
-    saveProfile({name});
+    saveProfile({ ...profile(), name });
     if (client && session) {
       const { error } = await client.auth.updateUser({data:{full_name:name,name}});
       if (error) setText('profileLocalStatus', 'Nome salvo neste dispositivo; não foi possível atualizar a conta agora.');
@@ -257,7 +261,8 @@
       setText('profilePhotoStatus', file.type === 'image/gif' ? 'GIF salvo e sincronizado! A animação será mantida.' : 'Foto salva e sincronizada com sua conta!');
     } catch (error) {
       console.error('Meu Tutor IA: falha ao salvar foto de perfil', error);
-      setText('profilePhotoStatus', 'Não foi possível salvar a imagem agora. Confira a conexão e tente novamente.');
+      const detail = error?.message ? String(error.message).slice(0, 180) : 'Erro desconhecido';
+      setText('profilePhotoStatus', 'Falha ao salvar a imagem: ' + detail);
     } finally {
       photoInput.disabled = false;
       photoInput.value = '';
@@ -273,7 +278,7 @@
       setText('profilePhotoStatus', 'Foto removida do perfil.');
     } catch (error) {
       console.error('Meu Tutor IA: falha ao remover foto', error);
-      setText('profilePhotoStatus', 'Não foi possível remover a foto agora.');
+      setText('profilePhotoStatus', 'Falha ao remover a foto: ' + (error?.message ? String(error.message).slice(0, 180) : 'erro desconhecido'));
     } finally {
       removePhotoButton.disabled = false;
     }
