@@ -4,7 +4,8 @@
   const notice = document.getElementById('aiNotice');
 
   if (endpoint && notice) {
-    notice.textContent = '🔒 Conexão configurada. Use apenas material de teste não sensível até concluir os testes de segurança e custos.';
+    notice.textContent =
+      '🔒 Conexão configurada. Use apenas material de teste não sensível até concluir os testes de segurança e custos.';
   }
 
   const byId = id => document.getElementById(id);
@@ -15,7 +16,8 @@
   let selectedCards = [];
 
   const status = message => {
-    byId('aiStatus').textContent = message;
+    const el = byId('aiStatus');
+    if (el) el.textContent = message;
   };
 
   const escapeHtml = value =>
@@ -29,22 +31,49 @@
 
   function sourcePayload(task) {
     const topic = byId('topic').value.trim();
-    const source = byId('source').value.trim();
+    const originalSource = byId('source').value.trim();
     const notes = byId('notes').value.trim();
 
-    if (!topic || !source) {
+    if (!topic) {
       throw new Error(
-        'Preencha o assunto e o material original antes de chamar a IA.'
+        'Informe o assunto que você quer estudar.'
       );
     }
 
-    if (source.length > 12000 || notes.length > 4000) {
+    if (originalSource.length > 12000 || notes.length > 4000) {
       throw new Error(
         'Para controlar custos, use até 12.000 caracteres no material e 4.000 nas anotações.'
       );
     }
 
-    return { task, topic, source, notes };
+    let source = originalSource;
+
+    if (task === 'activities') {
+      if (!source && notes) {
+        source =
+          'Use estas anotações como material de estudo:\n' + notes;
+      }
+
+      if (!source) {
+        source =
+          'Crie flashcards educativos corretos, claros e úteis para estudar o seguinte assunto: ' +
+          topic +
+          '. Gere perguntas objetivas e respostas explicativas. ' +
+          'Não invente informações específicas. Se o assunto exigir contexto, ' +
+          use conhecimento geral confiável e formule cartões adequados para revisão.';
+      }
+    } else if (!source) {
+      throw new Error(
+        'Cole o material original antes de analisar, ensinar ou resumir.'
+      );
+    }
+
+    return {
+      task,
+      topic,
+      source,
+      notes
+    };
   }
 
   function showResult(data, task) {
@@ -54,22 +83,37 @@
     const sections = [];
 
     if (data.understanding) {
-      sections.push(['O que a IA entendeu', data.understanding]);
+      sections.push([
+        'O que a IA entendeu',
+        data.understanding
+      ]);
     }
 
     if (data.explanation) {
-      sections.push(['Explicação', data.explanation]);
+      sections.push([
+        'Explicação',
+        data.explanation
+      ]);
     }
 
     if (data.summary) {
-      sections.push(['Resumo', data.summary]);
+      sections.push([
+        'Resumo',
+        data.summary
+      ]);
     }
 
     if (Array.isArray(data.questions) && data.questions.length) {
       sections.push([
         'Perguntas para praticar',
         data.questions
-          .map((q, i) => `${i + 1}. ${typeof q === 'object' ? (q.question || q.pergunta || q.front || '') : q}`)
+          .map((q, i) =>
+            `${i + 1}. ${
+              typeof q === 'object'
+                ? (q.question || q.pergunta || q.front || '')
+                : q
+            }`
+          )
           .join('\n')
       ]);
     }
@@ -95,7 +139,14 @@
     }
 
     if (task === 'activities') {
-      renderCards(data.flashcards || data.cards || []);
+      const cards =
+        data.flashcards ||
+        data.cards ||
+        data.activities?.flashcards ||
+        data.result?.flashcards ||
+        [];
+
+      renderCards(cards);
     }
   }
 
@@ -107,7 +158,8 @@
       return;
     }
 
-    if (task !== 'analyze' && !analyzed) {
+    // A criação de flashcards não depende de uma análise anterior.
+    if (task !== 'analyze' && task !== 'activities' && !analyzed) {
       status(
         'Primeiro analise o material e confira o que a IA entendeu.'
       );
@@ -158,7 +210,9 @@
       byId('aiAnalyze').disabled = false;
       byId('aiTeach').disabled = !analyzed;
       byId('aiSummary').disabled = !analyzed;
-      byId('aiActivities').disabled = !analyzed;
+
+      // Mantém a criação de flashcards disponível mesmo sem análise.
+      byId('aiActivities').disabled = false;
     }
   }
 
@@ -226,7 +280,7 @@
             </div>
           `)
           .join('')
-      : '<p class="muted">A IA não retornou cartões com pergunta e resposta preenchidas. Tente novamente com um material mais claro.</p>';
+      : '<p class="muted">A IA não retornou cartões com pergunta e resposta preenchidas. Confira a resposta da API e tente novamente.</p>';
 
     byId('aiSaveCards').disabled = !selectedCards.length;
   }
@@ -235,6 +289,9 @@
   byId('aiTeach').addEventListener('click', () => run('teach'));
   byId('aiSummary').addEventListener('click', () => run('summary'));
   byId('aiActivities').addEventListener('click', () => run('activities'));
+
+  // Libera o botão de atividades logo ao iniciar a página.
+  byId('aiActivities').disabled = false;
 
   byId('aiSaveCards').addEventListener('click', () => {
     const chosen = selectedCards.filter(c =>
