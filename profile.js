@@ -106,7 +106,7 @@
     if (facebook) facebook.hidden = Boolean(session);
     if (signOut) signOut.hidden = !session;
     if (sync) sync.hidden = !session;
-    if (photoInput) photoInput.disabled = !session;
+    if (photoInput) photoInput.disabled = false;
     if (uploadPhotoButton) uploadPhotoButton.disabled = !session || !photoInput?.files?.length;
     if (removePhotoButton) removePhotoButton.hidden = !session || !(profile().avatarUserId === session.user.id && profile().avatarPath);
     if (!configured()) {
@@ -181,7 +181,15 @@
     } catch (error) {
       console.error('Meu Tutor IA: falha na sincronização inicial', error);
       setText('syncStatus', 'Não foi possível carregar a cópia na nuvem. Seus dados locais foram preservados.');
-    } finally { syncing = false; }
+    } finally {
+      const queuedData = pendingData;
+      pendingData = null;
+      syncing = false;
+      if (queuedData && session?.user?.id) {
+        // Não perder alterações feitas enquanto a sincronização inicial estava em andamento.
+        saveCloudData(mergeData(queuedData, localData()));
+      }
+    }
   }
 
   window.syncTutorData = data => {
@@ -293,7 +301,7 @@
       const detail = error?.message ? String(error.message).slice(0, 180) : 'Erro desconhecido';
       setText('profilePhotoStatus', 'Falha ao salvar a imagem: ' + detail);
     } finally {
-      if (photoInput) photoInput.disabled = !session;
+      if (photoInput) photoInput.disabled = false;
       uploadPhotoButton.disabled = !session || !photoInput?.files?.length;
     }
   };
