@@ -41,6 +41,50 @@
       attempts: mergeItems(local.attempts || [], cloud.attempts || [])
     };
   }
+  let avatarRenderId = 0;
+  async function renderAvatar(path, initial = '👤') {
+    const renderId = ++avatarRenderId;
+    const nodes = [el('profileAvatar'), el('homeProfileAvatar')].filter(Boolean);
+    let signedUrl = '';
+    if (path && client && session?.user?.id) {
+      try {
+        const { data, error } = await client.storage.from('profile-avatars').createSignedUrl(path, 3600);
+        if (!error) signedUrl = data?.signedUrl || '';
+      } catch (error) {
+        console.warn('Meu Tutor IA: não foi possível carregar a foto de perfil', error);
+      }
+    }
+    if (renderId !== avatarRenderId) return;
+    nodes.forEach(node => {
+      node.replaceChildren();
+      if (signedUrl) {
+        const img = document.createElement('img');
+        img.src = signedUrl;
+        img.alt = 'Foto de perfil';
+        img.draggable = false;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '50%';
+        node.appendChild(img);
+        if (node.id === 'homeProfileAvatar') {
+          node.style.display = 'grid';
+          node.style.width = '100%';
+          node.style.height = '100%';
+          node.style.placeItems = 'center';
+        }
+      } else {
+        node.textContent = initial || '👤';
+        if (node.id === 'homeProfileAvatar') {
+          node.style.display = '';
+          node.style.width = '';
+          node.style.height = '';
+          node.style.placeItems = '';
+        }
+      }
+    });
+  }
+
   function showAuthState() {
     const name = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || 'Estudante';
     setText('profileDisplayName', name);
@@ -49,16 +93,15 @@
     if (nameInput) nameInput.value = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || '';
     setText('profileEmail', session?.user?.email || 'Perfil local neste dispositivo');
     const initial = name.trim().charAt(0).toUpperCase() || '👤';
-    const avatar = el('profileAvatar');
-    if (avatar) avatar.textContent = initial;
-    const homeAvatar = el('homeProfileAvatar');
-    if (homeAvatar) homeAvatar.textContent = initial;
+    renderAvatar(profile().avatarPath || null, initial);
     const google = el('profileGoogle'), facebook = el('profileFacebook');
     const signOut = el('profileSignOut'), sync = el('profileSyncNow');
     if (google) google.hidden = Boolean(session);
     if (facebook) facebook.hidden = Boolean(session);
     if (signOut) signOut.hidden = !session;
     if (sync) sync.hidden = !session;
+    if (photoInput) photoInput.disabled = !session;
+    if (removePhotoButton) removePhotoButton.hidden = !session || !profile().avatarPath;
     if (!configured()) {
       setText('authStatus', 'A conta ainda precisa ser configurada pelo administrador. Seus estudos atuais continuam salvos neste navegador.');
       if (google) google.disabled = true;
@@ -81,6 +124,7 @@
         const { error } = await client.from('user_study_data').upsert({
           user_id: session.user.id,
           display_name: profile().name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || null,
+          avatar_path: profile().avatarPath || null,
           data: nextData,
           updated_at: new Date().toISOString()
         }, { onConflict: 'user_id' });
@@ -98,7 +142,7 @@
     syncing = true;
     setText('syncStatus', 'Verificando seus estudos na nuvem…');
     try {
-      const { data: row, error } = await client.from('user_study_data').select('data,display_name').eq('user_id', session.user.id).maybeSingle();
+      const { data: row, error } = await client.from('user_study_data').select('data,display_name,avatar_path').eq('user_id', session.user.id).maybeSingle();
       if (error) throw error;
       const local = localData();
       const cloud = row?.data && typeof row.data === 'object' ? row.data : {topics:[],cards:[],attempts:[]};
@@ -109,11 +153,15 @@
       const newText = JSON.stringify(combined);
       if (oldText !== newText) localStorage.setItem(DATA_KEY, newText);
       const displayName = profile().name || row?.display_name || session.user.user_metadata?.full_name || session.user.user_metadata?.name;
-      if (displayName && !profile().name) saveProfile({name:displayName});
+      const savedProfile = profile();
+      if ((displayName && !savedProfile.name) || (row?.avatar_path && savedProfile.avatarPath !== row.avatar_path)) {
+        saveProfile({ ...savedProfile, ...(displayName && !savedProfile.name ? {name:displayName} : {}), ...(row?.avatar_path ? {avatarPath:row.avatar_path} : {}) });
+      }
       if (!cloudHas || oldText !== newText) {
         const { error: upsertError } = await client.from('user_study_data').upsert({
           user_id: session.user.id,
           display_name: profile().name || displayName || null,
+          avatar_path: profile().avatarPath || row?.avatar_path || null,
           data: combined,
           updated_at: new Date().toISOString()
         }, { onConflict: 'user_id' });
@@ -145,6 +193,87 @@
       await saveCloudData(localData());
     } else setText('profileLocalStatus', 'Nome salvo neste dispositivo. Quando a conta for configurada, poderemos associá-lo à nuvem.');
     showAuthState();
+  };
+
+  const photoInput = el('profilePhotoInput');
+  const removePhotoButton = el('removeProfilePhoto');
+
+  async function persistAvatarPath(path) {
+    if (!client || !session?.user?.id) throw new Error('Entre na sua conta antes de sincronizar a foto.');
+    const userId = session.user.id;
+    const { data: existingRow, error: readError } = await client.from('user_study_data')
+      .select('data,display_name,avatar_path').eq('user_id', userId).maybeSingle();
+    if (readError) throw readError;
+    const { error } = await client.from('user_study_data').upsert({
+      user_id: userId,
+      display_name: profile().name || existingRow?.display_name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || null,
+      avatar_path: path,
+      data: existingRow?.data || localData(),
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+    if (error) throw error;
+    const oldPath = existingRow?.avatar_path;
+    saveProfile({ ...profile(), avatarPath: path || null });
+    if (oldPath && oldPath !== path) {
+      const { error: removeError } = await client.storage.from('profile-avatars').remove([oldPath]);
+      if (removeError) console.warn('Meu Tutor IA: não foi possível remover a foto anterior', removeError);
+    }
+    await renderAvatar(path, (profile().name || '👤').trim().charAt(0).toUpperCase() || '👤');
+    if (removePhotoButton) removePhotoButton.hidden = !path;
+  }
+
+  if (photoInput) photoInput.addEventListener('change', async () => {
+    const file = photoInput.files?.[0];
+    if (!file) return;
+    if (!session || !client) {
+      setText('profilePhotoStatus', 'Entre com sua conta primeiro para salvar e sincronizar sua foto com segurança.');
+      photoInput.value = '';
+      return;
+    }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setText('profilePhotoStatus', 'Formato não aceito. Escolha JPG, PNG, WebP ou GIF.');
+      photoInput.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setText('profilePhotoStatus', 'A imagem precisa ter no máximo 5 MB.');
+      photoInput.value = '';
+      return;
+    }
+    const extensions = {'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'};
+    const path = session.user.id + '/avatar.' + extensions[file.type];
+    setText('profilePhotoStatus', 'Enviando foto para sua conta…');
+    photoInput.disabled = true;
+    try {
+      const { error: uploadError } = await client.storage.from('profile-avatars').upload(path, file, {
+        cacheControl: '3600', contentType: file.type, upsert: true
+      });
+      if (uploadError) throw uploadError;
+      await persistAvatarPath(path);
+      setText('profilePhotoStatus', file.type === 'image/gif' ? 'GIF salvo e sincronizado! A animação será mantida.' : 'Foto salva e sincronizada com sua conta!');
+    } catch (error) {
+      console.error('Meu Tutor IA: falha ao salvar foto de perfil', error);
+      setText('profilePhotoStatus', 'Não foi possível salvar a imagem agora. Confira a conexão e tente novamente.');
+    } finally {
+      photoInput.disabled = false;
+      photoInput.value = '';
+    }
+  });
+
+  if (removePhotoButton) removePhotoButton.onclick = async () => {
+    if (!session || !client) return;
+    setText('profilePhotoStatus', 'Removendo foto…');
+    removePhotoButton.disabled = true;
+    try {
+      await persistAvatarPath(null);
+      setText('profilePhotoStatus', 'Foto removida do perfil.');
+    } catch (error) {
+      console.error('Meu Tutor IA: falha ao remover foto', error);
+      setText('profilePhotoStatus', 'Não foi possível remover a foto agora.');
+    } finally {
+      removePhotoButton.disabled = false;
+    }
   };
 
   function startOAuth(provider) {
