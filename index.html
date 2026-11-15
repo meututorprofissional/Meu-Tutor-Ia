@@ -24,6 +24,15 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 #aiResult h3:first-child{margin-top:0}
 @media(max-width:700px){.home-layout{grid-template-columns:1fr}header{padding:10px 12px 8px}.brand img{width:38px;height:38px}.brand h1{font-size:1.1rem}.layout{padding:16px 12px 24px}.panel{padding:16px;border-radius:18px}.hero{padding:21px;border-radius:20px}.welcome h2{font-size:1.45rem}.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{padding:10px 8px;font-size:.82rem}.stat strong{font-size:1.4rem}.home-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.action-card{padding:13px}.row button{flex:1 1 auto}}
 @media(max-width:390px){.grid{grid-template-columns:1fr}.welcome h2{font-size:1.3rem}.brain{width:48px;height:48px;flex-basis:48px;font-size:1.6rem}}
+#fcAiPreview input[type="checkbox"]{width:auto;margin-right:8px}
+#fcAiPreview label{display:flex;align-items:center;gap:4px}
+#practicePanel{scroll-margin-top:130px}
+.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.compare>div{border-radius:12px;padding:10px 12px}
+.compare .mine{background:#f5f3ff}
+.compare .right{background:#ecfdf5}
+.compare p{margin:4px 0 0;white-space:pre-wrap}
+@media(max-width:520px){.compare{grid-template-columns:1fr}}
 </style></head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button></nav></header>
@@ -69,10 +78,18 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <div class="panel"><h2>Seus assuntos</h2><div id="studyList"></div></div>
 </section>
 <section id="cards" class="screen">
-<div class="panel"><h2>Flashcards</h2><label for="cardTopic">Assunto relacionado</label><select id="cardTopic"></select>
+<div class="panel" id="fcAiPanel"><h2>Flashcards</h2><p class="muted">Escolha um assunto e a IA cria as perguntas e as respostas para você praticar.</p>
+<label for="fcAiTopic">Assunto</label><select id="fcAiTopic"></select>
+<label for="fcAiNewTopic">Ou digite um assunto novo</label><input id="fcAiNewTopic" placeholder="Ex: Fotossíntese" maxlength="120">
+<label for="fcAiCount">Quantidade de cartões</label><select id="fcAiCount"><option value="5" selected>5 cartões (padrão)</option><option value="10">10 cartões</option><option value="15">15 cartões</option></select>
+<div class="row" style="margin-top:12px"><button id="fcAiCreate">🤖 Criar cartões com IA</button></div>
+<p id="fcAiStatus" class="muted" role="status" aria-live="polite"></p>
+<div id="fcAiReview" hidden><h3>Confira e escolha os cartões para salvar</h3><div id="fcAiPreview"></div><button id="fcAiSave" disabled>Salvar selecionados e praticar</button></div>
+</div>
+<div class="panel"><h2>Criar cartão à mão</h2><label for="cardTopic">Assunto relacionado</label><select id="cardTopic"></select>
 <label for="front">Frente — pergunta</label><textarea id="front" placeholder="Ex: Qual é a função do sistema respiratório?"></textarea>
 <label for="back">Verso — resposta</label><textarea id="back" placeholder="Escreva a resposta para conferir depois."></textarea><button id="saveCard">Salvar cartão</button><p id="cardMsg" class="muted" role="status"></p></div>
-<div class="panel"><h2>Praticar cartões</h2><div id="practiceCard" class="item"></div><div class="row"><button class="secondary" id="showAnswer">Mostrar resposta</button><button id="nextCard">Próximo cartão</button></div><div class="row"><button class="secondary" id="cardEasy">Lembrei</button><button class="secondary" id="cardHard">Preciso praticar</button></div><p class="muted">Sua avaliação é um registro pessoal; o app não verifica automaticamente se a resposta está correta.</p></div>
+<div class="panel" id="practicePanel"><h2>Praticar cartões</h2><div class="row"><button class="secondary" id="swapMode">🔄 Trocar: ver a resposta e escrever a pergunta</button></div><div id="practiceCard" class="item"></div><label for="myAnswer" id="myAnswerLabel">Sua resposta</label><textarea id="myAnswer" placeholder="Escreva a resposta com suas palavras, sem olhar."></textarea><div class="row"><button class="secondary" id="showAnswer">Mostrar resposta</button><button id="nextCard">Próximo cartão</button></div><div class="row"><button class="secondary" id="cardEasy">Lembrei</button><button class="secondary" id="cardHard">Preciso praticar</button></div><p class="muted">Sua avaliação é um registro pessoal; o app não verifica automaticamente se a resposta está correta.</p></div>
 <div class="panel"><h2>Cartões salvos</h2><div id="cardList"></div></div>
 </section>
 <section id="quiz" class="screen">
