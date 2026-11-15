@@ -90,7 +90,7 @@ function renderCard(){
    const feedback=el.querySelector('#quizFeedback');feedback.hidden=false;feedback.className=isCorrect?'good':'bad';
    feedback.innerHTML='<strong>'+(isCorrect?'✅ Correto!':'❌ Não foi dessa vez.')+'</strong><p>'+esc(card.explanation||card.back)+'</p>';
    db.attempts.unshift({id:id(),topicId:card.topicId,type:'flashcard-quiz',rating:isCorrect?'good':'practice',question:card.front,answer:opts[selected]||'',expectedAnswer:card.back,reflection:card.explanation||'',date:new Date().toISOString()});
-   save();
+   localStorage.setItem(KEY,JSON.stringify(db));
    const next=el.querySelector('#quizNext');if(next)next.disabled=false;
   });
   const next=el.querySelector('#quizNext');
