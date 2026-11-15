@@ -9,6 +9,12 @@
   }
 
   const byId = id => document.getElementById(id);
+  // Sinal visível de que o módulo foi carregado e seus eventos podem ser usados.
+  const startupStatus = document.getElementById('aiStatus');
+  if (startupStatus) startupStatus.textContent = endpoint
+    ? 'IA pronta para testar. Informe o assunto e o material, depois toque em Analisar material.'
+    : 'IA indisponível: endereço do servidor não configurado.';
+
   const buttons = ['aiAnalyze', 'aiTeach', 'aiSummary', 'aiActivities'];
 
   let analyzed = false;
@@ -176,20 +182,26 @@
       byId(id).disabled = true;
     });
 
-    status('A IA está trabalhando. Aguarde…');
+    status('Conectando ao servidor da IA. Aguarde…');
     byId('aiReview').hidden = true;
 
     try {
-      const response = await fetch(
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 25000);
+      let response;
+      try {
+        response = await fetch(
         endpoint.replace(/\/$/, '') + '/api/tutor',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
+          signal: controller.signal
         }
       );
+      } finally { clearTimeout(timeout); }
 
       const data = await response.json().catch(() => ({}));
 
@@ -202,7 +214,7 @@
       lastResult = data;
       showResult(data, task);
     } catch (e) {
-      status('Não foi possível conectar à IA: ' + e.message);
+      status('Não foi possível conectar à IA: ' + (e.name === 'AbortError' ? 'o servidor demorou mais de 25 segundos para responder.' : e.message));
     } finally {
       byId('aiAnalyze').disabled = false;
       byId('aiTeach').disabled = !analyzed;
