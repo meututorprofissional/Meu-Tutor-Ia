@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v16-supabase';
+const CACHE_VERSION = 'meu-tutor-ia-v17-profile-shortcut';
 
 const APP_FILES = [
   './',
