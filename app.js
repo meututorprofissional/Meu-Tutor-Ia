@@ -1,7 +1,7 @@
 
 const KEY='meuTutorIA.v2';
 const empty=()=>({topics:[],cards:[],attempts:[]});
-let db=load(), currentCard=null, answerShown=false;
+let db=load(), currentCard=null, answerShown=false, lastCardId=null;
 
 function load(){try{return {...empty(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return empty()}}
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
@@ -35,27 +35,34 @@ document.getElementById('saveCard').onclick=()=>{
  const topicId=document.getElementById('cardTopic').value,front=document.getElementById('front').value.trim(),back=document.getElementById('back').value.trim();
  if(!front||!back){document.getElementById('cardMsg').textContent='Preencha a pergunta e a resposta.';return}
  db.cards.unshift({id:id(),topicId,front,back,created:new Date().toISOString(),reviews:0,lastRating:null,nextReview:null});
- document.getElementById('front').value='';document.getElementById('back').value='';document.getElementById('cardMsg').textContent='Cartão salvo.';currentCard=null;save();
+ document.getElementById('front').value='';document.getElementById('back').value='';document.getElementById('cardMsg').textContent='Cartão salvo.';currentCard=null;lastCardId=null;save();
 };
 
 document.getElementById('showAnswer').onclick=()=>{answerShown=true;renderCard()};
 
-// Escolhe outro cartão quando o usuário toca em "Próximo cartão".
-function pickCard(excludeId=null){
- const now=Date.now();
- const due=db.cards.filter(c=>!c.nextReview||new Date(c.nextReview).getTime()<=now);
- let available=due.filter(c=>c.id!==excludeId);
+// Escolhe qual cartão mostrar na prática.
+// - Sem cartão anterior (primeira vez): mostra o primeiro cartão com revisão vencida,
+//   ou o primeiro da lista se nenhum estiver vencido.
+// - Com cartão anterior: mostra o cartão seguinte da lista e, depois do último,
+//   volta ao primeiro. Assim passa por TODOS os cartões salvos antes de repetir.
+function pickCard(afterId=null){
+ const total=db.cards.length;
+ if(!total)return null;
 
- if(!available.length)available=db.cards.filter(c=>c.id!==excludeId);
- if(!available.length)available=db.cards;
+ const start=db.cards.findIndex(c=>c.id===afterId);
+ if(start===-1){
+  const now=Date.now();
+  return db.cards.find(c=>!c.nextReview||new Date(c.nextReview).getTime()<=now)||db.cards[0];
+ }
 
- return available[0]||null;
+ return db.cards[(start+1)%total];
 }
 
-function renderCard(excludeId=null){
+function renderCard(){
  const el=document.getElementById('practiceCard');
 
- currentCard=(currentCard&&db.cards.find(c=>c.id===currentCard.id))||pickCard(excludeId);
+ currentCard=(currentCard&&db.cards.find(c=>c.id===currentCard.id))||pickCard(lastCardId);
+ if(currentCard)lastCardId=currentCard.id;
 
  if(!currentCard){
   el.innerHTML='<div class="empty">Você ainda não tem cartões. Crie o primeiro acima.</div>';
@@ -90,10 +97,9 @@ function rateCard(r){
 }
 
 document.getElementById('nextCard').onclick=()=>{
- const previousId=currentCard?.id||null;
  currentCard=null;
  answerShown=false;
- renderCard(previousId);
+ renderCard();
 };
 
 document.getElementById('cardEasy').onclick=()=>rateCard('easy');
