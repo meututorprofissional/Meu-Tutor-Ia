@@ -3,6 +3,25 @@ const KEY='meuTutorIA.v2';
 const empty=()=>({topics:[],cards:[],attempts:[]});
 let db=load(), currentCard=null, answerShown=false, lastCardId=null, quizRun=null;
 
+/*
+ * Registre a navegação antes de qualquer inicialização de recursos do app.
+ * Assim, um erro em outro módulo não deixa Meu estudo/perfil sem resposta.
+ */
+document.addEventListener('click', event => {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  const button = target.closest('[data-screen], [data-go], #homeProfileButton');
+  if (!button) return;
+  const screen = button.dataset.screen || button.dataset.go ||
+    (button.id === 'homeProfileButton' ? 'profile' : '');
+  if (!screen || !document.getElementById(screen)) return;
+  try {
+    go(screen);
+  } catch (error) {
+    console.error('Meu Tutor IA: erro ao atualizar o conteúdo da tela', error);
+  }
+}, true);
+
 function load(){try{return {...empty(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return empty()}}
 const selectedCardIds=new Set();
 function updateCardSelectionUI(){
@@ -49,17 +68,6 @@ function date(d){return new Date(d).toLocaleDateString('pt-BR')}
 function topicName(tid){return db.topics.find(t=>t.id===tid)?.name||'Assunto sem nome'}
 function go(name){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===name));document.querySelectorAll('nav [data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));render()}
 
-// Navegação delegada como proteção extra para cliques e toques em telas móveis.
-document.addEventListener('click', event => {
-  const button = event.target.closest('[data-screen], [data-go], #homeProfileButton');
-  if (!button) return;
-  const screen = button.dataset.screen || button.dataset.go || (button.id === 'homeProfileButton' ? 'profile' : '');
-  if (!screen || !document.getElementById(screen)) return;
-  go(screen);
-}, true);
-
-document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>go(b.dataset.screen));
-document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 
 function options(selected=''){return '<option value="">Selecione um assunto</option>'+db.topics.map(t=>`<option value="${t.id}" ${t.id===selected?'selected':''}>${esc(t.name)}</option>`).join('')}
 function refreshSelects(){['cardTopic','quizTopic','fcAiTopic'].forEach(id=>{let el=document.getElementById(id);if(!el)return;let old=el.value;el.innerHTML=options(old)})}
