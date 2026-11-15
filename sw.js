@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v28-individual-card-checkbox';
+const CACHE_VERSION = 'meu-tutor-ia-v29-fix-sync-gif-picker';
 
 const APP_FILES = [
   './',
