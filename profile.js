@@ -93,7 +93,9 @@
     if (nameInput) nameInput.value = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || '';
     setText('profileEmail', session?.user?.email || 'Perfil local neste dispositivo');
     const initial = name.trim().charAt(0).toUpperCase() || '👤';
-    renderAvatar(profile().avatarPath || null, initial);
+    const savedProfile = profile();
+    const ownedAvatarPath = session && savedProfile.avatarUserId === session.user.id ? savedProfile.avatarPath : null;
+    renderAvatar(ownedAvatarPath || null, initial);
     const google = el('profileGoogle'), facebook = el('profileFacebook');
     const signOut = el('profileSignOut'), sync = el('profileSyncNow');
     if (google) google.hidden = Boolean(session);
@@ -101,7 +103,7 @@
     if (signOut) signOut.hidden = !session;
     if (sync) sync.hidden = !session;
     if (photoInput) photoInput.disabled = !session;
-    if (removePhotoButton) removePhotoButton.hidden = !session || !profile().avatarPath;
+    if (removePhotoButton) removePhotoButton.hidden = !session || !(profile().avatarUserId === session.user.id && profile().avatarPath);
     if (!configured()) {
       setText('authStatus', 'A conta ainda precisa ser configurada pelo administrador. Seus estudos atuais continuam salvos neste navegador.');
       if (google) google.disabled = true;
@@ -124,7 +126,7 @@
         const { error } = await client.from('user_study_data').upsert({
           user_id: session.user.id,
           display_name: profile().name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || null,
-          avatar_path: profile().avatarPath || null,
+          avatar_path: profile().avatarUserId === session.user.id ? (profile().avatarPath || null) : null,
           data: nextData,
           updated_at: new Date().toISOString()
         }, { onConflict: 'user_id' });
@@ -154,8 +156,9 @@
       if (oldText !== newText) localStorage.setItem(DATA_KEY, newText);
       const displayName = profile().name || row?.display_name || session.user.user_metadata?.full_name || session.user.user_metadata?.name;
       const savedProfile = profile();
-      if ((displayName && !savedProfile.name) || (row?.avatar_path && savedProfile.avatarPath !== row.avatar_path)) {
-        saveProfile({ ...savedProfile, ...(displayName && !savedProfile.name ? {name:displayName} : {}), ...(row?.avatar_path ? {avatarPath:row.avatar_path} : {}) });
+      const cloudAvatarPath = row?.avatar_path || null;
+      if ((displayName && !savedProfile.name) || savedProfile.avatarUserId !== session.user.id || savedProfile.avatarPath !== cloudAvatarPath) {
+        saveProfile({ ...savedProfile, ...(displayName && !savedProfile.name ? {name:displayName} : {}), avatarPath:cloudAvatarPath, avatarUserId:session.user.id });
       }
       if (!cloudHas || oldText !== newText) {
         const { error: upsertError } = await client.from('user_study_data').upsert({
@@ -213,7 +216,7 @@
     }, { onConflict: 'user_id' });
     if (error) throw error;
     const oldPath = existingRow?.avatar_path;
-    saveProfile({ ...profile(), avatarPath: path || null });
+    saveProfile({ ...profile(), avatarPath: path || null, avatarUserId: userId });
     if (oldPath && oldPath !== path) {
       const { error: removeError } = await client.storage.from('profile-avatars').remove([oldPath]);
       if (removeError) console.warn('Meu Tutor IA: não foi possível remover a foto anterior', removeError);
