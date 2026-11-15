@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v31-fix-mobile-navigation';
+const CACHE_VERSION = 'meu-tutor-ia-v32-register-navigation-early';
 
 const APP_FILES = [
   './',
