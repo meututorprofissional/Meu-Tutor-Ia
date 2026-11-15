@@ -5,6 +5,7 @@
   let client = null;
   let session = null;
   let syncing = false;
+  let pendingData = null;
   let authReady = false;
 
   const el = id => document.getElementById(id);
@@ -66,17 +67,23 @@
     setText('authStatus', session ? 'Conta conectada. Seus estudos podem ser sincronizados com segurança.' : 'Entre com Google ou Facebook para acessar seus estudos em outros dispositivos.');
   }
   async function saveCloudData(data) {
-    if (!client || !session?.user?.id || syncing) return;
+    if (!client || !session?.user?.id || !data) return;
+    if (syncing) { pendingData = data; return; }
     syncing = true;
-    setText('syncStatus', 'Sincronizando seus estudos…');
+    let nextData = data;
     try {
-      const { error } = await client.from('user_study_data').upsert({
-        user_id: session.user.id,
-        display_name: profile().name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || null,
-        data,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' });
-      if (error) throw error;
+      do {
+        pendingData = null;
+        setText('syncStatus', 'Sincronizando seus estudos…');
+        const { error } = await client.from('user_study_data').upsert({
+          user_id: session.user.id,
+          display_name: profile().name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || null,
+          data: nextData,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+        if (error) throw error;
+        nextData = pendingData;
+      } while (nextData);
       setText('syncStatus', 'Estudos sincronizados com sua conta.');
     } catch (error) {
       console.error('Meu Tutor IA: falha ao sincronizar', error);
