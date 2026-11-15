@@ -1,7 +1,7 @@
 
 const KEY='meuTutorIA.v2';
 const empty=()=>({topics:[],cards:[],attempts:[]});
-let db=load(), currentCard=null, answerShown=false, lastCardId=null;
+let db=load(), currentCard=null, answerShown=false, lastCardId=null, quizRun=null;
 
 function load(){try{return {...empty(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return empty()}}
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
@@ -66,6 +66,38 @@ function pickCard(afterId=null){
 
 function renderCard(){
  const el=document.getElementById('practiceCard');
+ const panel=document.getElementById('practicePanel');
+ if(quizRun){
+  const card=db.cards.find(c=>c.id===quizRun.ids[quizRun.index]);
+  currentCard=card||null;
+  if(panel)panel.querySelectorAll('.row, label[for="myAnswer"], #myAnswer').forEach(n=>n.style.display='none');
+  if(!card){
+   const total=quizRun.ids.length,percent=total?Math.round(quizRun.score/total*100):0;
+   el.innerHTML='<div class="success"><h3>Quiz concluído! 🎉</h3><p>Você acertou <strong>'+quizRun.score+'</strong> de <strong>'+total+'</strong> perguntas.</p><p>Resultado: <strong>'+percent+'%</strong></p><button id="quizFinish">Voltar aos cartões</button></div>';
+   const finish=document.getElementById('quizFinish');
+   if(finish)finish.onclick=()=>{quizRun=null;currentCard=null;renderCard()};
+   return;
+  }
+  const opts=Array.isArray(card.options)&&card.options.length?card.options:[card.back];
+  el.innerHTML='<div class="quiz-progress">Pergunta '+(quizRun.index+1)+' de '+quizRun.ids.length+' · Acertos: '+quizRun.score+'</div><span class="pill">'+esc(topicName(card.topicId))+'</span><h3>'+esc(card.front)+'</h3><div id="quizOptions">'+opts.map((option,i)=>'<button type="button" data-quiz-option="'+i+'" '+(quizRun.answered?'disabled':'')+'>'+String.fromCharCode(65+i)+') '+esc(option)+'</button>').join('')+'</div><div id="quizFeedback" hidden></div><button id="quizNext" '+(!quizRun.answered?'disabled':'')+'>'+(quizRun.index===quizRun.ids.length-1?'Ver resultado':'Próxima pergunta')+' →</button>';
+  el.querySelectorAll('[data-quiz-option]').forEach(button=>button.onclick=()=>{
+   if(quizRun.answered)return;
+   const selected=Number(button.dataset.quizOption),correct=Number.isInteger(Number(card.correctIndex))?Number(card.correctIndex):0;
+   quizRun.answered=true;
+   const isCorrect=selected===correct;
+   if(isCorrect)quizRun.score++;
+   el.querySelectorAll('[data-quiz-option]').forEach(btn=>{btn.disabled=true;if(Number(btn.dataset.quizOption)===correct)btn.classList.add('correct');else if(Number(btn.dataset.quizOption)===selected)btn.classList.add('incorrect')});
+   const feedback=el.querySelector('#quizFeedback');feedback.hidden=false;feedback.className=isCorrect?'good':'bad';
+   feedback.innerHTML='<strong>'+(isCorrect?'✅ Correto!':'❌ Não foi dessa vez.')+'</strong><p>'+esc(card.explanation||card.back)+'</p>';
+   db.attempts.unshift({id:id(),topicId:card.topicId,type:'flashcard-quiz',rating:isCorrect?'good':'practice',question:card.front,answer:opts[selected]||'',expectedAnswer:card.back,reflection:card.explanation||'',date:new Date().toISOString()});
+   save();
+   const next=el.querySelector('#quizNext');if(next)next.disabled=false;
+  });
+  const next=el.querySelector('#quizNext');
+  if(next)next.onclick=()=>{if(!quizRun.answered)return;quizRun.index++;quizRun.answered=false;renderCard()};
+  return;
+ }
+ if(panel)panel.querySelectorAll('.row, label[for="myAnswer"], #myAnswer').forEach(n=>n.style.display='');
  currentCard=(currentCard&&db.cards.find(c=>c.id===currentCard.id))||pickCard(lastCardId);
  if(currentCard)lastCardId=currentCard.id;
  if(!currentCard){
@@ -110,6 +142,14 @@ document.getElementById('nextCard').onclick=()=>{
  currentCard=null;
  answerShown=false;
  if(myAnswerEl)myAnswerEl.value='';
+ renderCard();
+};
+window.startFlashcardQuiz=(ids)=>{
+ quizRun={ids:ids.slice(),index:0,score:0,answered:false};
+ currentCard=null;lastCardId=null;answerShown=false;
+ go('cards');
+ const panel=document.getElementById('practicePanel');
+ if(panel)panel.scrollIntoView({behavior:'smooth',block:'start'});
  renderCard();
 };
 window.practiceNow=()=>{go('cards');currentCard=null;lastCardId=null;answerShown=false;if(myAnswerEl)myAnswerEl.value='';renderCard();const panel=document.getElementById('practicePanel');if(panel)panel.scrollIntoView({behavior:'smooth',block:'start'});};
