@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v18-single-profile-entry';
+const CACHE_VERSION = 'meu-tutor-ia-v19-mobile-profile-tap';
 
 const APP_FILES = [
   './',
