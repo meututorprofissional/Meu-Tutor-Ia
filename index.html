@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -15,8 +16,12 @@ nav{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:thin
 .hero{color:#fff;background:linear-gradient(115deg,#3b2e88 0%,#4f46e5 54%,#3b82f6 100%);border:0;border-radius:24px;padding:26px;box-shadow:0 10px 26px #4338ca26;margin-bottom:16px}.hero .badge{display:inline-block;background:#dcfce7;color:#166534;border-radius:999px;padding:5px 10px;font-size:.7rem;font-weight:800;letter-spacing:.06em}.hero h2{font-size:clamp(1.45rem,3vw,2rem);line-height:1.2;margin:14px 0 8px;max-width:620px}.hero p{max-width:680px;color:#eef2ff;margin:0 0 18px}.hero button{background:#fff;color:#4338ca;font-weight:750;border-radius:12px;padding:11px 16px}
 h2{font-size:1.25rem;letter-spacing:-.02em;margin:0 0 10px}h3{font-size:1rem;margin:14px 0 6px}p{margin:6px 0 12px}.muted{color:var(--muted);font-size:.92rem}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.stat{background:#f5f3ff;border:1px solid #ede9fe;padding:15px;border-radius:16px;color:#4338ca}.stat strong{display:block;font-size:1.8rem;color:#312e81}.stat:nth-child(3n+2){background:#eff6ff;border-color:#dbeafe;color:#1d4ed8}.stat:nth-child(3n){background:#ecfdf5;border-color:#d1fae5;color:#047857}
 label{display:block;font-weight:650;margin:12px 0 5px}input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:100px;resize:vertical}input:focus,textarea:focus,select:focus{outline:3px solid #c7d2fe;outline-offset:1px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row button{flex:0 0 auto}.study-actions #studyMsg{flex:2 1 240px;margin:0}
-button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;font:inherit;font-weight:650;cursor:pointer;transition:filter .15s,transform .15s}button:hover{filter:brightness(1.04)}button:active{transform:translateY(1px)}button.secondary{background:#eef2ff;color:#4338ca;border:1px solid #e0e7ff}button.danger{background:#b91c1c}.item{padding:14px;border:1px solid var(--line);border-radius:14px;margin:9px 0;background:#fff}.item strong{display:block}.pill{display:inline-block;background:#dcfce7;color:#166534;padding:3px 9px;border-radius:99px;font-size:.8rem;font-weight:650}.notice{background:#fffbeb;color:#92400e;border:1px solid #fde68a;border-radius:14px;padding:13px}.success{background:#ecfdf5;color:#166534;padding:13px;border-radius:14px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}.empty{padding:18px;text-align:center;color:var(--muted)}
+button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;font:inherit;font-weight:650;cursor:pointer;transition:filter .15s,transform .15s}button:hover{filter:brightness(1.04)}button:active{transform:translateY(1px)}button.secondary{background:#eef2ff;color:#4338ca;border:1px solid #e0e7ff}button.danger{background:#b91c1c}button:disabled{opacity:.55;cursor:not-allowed;filter:none;transform:none}.item{padding:14px;border:1px solid var(--line);border-radius:14px;margin:9px 0;background:#fff}.item strong{display:block}.pill{display:inline-block;background:#dcfce7;color:#166534;padding:3px 9px;border-radius:99px;font-size:.8rem;font-weight:650}.notice{background:#fffbeb;color:#92400e;border:1px solid #fde68a;border-radius:14px;padding:13px}.success{background:#ecfdf5;color:#166534;padding:13px;border-radius:14px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}.empty{padding:18px;text-align:center;color:var(--muted)}
 .section-intro{color:var(--muted);margin-top:-4px}.home-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}.home-left,.home-right{min-width:0}.home-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.action-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;text-align:left;box-shadow:0 4px 12px #11182708}.action-card .emoji{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#eef2ff;font-size:1.35rem;margin-bottom:10px}.action-card strong{display:block}.action-card span{display:block;color:var(--muted);font-size:.86rem;margin-top:3px}
+#aiCardsPreview input[type="checkbox"]{width:auto;margin-right:8px}
+#aiCardsPreview label{display:flex;align-items:center;gap:4px}
+#aiResult h3{margin-top:16px}
+#aiResult h3:first-child{margin-top:0}
 @media(max-width:700px){.home-layout{grid-template-columns:1fr}header{padding:10px 12px 8px}.brand img{width:38px;height:38px}.brand h1{font-size:1.1rem}.layout{padding:16px 12px 24px}.panel{padding:16px;border-radius:18px}.hero{padding:21px;border-radius:20px}.welcome h2{font-size:1.45rem}.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{padding:10px 8px;font-size:.82rem}.stat strong{font-size:1.4rem}.home-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.action-card{padding:13px}.row button{flex:1 1 auto}}
 @media(max-width:390px){.grid{grid-template-columns:1fr}.welcome h2{font-size:1.3rem}.brain{width:48px;height:48px;flex-basis:48px;font-size:1.6rem}}
 </style></head>
@@ -31,15 +36,36 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <main>
 <section id="home" class="screen active">
 <div class="welcome"><div><p class="overline">SEU ESPAÇO DE APRENDIZAGEM</p><h2>Olá! Vamos aprender? 👋</h2></div><div class="brain" aria-label="Cérebro ilustrativo">🧠</div></div>
-<div class="home-layout"><div class="home-left"><div class="panel"><h2>Continue aprendendo</h2><p class="section-intro">Escolha o próximo passo da sua jornada.</p><div class="home-actions"><button class="action-card" data-go="study"><span class="emoji">📚</span><strong>Meu estudo</strong><span>Registre o material e suas anotações.</span></button><button class="action-card" data-go="cards"><span class="emoji">🗂️</span><strong>Flashcards</strong><span>Treine sua memória com cartões.</span></button><button class="action-card" data-go="quiz"><span class="emoji">✅</span><strong>Teste</strong><span>Pratique recordar sem consultar.</span></button><button class="action-card" data-go="progress"><span class="emoji">📈</span><strong>Progresso</strong><span>Acompanhe os seus registros.</span></button></div></div></div><div class="home-right"><div class="hero"><span class="badge">SEU TUTOR DE ESTUDOS</span><h2>Estude melhor. Aprenda de verdade.</h2><p>Um passo de cada vez: registre suas anotações, revise o que aprendeu e acompanhe sua evolução.</p><button data-go="study">Começar a estudar &nbsp; →</button></div><div class="panel"><h2>Revisões para hoje</h2><div id="homeReviews"></div></div><div class="panel"><h2>Seu método de estudo</h2><p class="muted">1. Leia o material original. 2. Escreva o que entendeu com suas palavras. 3. Compare suas anotações com a fonte. 4. Revise e teste o que lembra.</p><div class="notice">ℹ️ Esta versão organiza seus estudos e registra sua autoavaliação. A IA ainda não está conectada e o app não corrige automaticamente suas respostas.</div></div></div></div>
+<div class="home-layout"><div class="home-left"><div class="panel"><h2>Continue aprendendo</h2><p class="section-intro">Escolha o próximo passo da sua jornada.</p><div class="home-actions"><button class="action-card" data-go="study"><span class="emoji">📚</span><strong>Meu estudo</strong><span>Registre o material e suas anotações.</span></button><button class="action-card" data-go="cards"><span class="emoji">🗂️</span><strong>Flashcards</strong><span>Treine sua memória com cartões.</span></button><button class="action-card" data-go="quiz"><span class="emoji">✅</span><strong>Teste</strong><span>Pratique recordar sem consultar.</span></button><button class="action-card" data-go="progress"><span class="emoji">📈</span><strong>Progresso</strong><span>Acompanhe os seus registros.</span></button></div></div></div><div class="home-right"><div class="hero"><span class="badge">SEU TUTOR DE ESTUDOS</span><h2>Estude melhor. Aprenda de verdade.</h2><p>Um passo de cada vez: registre suas anotações, revise o que aprendeu e acompanhe sua evolução.</p><button data-go="study">Começar a estudar &nbsp; →</button></div><div class="panel"><h2>Revisões para hoje</h2><div id="homeReviews"></div></div><div class="panel"><h2>Seu método de estudo</h2><p class="muted">1. Leia o material original. 2. Escreva o que entendeu com suas palavras. 3. Compare suas anotações com a fonte. 4. Revise e teste o que lembra.</p><div class="notice">ℹ️ A IA analisa o material primeiro. Confira o que ela entendeu antes de pedir explicações, resumos e atividades. Revise os resultados antes de usá-los.</div></div></div></div>
 </section>
 <section id="study" class="screen">
 <div class="panel"><h2>Meu estudo</h2><p class="muted">Estude primeiro. Depois escreva o que entendeu sem copiar o material.</p>
 <label for="topic">Assunto</label><input id="topic" placeholder="Ex: Sistema respiratório" maxlength="120">
-<label for="source">Material original / conteúdo estudado</label><textarea id="source" placeholder="Cole ou escreva aqui o conteúdo da fonte..."></textarea>
-<label for="notes">Minhas anotações (com suas palavras)</label><textarea id="notes" placeholder="O que você entendeu e anotou?"></textarea>
+<label for="source">Material original / conteúdo estudado</label><textarea id="source" placeholder="Cole ou escreva aqui o conteúdo da fonte..." maxlength="12000"></textarea>
+<label for="notes">Minhas anotações (com suas palavras)</label><textarea id="notes" placeholder="O que você entendeu e anotou?" maxlength="4000"></textarea>
 <label for="difficulty">Como se sentiu ao recordar?</label><select id="difficulty"><option value="ok">Consegui explicar</option><option value="partial">Lembrei de uma parte</option><option value="hard">Tive dificuldade</option></select>
 <div class="row study-actions"><button id="saveStudy">Salvar estudo</button><button class="secondary" id="clearStudy">Limpar campos</button><span id="studyMsg" class="muted" role="status" aria-live="polite"></span></div></div>
+
+<div class="panel" id="aiStudyPanel">
+  <h2>🤖 Meu Tutor IA</h2>
+  <p class="muted">Primeiro, a IA analisa o material e mostra o que entendeu. Confira a análise antes de avançar para explicações, resumos e atividades.</p>
+  <div id="aiNotice" class="notice">Preparando a conexão com o tutor...</div>
+  <div class="row">
+    <button id="aiAnalyze">Analisar material</button>
+    <button id="aiTeach" disabled>Explicar conteúdo</button>
+    <button id="aiSummary" disabled>Fazer resumo</button>
+    <button id="aiActivities" disabled>Criar atividades e flashcards</button>
+  </div>
+  <p id="aiStatus" class="muted" role="status" aria-live="polite">Preencha o assunto e o material original para começar.</p>
+  <div id="aiResult" class="item" hidden></div>
+  <div id="aiReview" hidden>
+    <h3>Escolha os flashcards para salvar</h3>
+    <div id="aiCardsPreview"></div>
+    <button id="aiSaveCards" disabled>Salvar cartões selecionados</button>
+    <p id="aiSaveStatus" class="muted" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
 <div class="panel"><h2>Seus assuntos</h2><div id="studyList"></div></div>
 </section>
 <section id="cards" class="screen">
@@ -66,4 +92,9 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 </section>
 <section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
-<script src="app.js"></script><script src="updates.js"></script></body></html>
+<script src="app.js"></script>
+<script src="updates.js"></script>
+<script src="ai-config.js"></script>
+<script src="ai-client.js"></script>
+</body>
+</html>
