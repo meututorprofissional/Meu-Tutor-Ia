@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v35-refresh-assets';
+const CACHE_VERSION = 'meu-tutor-ia-v36-quiz-options';
 
 const APP_FILES = [
   './',
