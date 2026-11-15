@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v22-profile-photo-send-button';
+const CACHE_VERSION = 'meu-tutor-ia-v23-desktop-mobile-profile-upload';
 
 const APP_FILES = [
   './',
