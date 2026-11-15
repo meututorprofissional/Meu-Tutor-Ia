@@ -225,20 +225,8 @@ function render(){
 
  document.getElementById('studyList').innerHTML=db.topics.length?db.topics.map(t=>`<div class="item"><strong>${esc(t.name)}</strong><span class="muted">Atualizado: ${date(t.updated||t.created)}</span><p>${esc((t.notes||'Sem anotações registradas').slice(0,220))}</p><button class="secondary" onclick="editTopic('${t.id}')">Ver / editar</button> <button class="secondary" onclick="makeQuiz('${t.id}')">Criar teste</button></div>`).join(''):'<div class="empty">Nenhum assunto registrado ainda.</div>';
 
- document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item saved-card-item"><input type="checkbox" aria-label="Selecionar cartão: ${esc(c.front)}" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}><div class="saved-card-content"><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></div><button class="secondary saved-card-delete" type="button" data-delete-card-id="${esc(c.id)}" aria-label="Excluir somente este cartão">Excluir</button></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
+ document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item saved-card-item"><div class="saved-card-content"><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></div><input type="checkbox" aria-label="Selecionar cartão: ${esc(c.front)}" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
  document.querySelectorAll('.saved-card-select').forEach(box=>box.onchange=()=>{if(box.checked)selectedCardIds.add(box.dataset.cardId);else selectedCardIds.delete(box.dataset.cardId);updateCardSelectionUI()});
- document.querySelectorAll('.saved-card-delete').forEach(button=>button.onclick=()=>{
-  const cardId=button.dataset.deleteCardId;
-  const card=db.cards.find(c=>c.id===cardId);
-  if(!card)return;
-  if(!confirm('Excluir somente este cartão? Essa ação não pode ser desfeita.'))return;
-  db.cards=db.cards.filter(c=>c.id!==cardId);
-  selectedCardIds.delete(cardId);
-  if(currentCard&&currentCard.id===cardId){currentCard=null;lastCardId=null;answerShown=false}
-  if(quizRun&&quizRun.ids.includes(cardId))quizRun=null;
-  document.getElementById('cardManageMsg').textContent='Cartão excluído.';
-  save();
- });
  updateCardSelectionUI();
 
  document.getElementById('quizList').innerHTML=db.attempts.filter(a=>a.type==='quiz').slice(0,8).map(a=>`<div class="item"><strong>${esc(a.question)}</strong><p>${esc(a.answer)}</p><span class="pill">${a.rating==='good'?'Consegui explicar':a.rating==='partial'?'Lembrei parcialmente':'Preciso praticar'}</span> <span class="muted">${date(a.date)} · ${esc(topicName(a.topicId))}</span>${a.reflection?`<p><strong>Para revisar:</strong> ${esc(a.reflection)}</p>`:''}</div>`).join('')||'<div class="empty">Ainda não há testes registrados.</div>';
