@@ -294,7 +294,7 @@
       setText('profilePhotoStatus', 'Falha ao salvar a imagem: ' + detail);
     } finally {
       if (photoInput) photoInput.disabled = !session;
-      uploadPhotoButton.disabled = true;
+      uploadPhotoButton.disabled = !session || !photoInput?.files?.length;
     }
   };
 
