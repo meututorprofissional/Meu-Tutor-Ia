@@ -252,7 +252,7 @@
       return;
     }
     setText('profilePhotoStatus', session && client
-      ? 'Arquivo selecionado. Toque em “Enviar foto/GIF” para salvar no perfil.'
+      ? 'Arquivo selecionado. Clique ou toque em “Enviar foto/GIF” para salvar no perfil.'
       : 'Entre com sua conta primeiro para enviar e sincronizar sua foto.');
   });
 
