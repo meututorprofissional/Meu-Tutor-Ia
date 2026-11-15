@@ -15,7 +15,7 @@ document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>go(b.dataset
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 
 function options(selected=''){return '<option value="">Selecione um assunto</option>'+db.topics.map(t=>`<option value="${t.id}" ${t.id===selected?'selected':''}>${esc(t.name)}</option>`).join('')}
-function refreshSelects(){['cardTopic','quizTopic'].forEach(id=>{let el=document.getElementById(id),old=el.value;el.innerHTML=options(old)})}
+function refreshSelects(){['cardTopic','quizTopic','fcAiTopic'].forEach(id=>{let el=document.getElementById(id);if(!el)return;let old=el.value;el.innerHTML=options(old)})}
 
 document.getElementById('saveStudy').onclick=()=>{
  const name=document.getElementById('topic').value.trim(),source=document.getElementById('source').value.trim(),notes=document.getElementById('notes').value.trim(),rating=document.getElementById('difficulty').value;
@@ -39,6 +39,12 @@ document.getElementById('saveCard').onclick=()=>{
 };
 
 document.getElementById('showAnswer').onclick=()=>{answerShown=true;renderCard()};
+const PRACTICE_MODE_KEY='meuTutorIA.practiceMode';
+let practiceMode=localStorage.getItem(PRACTICE_MODE_KEY)==='back'?'back':'front';
+const myAnswerEl=document.getElementById('myAnswer');
+const myAnswerLabel=document.getElementById('myAnswerLabel');
+const swapModeButton=document.getElementById('swapMode');
+if(swapModeButton)swapModeButton.onclick=()=>{practiceMode=practiceMode==='front'?'back':'front';localStorage.setItem(PRACTICE_MODE_KEY,practiceMode);answerShown=false;if(myAnswerEl)myAnswerEl.value='';swapModeButton.textContent=practiceMode==='front'?'🔄 Trocar: ver a resposta e escrever a pergunta':'🔄 Trocar: ver a pergunta e escrever a resposta';renderCard()};
 
 // Escolhe qual cartão mostrar na prática.
 // - Sem cartão anterior (primeira vez): mostra o primeiro cartão com revisão vencida,
@@ -60,18 +66,19 @@ function pickCard(afterId=null){
 
 function renderCard(){
  const el=document.getElementById('practiceCard');
-
  currentCard=(currentCard&&db.cards.find(c=>c.id===currentCard.id))||pickCard(lastCardId);
  if(currentCard)lastCardId=currentCard.id;
-
  if(!currentCard){
   el.innerHTML='<div class="empty">Você ainda não tem cartões. Crie o primeiro acima.</div>';
+  if(myAnswerLabel)myAnswerLabel.textContent='Sua resposta';
   return;
  }
-
- el.innerHTML=`<span class="pill">${esc(topicName(currentCard.topicId))}</span><h3>${esc(currentCard.front)}</h3>${answerShown?`<hr><strong>Resposta:</strong><p>${esc(currentCard.back)}</p>`:'<p class="muted">Tente responder em voz alta antes de mostrar a resposta.</p>'}`;
+ const prompt=practiceMode==='front'?currentCard.front:currentCard.back;
+ const expected=practiceMode==='front'?currentCard.back:currentCard.front;
+ if(myAnswerLabel)myAnswerLabel.textContent=practiceMode==='front'?'Sua resposta':'Sua pergunta';
+ if(myAnswerEl)myAnswerEl.placeholder=practiceMode==='front'?'Escreva a resposta com suas palavras, sem olhar.':'Escreva a pergunta que corresponde à resposta exibida.';
+ el.innerHTML='<span class="pill">'+esc(topicName(currentCard.topicId))+'</span><h3>'+esc(prompt)+'</h3>'+(!answerShown?'<p class="muted">Tente responder com suas palavras antes de conferir.</p>':'<div class="compare"><div class="mine"><strong>Sua resposta</strong><p>'+esc(myAnswerEl?myAnswerEl.value.trim():'')+'</p></div><div class="right"><strong>Resposta esperada</strong><p>'+esc(expected)+'</p></div></div>');
 }
-
 function rateCard(r){
  if(!currentCard)return;
 
@@ -85,22 +92,27 @@ function rateCard(r){
   topicId:currentCard.topicId,
   type:'flashcard',
   rating:r==='easy'?'good':'practice',
-  question:currentCard.front,
-  answer:currentCard.back,
+  question:practiceMode==='front'?currentCard.front:currentCard.back,
+  answer:myAnswerEl?myAnswerEl.value.trim():'',
+  expectedAnswer:practiceMode==='front'?currentCard.back:currentCard.front,
+  practiceMode,
   reflection:'',
   date:new Date().toISOString()
  });
 
  currentCard=null;
  answerShown=false;
+ if(myAnswerEl)myAnswerEl.value='';
  save();
 }
 
 document.getElementById('nextCard').onclick=()=>{
  currentCard=null;
  answerShown=false;
+ if(myAnswerEl)myAnswerEl.value='';
  renderCard();
 };
+window.practiceNow=()=>{go('cards');currentCard=null;lastCardId=null;answerShown=false;if(myAnswerEl)myAnswerEl.value='';renderCard();const panel=document.getElementById('practicePanel');if(panel)panel.scrollIntoView({behavior:'smooth',block:'start'});};
 
 document.getElementById('cardEasy').onclick=()=>rateCard('easy');
 document.getElementById('cardHard').onclick=()=>rateCard('hard');
