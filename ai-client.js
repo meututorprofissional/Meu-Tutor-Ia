@@ -502,7 +502,7 @@
         for (let batchIndex = 0; batchIndex < batchSizes.length; batchIndex++) {
           const batchCount = batchSizes[batchIndex];
           const batchSource = source
-            ? 'Crie exatamente ' + batchCount + ' flashcards diferentes, em português brasileiro, baseados no material abaixo. Cada cartão deve ter pergunta objetiva e resposta correta, útil para revisão. Evite duplicatas.\\n\\nMATERIAL:\\n' + source
+            ? 'Crie exatamente ' + batchCount + ' flashcards diferentes, em português brasileiro, baseados no material abaixo. Cada cartão deve ter pergunta objetiva e resposta correta, útil para revisão. Evite duplicatas.\n\nMATERIAL:\n' + source
             : 'Crie exatamente ' + batchCount + ' flashcards educativos diferentes, em português brasileiro, sobre o assunto "' + topic + '". Cada cartão deve ter uma pergunta objetiva e uma resposta correta e explicativa. Evite duplicatas e não invente fatos específicos.';
           const response = await fetch(endpoint.replace(/\\/$/, '') + '/api/tutor', {
             method: 'POST',
