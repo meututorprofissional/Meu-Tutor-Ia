@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v26-fix-saved-card-checkboxes';
+const CACHE_VERSION = 'meu-tutor-ia-v27-fix-card-management-layout';
 
 const APP_FILES = [
   './',
