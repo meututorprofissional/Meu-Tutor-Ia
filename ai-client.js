@@ -1,3 +1,4 @@
+
 (() => {
   const endpoint = (window.MEU_TUTOR_AI_ENDPOINT || '').trim();
   const notice = document.getElementById('aiNotice');
@@ -68,7 +69,7 @@
       sections.push([
         'Perguntas para praticar',
         data.questions
-          .map((q, i) => `${i + 1}. ${q.question || q}`)
+          .map((q, i) => `${i + 1}. ${typeof q === 'object' ? (q.question || q.pergunta || q.front || '') : q}`)
           .join('\n')
       ]);
     }
@@ -94,7 +95,7 @@
     }
 
     if (task === 'activities') {
-      renderCards(data.flashcards || []);
+      renderCards(data.flashcards || data.cards || []);
     }
   }
 
@@ -161,17 +162,48 @@
     }
   }
 
+  // Aceita diferentes nomes de campos que a IA pode retornar.
+  function normalizeCard(card, index) {
+    if (!card || typeof card !== 'object') {
+      return null;
+    }
+
+    const front = String(
+      card.front ??
+      card.question ??
+      card.pergunta ??
+      card.frente ??
+      card.q ??
+      ''
+    ).trim();
+
+    const back = String(
+      card.back ??
+      card.answer ??
+      card.resposta ??
+      card.verso ??
+      card.a ??
+      ''
+    ).trim();
+
+    if (!front || !back) {
+      return null;
+    }
+
+    return {
+      front,
+      back,
+      checked: true,
+      key: index
+    };
+  }
+
   function renderCards(cards) {
     selectedCards = Array.isArray(cards)
       ? cards
           .slice(0, 10)
-          .map((c, i) => ({
-            front: String(c.front || c.question || ''),
-            back: String(c.back || c.answer || ''),
-            checked: true,
-            key: i
-          }))
-          .filter(c => c.front && c.back)
+          .map((card, index) => normalizeCard(card, index))
+          .filter(Boolean)
       : [];
 
     byId('aiReview').hidden = false;
@@ -194,7 +226,7 @@
             </div>
           `)
           .join('')
-      : '<p class="muted">Nenhum flashcard válido foi retornado. Tente novamente com um material mais claro.</p>';
+      : '<p class="muted">A IA não retornou cartões com pergunta e resposta preenchidas. Tente novamente com um material mais claro.</p>';
 
     byId('aiSaveCards').disabled = !selectedCards.length;
   }
@@ -227,12 +259,10 @@
 
     const now = new Date().toISOString();
 
-    // Procura o assunto existente, sem diferenciar maiúsculas de minúsculas.
     let topicRecord = db.topics.find(
       t => t.name.trim().toLowerCase() === topicName.toLowerCase()
     );
 
-    // Se o assunto não existir, cria um registro compatível com Meu estudo.
     if (!topicRecord) {
       topicRecord = {
         id: id(),
@@ -246,7 +276,6 @@
 
       db.topics.unshift(topicRecord);
     } else {
-      // Atualiza os dados do assunto sem apagar informações já existentes.
       topicRecord.source =
         byId('source').value.trim() || topicRecord.source;
 
@@ -257,7 +286,6 @@
       topicRecord.rating = byId('difficulty').value;
     }
 
-    // Salva os cartões no mesmo banco usado pelos flashcards manuais.
     chosen.forEach(c => {
       db.cards.unshift({
         id: id(),
@@ -271,10 +299,12 @@
       });
     });
 
-    // Usa a função original do aplicativo para persistir e atualizar as telas.
     save();
 
     byId('aiSaveStatus').textContent =
       `${chosen.length} flashcard(s) salvo(s) com sucesso!`;
+
+    selectedCards = [];
+    byId('aiSaveCards').disabled = true;
   });
 })();
