@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v23-desktop-mobile-profile-upload';
+const CACHE_VERSION = 'meu-tutor-ia-v24-weekly-progress-auto-update-check';
 
 const APP_FILES = [
   './',
