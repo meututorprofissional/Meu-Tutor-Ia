@@ -208,7 +208,7 @@ function render(){
 
  document.getElementById('studyList').innerHTML=db.topics.length?db.topics.map(t=>`<div class="item"><strong>${esc(t.name)}</strong><span class="muted">Atualizado: ${date(t.updated||t.created)}</span><p>${esc((t.notes||'Sem anotações registradas').slice(0,220))}</p><button class="secondary" onclick="editTopic('${t.id}')">Ver / editar</button> <button class="secondary" onclick="makeQuiz('${t.id}')">Criar teste</button></div>`).join(''):'<div class="empty">Nenhum assunto registrado ainda.</div>';
 
- document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item"><label style="display:flex;align-items:flex-start;gap:10px;margin:0"><input type="checkbox" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}><span><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></span></label></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
+ document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item saved-card-item"><input type="checkbox" aria-label="Selecionar cartão: ${esc(c.front)}" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}><div class="saved-card-content"><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></div></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
  document.querySelectorAll('.saved-card-select').forEach(box=>box.onchange=()=>{if(box.checked)selectedCardIds.add(box.dataset.cardId);else selectedCardIds.delete(box.dataset.cardId);updateCardSelectionUI()});
  updateCardSelectionUI();
 
@@ -274,3 +274,8 @@ document.getElementById('erase').onclick=()=>{
 };
 
 render();
+
+/* Alinhamento explícito da seleção individual dos cartões salvos. */
+#cardList .saved-card-item{display:flex;align-items:flex-start;gap:10px}
+#cardList .saved-card-content{flex:1;min-width:0}
+#cardList .saved-card-content>p{margin:6px 0}
