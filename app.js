@@ -274,8 +274,3 @@ document.getElementById('erase').onclick=()=>{
 };
 
 render();
-
-/* Alinhamento explícito da seleção individual dos cartões salvos. */
-#cardList .saved-card-item{display:flex;align-items:flex-start;gap:10px}
-#cardList .saved-card-content{flex:1;min-width:0}
-#cardList .saved-card-content>p{margin:6px 0}
