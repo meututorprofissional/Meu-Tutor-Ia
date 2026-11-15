@@ -107,6 +107,7 @@
     if (signOut) signOut.hidden = !session;
     if (sync) sync.hidden = !session;
     if (photoInput) photoInput.disabled = !session;
+    if (uploadPhotoButton) uploadPhotoButton.disabled = !session || !photoInput?.files?.length;
     if (removePhotoButton) removePhotoButton.hidden = !session || !(profile().avatarUserId === session.user.id && profile().avatarPath);
     if (!configured()) {
       setText('authStatus', 'A conta ainda precisa ser configurada pelo administrador. Seus estudos atuais continuam salvos neste navegador.');
@@ -229,29 +230,56 @@
     if (removePhotoButton) removePhotoButton.hidden = !path;
   }
 
-  if (photoInput) photoInput.addEventListener('change', async () => {
+  const uploadPhotoButton = el('uploadProfilePhoto');
+
+  if (photoInput) photoInput.addEventListener('change', () => {
     const file = photoInput.files?.[0];
-    if (!file) return;
-    if (!session || !client) {
-      setText('profilePhotoStatus', 'Entre com sua conta primeiro para salvar e sincronizar sua foto com segurança.');
-      photoInput.value = '';
+    if (!uploadPhotoButton) return;
+    uploadPhotoButton.disabled = !file || !session || !client;
+    if (!file) {
+      setText('profilePhotoStatus', '');
       return;
     }
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
       setText('profilePhotoStatus', 'Formato não aceito. Escolha JPG, PNG, WebP ou GIF.');
-      photoInput.value = '';
+      uploadPhotoButton.disabled = true;
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
       setText('profilePhotoStatus', 'A imagem precisa ter no máximo 5 MB.');
-      photoInput.value = '';
+      uploadPhotoButton.disabled = true;
+      return;
+    }
+    setText('profilePhotoStatus', session && client
+      ? 'Arquivo selecionado. Toque em “Enviar foto/GIF” para salvar no perfil.'
+      : 'Entre com sua conta primeiro para enviar e sincronizar sua foto.');
+  });
+
+  if (uploadPhotoButton) uploadPhotoButton.onclick = async () => {
+    const file = photoInput?.files?.[0];
+    if (!file) {
+      setText('profilePhotoStatus', 'Escolha uma foto ou GIF antes de enviar.');
+      return;
+    }
+    if (!session || !client) {
+      setText('profilePhotoStatus', 'Entre com sua conta primeiro para salvar e sincronizar sua foto com segurança.');
+      return;
+    }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setText('profilePhotoStatus', 'Formato não aceito. Escolha JPG, PNG, WebP ou GIF.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setText('profilePhotoStatus', 'A imagem precisa ter no máximo 5 MB.');
       return;
     }
     const extensions = {'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'};
     const path = session.user.id + '/avatar.' + extensions[file.type];
     setText('profilePhotoStatus', 'Enviando foto para sua conta…');
-    photoInput.disabled = true;
+    uploadPhotoButton.disabled = true;
+    if (photoInput) photoInput.disabled = true;
     try {
       const { error: uploadError } = await client.storage.from('profile-avatars').upload(path, file, {
         cacheControl: '3600', contentType: file.type, upsert: true
@@ -259,15 +287,16 @@
       if (uploadError) throw uploadError;
       await persistAvatarPath(path);
       setText('profilePhotoStatus', file.type === 'image/gif' ? 'GIF salvo e sincronizado! A animação será mantida.' : 'Foto salva e sincronizada com sua conta!');
+      if (photoInput) photoInput.value = '';
     } catch (error) {
       console.error('Meu Tutor IA: falha ao salvar foto de perfil', error);
       const detail = error?.message ? String(error.message).slice(0, 180) : 'Erro desconhecido';
       setText('profilePhotoStatus', 'Falha ao salvar a imagem: ' + detail);
     } finally {
-      photoInput.disabled = false;
-      photoInput.value = '';
+      if (photoInput) photoInput.disabled = !session;
+      uploadPhotoButton.disabled = true;
     }
-  });
+  };
 
   if (removePhotoButton) removePhotoButton.onclick = async () => {
     if (!session || !client) return;
