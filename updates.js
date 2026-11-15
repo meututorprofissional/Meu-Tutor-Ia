@@ -10,7 +10,7 @@
     waitingWorker = worker;
     if (notice) notice.style.display = 'block';
   }
-  navigator.serviceWorker.register('./sw.js').then(reg => {
+  navigator.serviceWorker.register('./sw.js', {updateViaCache: 'none'}).then(reg => {
     // Se a nova versão já estiver esperando, oferecer atualização.
     if (reg.waiting && navigator.serviceWorker.controller) showUpdate(reg.waiting);
 
