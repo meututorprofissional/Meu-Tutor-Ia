@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v13-quiz-automatico';
+const CACHE_VERSION = 'meu-tutor-ia-v14-ordem-flashcards';
 
 const APP_FILES = [
   './',
