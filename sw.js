@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v24-weekly-progress-auto-update-check';
+const CACHE_VERSION = 'meu-tutor-ia-v25-manage-saved-flashcards';
 
 const APP_FILES = [
   './',
