@@ -155,7 +155,20 @@
     client.auth.signInWithOAuth({provider, options:{redirectTo:location.origin + location.pathname}});
   }
   const homeProfileButton = el('homeProfileButton');
-  if (homeProfileButton) homeProfileButton.onclick = () => { if (typeof go === 'function') go('profile'); };
+  if (homeProfileButton) {
+    const openProfile = event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof go === 'function') go('profile');
+      const profileScreen = el('profile');
+      if (profileScreen) profileScreen.scrollIntoView({ behavior: 'auto', block: 'start' });
+    };
+    homeProfileButton.addEventListener('click', openProfile, true);
+    homeProfileButton.addEventListener('touchend', event => {
+      if (event.cancelable) event.preventDefault();
+      openProfile(event);
+    }, { passive: false });
+  }
   if (el('profileGoogle')) el('profileGoogle').onclick = () => startOAuth('google');
   if (el('profileFacebook')) el('profileFacebook').onclick = () => startOAuth('facebook');
   if (el('profileSignOut')) el('profileSignOut').onclick = async () => {
