@@ -27,9 +27,13 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 #fcAiPreview input[type="checkbox"]{width:auto;margin-right:8px}
 #fcAiPreview label{display:flex;align-items:center;gap:4px}
 /* Checkboxes dos cartões salvos: não herdar a largura dos campos de texto. */
-.saved-card-select{width:18px!important;min-width:18px;height:18px;flex:0 0 18px;margin:3px 0 0;padding:0;accent-color:#6366f1;cursor:pointer}
+.saved-card-select,#selectAllCards{appearance:auto;-webkit-appearance:checkbox;width:18px!important;min-width:18px;height:18px;flex:0 0 18px;margin:3px 0 0;padding:0;accent-color:#6366f1;cursor:pointer;outline-offset:3px}
 #cardList label{display:flex;align-items:flex-start;gap:10px;margin:0;cursor:pointer}
 #cardList label>span{flex:1;min-width:0}
+.card-manage-controls{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.card-manage-controls>label{display:inline-flex!important;align-items:center;justify-content:flex-start;gap:8px;flex:0 0 auto!important;width:auto;margin:0!important;white-space:nowrap}
+.card-manage-controls>button{flex:0 0 auto!important;white-space:normal;max-width:100%}
+@media(max-width:520px){.card-manage-controls{align-items:stretch}.card-manage-controls>label{width:100%;margin-bottom:4px}.card-manage-controls>button{flex:1 1 auto!important}}
 #practicePanel{scroll-margin-top:130px}
 .compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .compare>div{border-radius:12px;padding:10px 12px}
@@ -95,7 +99,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <div class="panel"><h2>Criar cartão à mão</h2><label for="cardTopic">Assunto relacionado</label><select id="cardTopic"></select>
 <label for="front">Frente — pergunta</label><textarea id="front" placeholder="Ex: Qual é a função do sistema respiratório?"></textarea>
 <label for="back">Verso — resposta</label><textarea id="back" placeholder="Escreva a resposta para conferir depois."></textarea><button id="saveCard">Salvar cartão</button><p id="cardMsg" class="muted" role="status"></p></div>
-<div class="panel"><h2>Cartões salvos</h2><p class="muted">Selecione os cartões que deseja remover ou use “Selecionar todos”. A exclusão só acontece depois da confirmação.</p><div class="row" style="align-items:center;flex-wrap:wrap;margin-bottom:12px"><label style="display:flex;align-items:center;gap:8px;margin:0"><input id="selectAllCards" type="checkbox"> Selecionar todos</label><button class="secondary" id="deleteSelectedCards" type="button" disabled>Excluir selecionados (0)</button><button class="secondary" id="deleteAllCards" type="button">Excluir todos</button></div><p id="cardManageMsg" class="muted" role="status" aria-live="polite"></p><div id="cardList"></div></div>
+<div class="panel"><h2>Cartões salvos</h2><p class="muted">Selecione os cartões que deseja remover ou use “Selecionar todos”. A exclusão só acontece depois da confirmação.</p><div class="card-manage-controls"><label for="selectAllCards"><input id="selectAllCards" type="checkbox"> Selecionar todos</label><button class="secondary" id="deleteSelectedCards" type="button" disabled>Excluir selecionados (0)</button><button class="secondary" id="deleteAllCards" type="button">Excluir todos</button></div><p id="cardManageMsg" class="muted" role="status" aria-live="polite"></p><div id="cardList"></div></div>
 </section>
 <section id="quiz" class="screen">
 <div class="panel"><h2>Teste de recordação</h2><p class="muted">Escreva uma pergunta sobre o que estudou, responda sem consultar e só depois confira suas anotações.</p>
