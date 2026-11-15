@@ -362,50 +362,96 @@
 
   // Geração de flashcards ligada ao painel estático da tela de Flashcards.
   function installFlashcardGenerator() {
-    const topicSelect=byId('fcAiTopic'), topicInput=byId('fcAiNewTopic'), countSelect=byId('fcAiCount');
+    const topicSelect=byId('fcAiTopic'), countSelect=byId('fcAiCount');
     const createButton=byId('fcAiCreate'), saveButton=byId('fcAiSave'), review=byId('fcAiReview');
     const preview=byId('fcAiPreview'), message=byId('fcAiStatus');
-    if(!topicSelect||!topicInput||!countSelect||!createButton||!saveButton||!review||!preview||!message)return;
+    if(!topicSelect||!countSelect||!createButton||!saveButton||!review||!preview||!message)return;
     let generated=[];
     function refreshTopicOptions(){
-      const old=topicSelect.value;topicSelect.innerHTML='<option value="">Selecione um assunto</option>';
+      const old=topicSelect.value;
+      topicSelect.innerHTML='<option value="">Selecione um assunto</option>';
       (db.topics||[]).forEach(topic=>{const option=document.createElement('option');option.value=topic.id;option.textContent=topic.name;topicSelect.appendChild(option)});
       if(old&&Array.from(topicSelect.options).some(option=>option.value===old))topicSelect.value=old;
     }
-    topicSelect.addEventListener('change',()=>{const t=(db.topics||[]).find(item=>item.id===topicSelect.value);if(t)topicInput.value=t.name});
     const extractCards=data=>data.flashcards||data.cards||data.activities?.flashcards||data.result?.flashcards||data.activities?.cards||[];
-    const normalize=card=>{if(!card||typeof card!=='object')return null;const front=String(card.front??card.question??card.pergunta??card.frente??card.q??'').trim();const back=String(card.back??card.answer??card.resposta??card.verso??card.a??'').trim();return front&&back?{front,back,checked:true}:null};
+    function normalize(card){
+      if(!card||typeof card!=='object')return null;
+      const front=String(card.front??card.question??card.pergunta??card.frente??card.q??'').trim();
+      const back=String(card.back??card.answer??card.resposta??card.verso??card.a??'').trim();
+      if(!front||!back)return null;
+      const raw=card.options??card.choices??card.alternatives??card.opcoes??card.alternativas;
+      const options=Array.isArray(raw)?raw.map(v=>String(typeof v==='object'?(v.text??v.option??v.value??''):v).trim()).filter(Boolean):[];
+      const answer=card.correctIndex??card.correct_index??card.correctAnswerIndex??card.correctAnswer??card.correct_answer??card.respostaCorreta??card.resposta_correta;
+      let correctIndex=typeof answer==='number'?answer:-1;
+      if(correctIndex<0&&typeof answer==='string'){
+        const num=Number(answer);
+        correctIndex=Number.isInteger(num)&&num>=0&&num<options.length?num:options.findIndex(v=>v.toLowerCase()===answer.trim().toLowerCase());
+      }
+      if(correctIndex<0)correctIndex=options.findIndex(v=>v.toLowerCase()===back.toLowerCase());
+      return {front,back,options,correctIndex,explanation:String(card.explanation??card.explicacao??card.justification??card.justificativa??back).trim()};
+    }
+    function prepareOptions(){
+      generated.forEach((card,index)=>{
+        if(card.options.length>=2&&card.correctIndex>=0&&card.correctIndex<card.options.length){
+          const answer=card.options[card.correctIndex];
+          card.options=card.options.slice().sort(()=>Math.random()-.5);
+          card.correctIndex=card.options.findIndex(v=>v===answer);
+          return;
+        }
+        const others=generated.filter((other,i)=>i!==index&&other.back.toLowerCase()!==card.back.toLowerCase()).map(other=>other.back);
+        card.options=[card.back,...others].filter((v,i,all)=>all.findIndex(x=>x.toLowerCase()===v.toLowerCase())===i).slice(0,4);
+        card.correctIndex=0;
+        const answer=card.back;
+        card.options=card.options.sort(()=>Math.random()-.5);
+        card.correctIndex=card.options.findIndex(v=>v===answer);
+      });
+    }
     function renderPreview(){
       preview.innerHTML='';
-      if(!generated.length){saveButton.disabled=true;return}
-      generated.forEach(card=>{const item=document.createElement('div');item.className='item';const label=document.createElement('label');const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.checked=card.checked;checkbox.style.width='auto';checkbox.addEventListener('change',()=>{card.checked=checkbox.checked;saveButton.disabled=!generated.some(entry=>entry.checked)});label.append(checkbox,document.createTextNode('Salvar este cartão'));const front=document.createElement('strong');front.textContent=card.front;const back=document.createElement('p');back.textContent=card.back;item.append(label,front,back);preview.appendChild(item)});
-      saveButton.disabled=!generated.some(card=>card.checked);
+      generated.forEach((card,index)=>{
+        const item=document.createElement('div');item.className='item';
+        const title=document.createElement('strong');title.textContent=(index+1)+'. '+card.front;
+        const answer=document.createElement('p');answer.textContent=card.back;
+        const meta=document.createElement('p');meta.className='muted';meta.textContent='Quiz de múltipla escolha · '+card.options.length+' alternativas';
+        item.append(title,answer,meta);preview.appendChild(item);
+      });
+      saveButton.disabled=!generated.length;
     }
     createButton.addEventListener('click',async()=>{
-      const existing=(db.topics||[]).find(item=>item.id===topicSelect.value),topic=topicInput.value.trim()||(existing||{}).name||'',count=Number(countSelect.value)||5;
-      if(!topic){message.textContent='Digite um assunto ou escolha um assunto cadastrado.';topicInput.focus();return}
+      const topicRecord=(db.topics||[]).find(item=>item.id===topicSelect.value);
+      const topic=topicRecord?.name||'',count=Number(countSelect.value)||5;
+      if(!topicRecord){message.textContent='Escolha um assunto cadastrado. Para criar um assunto novo, registre-o primeiro em Meu estudo.';topicSelect.focus();return}
       if(!endpoint){message.textContent='A conexão com a IA não está configurada. Confira ai-config.js.';return}
-      const source=(existing||{}).source||'';
-      generated=[];renderPreview();review.hidden=true;createButton.disabled=true;saveButton.disabled=true;message.textContent='A IA está preparando os cartões. Aguarde…';
+      generated=[];renderPreview();review.hidden=true;createButton.disabled=true;saveButton.disabled=true;
+      message.textContent='A IA está criando as perguntas e alternativas do quiz. Aguarde…';
       try{
         const batches=count===15?[10,5]:[count];
         for(const batchCount of batches){
-          const prompt=source?'Crie exatamente '+batchCount+' flashcards diferentes, em português brasileiro, baseados no material abaixo. Cada cartão deve ter pergunta objetiva e resposta correta. Evite duplicatas.\n\nMATERIAL:\n'+source:'Crie exatamente '+batchCount+' flashcards educativos diferentes, em português brasileiro, sobre o assunto "'+topic+'". Cada cartão deve ter uma pergunta objetiva e uma resposta correta e explicativa. Evite duplicatas.';
-          const response=await fetch(endpoint.replace(/\/$/,'')+'/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'activities',topic,source:prompt,notes:(existing||{}).notes||''})});
-          const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Falha na solicitação ('+response.status+').');
-          extractCards(data).map(normalize).filter(Boolean).forEach(card=>{if(generated.length<count&&!generated.some(old=>old.front.trim().toLocaleLowerCase()===card.front.trim().toLocaleLowerCase()))generated.push(card)});
+          const source=topicRecord.source
+            ?'Crie exatamente '+batchCount+' flashcards para um quiz de múltipla escolha em português brasileiro, usando o material abaixo. Cada cartão deve ter front (pergunta), back (resposta correta), options (4 alternativas incluindo a correta), correctIndex (índice de 0 a 3 da correta dentro de options) e explanation (explicação curta). As alternativas erradas devem ser plausíveis, mas incorretas segundo o material. Retorne os cartões em flashcards e evite duplicatas.\n\nMATERIAL:\n'+topicRecord.source
+            :'Crie exatamente '+batchCount+' flashcards para um quiz de múltipla escolha em português brasileiro sobre "'+topic+'". Cada cartão deve ter front (pergunta), back (resposta correta), options (4 alternativas incluindo a correta), correctIndex (índice de 0 a 3 da correta dentro de options) e explanation (explicação curta). As alternativas erradas devem ser plausíveis, mas incorretas. Retorne os cartões em flashcards e evite duplicatas.';
+          const response=await fetch(endpoint.replace(/\/$/,'')+'/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'activities',topic,source,notes:topicRecord.notes||''})});
+          const data=await response.json().catch(()=>({}));
+          if(!response.ok)throw new Error(data.error||'Falha na solicitação ('+response.status+').');
+          extractCards(data).map(normalize).filter(Boolean).forEach(card=>{if(generated.length<count&&!generated.some(old=>old.front.toLowerCase()===card.front.toLowerCase()))generated.push(card)});
         }
-        review.hidden=false;renderPreview();message.textContent=generated.length?'Pronto! Confira os cartões e desmarque os que não quiser salvar.':'A IA não retornou cartões válidos. Tente novamente.';
-      }catch(error){message.textContent='Não foi possível gerar os cartões: '+error.message}finally{createButton.disabled=false}
+        if(!generated.length)throw new Error('A IA não retornou perguntas válidas. Tente novamente.');
+        prepareOptions();review.hidden=false;renderPreview();
+        message.textContent='Quiz pronto! Salvando os cartões e iniciando a prática automaticamente…';
+        saveButton.click();
+      }catch(error){message.textContent='Não foi possível gerar o quiz: '+error.message}
+      finally{createButton.disabled=false}
     });
     saveButton.addEventListener('click',()=>{
-      const chosen=generated.filter(card=>card.checked);if(!chosen.length){message.textContent='Marque pelo menos um cartão para salvar.';return}
-      const existing=(db.topics||[]).find(item=>item.id===topicSelect.value),name=topicInput.value.trim()||(existing||{}).name||'';if(!name){message.textContent='Informe o assunto antes de salvar.';return}
-      const now=new Date().toISOString();let topic=(db.topics||[]).find(item=>item.name.trim().toLocaleLowerCase()===name.toLocaleLowerCase());
-      if(!topic){topic={id:id(),name,source:(existing||{}).source||'',notes:(existing||{}).notes||'',created:now,updated:now,rating:'ok'};db.topics.unshift(topic)}else topic.updated=now;
-      chosen.forEach(card=>db.cards.unshift({id:id(),topicId:topic.id,front:card.front,back:card.back,created:now,reviews:0,lastRating:null,nextReview:null}));
-      save();refreshTopicOptions();topicSelect.value=topic.id;topicInput.value=topic.name;generated=[];renderPreview();review.hidden=true;message.textContent=chosen.length+' cartão(ões) salvo(s)! Vamos praticar.';
-      if(typeof window.practiceNow==='function')window.practiceNow();
+      if(!generated.length)return;
+      const topicRecord=(db.topics||[]).find(item=>item.id===topicSelect.value);
+      if(!topicRecord){message.textContent='Escolha um assunto cadastrado antes de salvar.';return}
+      const now=new Date().toISOString();
+      const saved=generated.map(card=>({id:id(),topicId:topicRecord.id,front:card.front,back:card.back,options:card.options,correctIndex:card.correctIndex,explanation:card.explanation,created:now,reviews:0,lastRating:null,nextReview:null}));
+      db.cards.unshift(...saved);save();refreshTopicOptions();topicSelect.value=topicRecord.id;generated=[];renderPreview();review.hidden=true;
+      message.textContent=saved.length+' cartões salvos! Começando o quiz…';
+      if(typeof window.startFlashcardQuiz==='function')window.startFlashcardQuiz(saved.map(card=>card.id));
+      else if(typeof window.practiceNow==='function')window.practiceNow();
     });
     refreshTopicOptions();
   }
