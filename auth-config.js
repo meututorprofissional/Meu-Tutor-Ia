@@ -1,8 +1,7 @@
 /* Configuração pública do Supabase.
-   Preencha com Project URL e anon/public key do seu projeto Supabase.
-   NUNCA coloque service_role key, senha ou segredo neste arquivo.
-   Até configurar esses dois valores, login e sincronização ficam desativados. */
+   A URL e a publishable key são próprias para uso no navegador.
+   NUNCA coloque service_role key, senha ou segredo neste arquivo. */
 window.MEU_TUTOR_AUTH_CONFIG = {
-  supabaseUrl: "",
-  supabaseAnonKey: ""
+  supabaseUrl: "https://lwsrwiytxxatpmuyaljj.supabase.co",
+  supabaseAnonKey: "sb_publishable_XqN7Sujj4Mnz6wDWOxNbOA_yOpKUnN3"
 };
