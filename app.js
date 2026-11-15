@@ -4,6 +4,44 @@ const empty=()=>({topics:[],cards:[],attempts:[]});
 let db=load(), currentCard=null, answerShown=false, lastCardId=null, quizRun=null;
 
 function load(){try{return {...empty(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return empty()}}
+const selectedCardIds=new Set();
+function updateCardSelectionUI(){
+ const valid=new Set(db.cards.map(c=>c.id));
+ for(const cid of selectedCardIds)if(!valid.has(cid))selectedCardIds.delete(cid);
+ const selectAll=document.getElementById('selectAllCards');
+ const deleteSelected=document.getElementById('deleteSelectedCards');
+ const deleteAll=document.getElementById('deleteAllCards');
+ if(selectAll){selectAll.checked=db.cards.length>0&&selectedCardIds.size===db.cards.length;selectAll.indeterminate=selectedCardIds.size>0&&selectedCardIds.size<db.cards.length;selectAll.disabled=db.cards.length===0}
+ if(deleteSelected){deleteSelected.disabled=selectedCardIds.size===0;deleteSelected.textContent='Excluir selecionados ('+selectedCardIds.size+')'}
+ if(deleteAll)deleteAll.disabled=db.cards.length===0;
+}
+document.getElementById('selectAllCards').onchange=e=>{
+ selectedCardIds.clear();
+ if(e.target.checked)db.cards.forEach(c=>selectedCardIds.add(c.id));
+ render();
+};
+document.getElementById('deleteSelectedCards').onclick=()=>{
+ const ids=[...selectedCardIds];
+ if(!ids.length)return;
+ if(!confirm('Excluir '+ids.length+' cartão(ões) selecionado(s)? Essa ação não pode ser desfeita.'))return;
+ db.cards=db.cards.filter(c=>!selectedCardIds.has(c.id));
+ if(currentCard&&selectedCardIds.has(currentCard.id)){currentCard=null;lastCardId=null;answerShown=false}
+ if(quizRun&&quizRun.ids.some(cid=>selectedCardIds.has(cid)))quizRun=null;
+ selectedCardIds.clear();
+ document.getElementById('cardManageMsg').textContent=ids.length+' cartão(ões) excluído(s).';
+ save();
+};
+document.getElementById('deleteAllCards').onclick=()=>{
+ if(!db.cards.length)return;
+ if(!confirm('Tem certeza de que deseja excluir TODOS os '+db.cards.length+' cartões salvos? Essa ação não pode ser desfeita.'))return;
+ const removed=new Set(db.cards.map(c=>c.id));
+ db.cards=[];
+ if(currentCard&&removed.has(currentCard.id)){currentCard=null;lastCardId=null;answerShown=false}
+ quizRun=null;selectedCardIds.clear();
+ document.getElementById('cardManageMsg').textContent='Todos os cartões salvos foram excluídos.';
+ save();
+};
+
 function save(){localStorage.setItem(KEY,JSON.stringify(db));if(window.syncTutorData)window.syncTutorData(db);render()}
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
@@ -170,7 +208,9 @@ function render(){
 
  document.getElementById('studyList').innerHTML=db.topics.length?db.topics.map(t=>`<div class="item"><strong>${esc(t.name)}</strong><span class="muted">Atualizado: ${date(t.updated||t.created)}</span><p>${esc((t.notes||'Sem anotações registradas').slice(0,220))}</p><button class="secondary" onclick="editTopic('${t.id}')">Ver / editar</button> <button class="secondary" onclick="makeQuiz('${t.id}')">Criar teste</button></div>`).join(''):'<div class="empty">Nenhum assunto registrado ainda.</div>';
 
- document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item"><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
+ document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item"><label style="display:flex;align-items:flex-start;gap:10px;margin:0"><input type="checkbox" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}><span><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></span></label></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
+ document.querySelectorAll('.saved-card-select').forEach(box=>box.onchange=()=>{if(box.checked)selectedCardIds.add(box.dataset.cardId);else selectedCardIds.delete(box.dataset.cardId);updateCardSelectionUI()});
+ updateCardSelectionUI();
 
  document.getElementById('quizList').innerHTML=db.attempts.filter(a=>a.type==='quiz').slice(0,8).map(a=>`<div class="item"><strong>${esc(a.question)}</strong><p>${esc(a.answer)}</p><span class="pill">${a.rating==='good'?'Consegui explicar':a.rating==='partial'?'Lembrei parcialmente':'Preciso praticar'}</span> <span class="muted">${date(a.date)} · ${esc(topicName(a.topicId))}</span>${a.reflection?`<p><strong>Para revisar:</strong> ${esc(a.reflection)}</p>`:''}</div>`).join('')||'<div class="empty">Ainda não há testes registrados.</div>';
 
