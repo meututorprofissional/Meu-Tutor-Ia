@@ -26,6 +26,13 @@
 
     // Verifica se há atualização ao abrir a página. O navegador também faz verificações periódicas.
     reg.update().catch(() => {});
+    // Reconfere ao voltar ao app ou recuperar a conexão, sem interromper formulários.
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') reg.update().catch(() => {});
+    });
+    window.addEventListener('online', () => reg.update().catch(() => {}));
+    // Verificação periódica de novas versões enquanto o app está aberto.
+    window.setInterval(() => reg.update().catch(() => {}), 5 * 60 * 1000);
   }).catch(() => {});
 
   if (apply) apply.addEventListener('click', () => {
