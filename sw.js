@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v33-single-card-delete';
+const CACHE_VERSION = 'meu-tutor-ia-v34-checkbox-right';
 
 const APP_FILES = [
   './',
