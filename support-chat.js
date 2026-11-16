@@ -2,7 +2,7 @@
 const $=id=>document.getElementById(id);
 const ai=$('supportChatMessages'),human=$('humanChatMessages');
 if(!ai||!human)return;
-let aiHistory=[],humanHistory=[],transferred=false,busy=false;
+let aiHistory=[],humanHistory=[],transferred=false,busy=false,lastFailedQuestion=null;
 function typing(show){let el=$('supportTyping');if(show){if(!el){el=document.createElement('div');el.id='supportTyping';el.className='support-bubble support-typing';el.setAttribute('role','status');el.innerHTML='<strong>🤖 Assistente virtual</strong><span class="typing-dots" aria-label="Digitando"><i></i><i></i><i></i></span>';ai.appendChild(el);}ai.scrollTop=ai.scrollHeight;}else if(el)el.remove();}
 const guide=[
 'Você está ajudando um usuário do aplicativo Meu Tutor IA — Aprenda de verdade.',
@@ -18,12 +18,12 @@ function cleanAnswer(value){return String(value).replace(/\\*\\*([^*\\n]+)\\*\\*
 function bubble(parent,who,body,mine=false){const el=document.createElement('div');el.className='support-bubble'+(mine?' mine':'');const label=document.createElement('strong');label.textContent=who;const p=document.createElement('p');p.textContent=mine?body:cleanAnswer(body);el.append(label,p);parent.appendChild(el);parent.scrollTop=parent.scrollHeight;}
 function show(parent,items){parent.replaceChildren();items.forEach(m=>bubble(parent,m.who,m.body,m.mine));}
 function record(items,parent,who,body,mine=false){items.push({who,body,mine});show(parent,items);}
-function resetAI(){if(busy)return;typing(false);aiHistory=[];record(aiHistory,ai,'🤖 Assistente virtual','Olá! 💜 Sou a IA de atendimento em teste. Conte sua dúvida sobre o Meu Tutor IA. Não envie senhas nem dados pessoais.');$('supportChatInput').value='';$('supportChatStatus').textContent='IA experimental: respostas podem conter erros. Conversa não é salva.';}
+function resetAI(){if(busy)return;lastFailedQuestion=null;typing(false);aiHistory=[];record(aiHistory,ai,'🤖 Assistente virtual','Olá! 💜 Sou a IA de atendimento em teste. Conte sua dúvida sobre o Meu Tutor IA. Não envie senhas nem dados pessoais.');$('supportChatInput').value='';$('supportChatStatus').textContent='IA experimental: respostas podem conter erros. Conversa não é salva.';}
 function resetHuman(){humanHistory=[];transferred=false;record(humanHistory,human,'🎧 Sistema de atendimento','Esta é a página exclusiva do atendimento humano. Nenhum funcionário está conectado nesta demonstração.');$('humanChatInput').value='';$('humanChatStatus').textContent='Nenhum chamado ou mensagem real foi enviado.';}
 async function answer(question){
 const endpoint='https://meu-tutor-ia-suporte.charlesvictordacosta.workers.dev/api/support';
 const recent=aiHistory.slice(-7).map(m=>m.who+': '+m.body).join('\n').slice(-1400);
-const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),25000);
+const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),40000);
 try{
 const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,history:recent}),signal:controller.signal});
 const data=await response.json().catch(()=>({}));
@@ -33,16 +33,26 @@ if(!reply)throw new Error('A IA não retornou uma resposta.');
 return reply.slice(0,2200);
 }finally{clearTimeout(timeout);}
 }
-$('supportChatForm').addEventListener('submit',async e=>{
-e.preventDefault();if(busy)return;const v=$('supportChatInput').value.trim();if(!v)return;
+async function sendQuestion(v,isRetry=false){
+if(busy)return;
 if(v.length>600){$('supportChatStatus').textContent='Para este teste, use até 600 caracteres por mensagem.';return;}
-record(aiHistory,ai,'Você',v,true);$('supportChatInput').value='';busy=true;
+if(!isRetry){record(aiHistory,ai,'Você',v,true);$('supportChatInput').value='';}
+lastFailedQuestion=null;busy=true;
 const send=$('supportChatForm').querySelector('button[type=submit]');send.disabled=true;
-$('supportChatStatus').textContent='';typing(true);
-try{const reply=await answer(v);typing(false);record(aiHistory,ai,'🤖 Assistente virtual · IA em teste',reply);$('supportChatStatus').textContent='Resposta experimental. Confira as orientações antes de agir.';}
-catch(err){typing(false);record(aiHistory,ai,'⚠️ Sistema','Não consegui consultar a IA agora. Você pode tentar novamente ou enviar um relato à equipe.');$('supportChatStatus').textContent=err.name==='AbortError'?'A consulta demorou mais de 25 segundos.':String(err.message||'Erro na conexão.').slice(0,180);}
-finally{typing(false);busy=false;send.disabled=false;}
-});
+$('supportChatStatus').replaceChildren();typing(true);
+try{
+const reply=await answer(v);typing(false);record(aiHistory,ai,'🤖 Assistente virtual · IA em teste',reply);
+$('supportChatStatus').textContent='Resposta experimental. Confira as orientações antes de agir.';
+}catch(err){
+typing(false);lastFailedQuestion=v;
+const status=$('supportChatStatus');status.replaceChildren();
+const info=document.createElement('span');info.textContent=err.name==='AbortError'?'A IA demorou mais de 40 segundos. Sua mensagem foi preservada.':'Não foi possível consultar a IA. Sua mensagem foi preservada.';
+const retry=document.createElement('button');retry.type='button';retry.textContent='↻ Tentar novamente';retry.className='secondary';retry.style.marginLeft='8px';
+retry.addEventListener('click',()=>{if(!busy&&lastFailedQuestion)sendQuestion(lastFailedQuestion,true);});
+status.append(info,retry);
+}finally{typing(false);busy=false;send.disabled=false;}
+}
+$('supportChatForm').addEventListener('submit',e=>{e.preventDefault();const v=$('supportChatInput').value.trim();if(v)sendQuestion(v);});
 $('humanChatForm').addEventListener('submit',e=>{e.preventDefault();const v=$('humanChatInput').value.trim();if(!v)return;record(humanHistory,human,'Você',v,true);$('humanChatInput').value='';record(humanHistory,human,'🎧 Sistema de atendimento','Mensagem exibida apenas nesta prévia. Nenhum atendente foi notificado. Para atendimento real, use Enviar relato.');});
 $('supportTransfer').addEventListener('click',()=>{if(!transferred){humanHistory=[{who:'🎧 Sistema de atendimento',body:'Transferência simulada da IA. O histórico aparece abaixo apenas neste navegador. Nenhum atendente foi notificado.',mine:false},...aiHistory.map(m=>({who:'Histórico IA · '+m.who,body:m.body,mine:m.mine}))];transferred=true;}show(human,humanHistory);$('humanChatStatus').textContent='Histórico copiado nesta prévia; não foi enviado à equipe.';const btn=document.querySelector('[data-go="support-human"]');if(btn)btn.click();});
 $('supportChatClear').addEventListener('click',resetAI);$('humanChatClear').addEventListener('click',resetHuman);resetAI();resetHuman();
