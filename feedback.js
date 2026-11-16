@@ -33,6 +33,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind, subject, message, turnstileToken: token })
       });
+      if (response.status === 429) { status.textContent = 'Limite de envios atingido. Aguarde um pouco e tente novamente.'; return; }
       if (!response.ok) throw new Error('HTTP ' + response.status);
       localStorage.setItem(lastKey, String(Date.now()));
       form.reset();
