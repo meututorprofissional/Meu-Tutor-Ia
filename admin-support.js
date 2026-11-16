@@ -56,6 +56,11 @@
         status.textContent = 'Acesso restrito. Entre novamente com a conta administradora.';
         return;
       }
+      // RLS reads the JWT claims, which may be older than getUser() app_metadata.
+      // Refresh before privileged reads so the server receives current admin claims.
+      const { error: refreshError } = await client.auth.refreshSession();
+      if (refreshError) throw refreshError;
+      if (!(await checkAccess())) throw new Error('Permissão administrativa não confirmada.');
       const [conversations, tickets] = await Promise.all([
         client.from('support_conversations').select('id,user_id,status,created_at').order('created_at', {ascending:false}).limit(40),
         client.from('tutor_feedback').select('id,kind,subject,message,status,created_at,user_id').order('created_at', {ascending:false}).limit(40)
