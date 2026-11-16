@@ -74,7 +74,7 @@ function updateCardSelectionUI(){
  const deleteSelected=document.getElementById('deleteSelectedCards');
  const deleteAll=document.getElementById('deleteAllCards');
  if(selectAll){selectAll.checked=db.cards.length>0&&selectedCardIds.size===db.cards.length;selectAll.indeterminate=selectedCardIds.size>0&&selectedCardIds.size<db.cards.length;selectAll.disabled=db.cards.length===0}
- if(deleteSelected){deleteSelected.disabled=selectedCardIds.size===0;deleteSelected.textContent='Excluir selecionados ('+selectedCardIds.size+')'}
+ if(deleteSelected){deleteSelected.disabled=selectedCardIds.size===0;deleteSelected.textContent='Mover selecionados ('+selectedCardIds.size+')'}
  if(deleteAll)deleteAll.disabled=db.cards.length===0;
 }
 document.getElementById('selectAllCards').onchange=e=>{
