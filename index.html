@@ -173,6 +173,16 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <p class="muted">Acompanhe aqui os relatos vinculados à sua conta e as respostas da equipe do Meu Tutor IA.</p>
 <div class="row"><button type="button" class="secondary" data-go="feedback">💬 Enviar novo relato</button><button type="button" id="ticketsRefresh" class="secondary">↻ Atualizar</button></div>
 <p id="ticketsStatus" class="muted" role="status" aria-live="polite">Entre na sua conta para consultar seus chamados.</p>
+<div class="item" id="supportChat">
+<h3>🤖 Conversa com o suporte <span class="pill">Prévia</span></h3>
+<p class="muted">Conheça o futuro atendimento híbrido. Esta demonstração não envia mensagens nem abre chamados reais.</p>
+<div id="supportChatMessages" role="log" aria-live="polite" style="display:grid;gap:10px;max-height:360px;overflow-y:auto;padding:12px;background:#f8f9fc;border-radius:12px"></div>
+<div class="row" style="margin-top:12px"><button type="button" id="supportChatAI" class="secondary">🤖 Ajuda virtual</button><button type="button" id="supportChatHuman" class="secondary">🎧 Pedir atendente</button></div>
+<label for="supportChatInput">Sua mensagem (simulação)</label>
+<textarea id="supportChatInput" maxlength="1000" placeholder="Descreva sua dúvida ou problema..."></textarea>
+<div class="row"><button type="button" id="supportChatSend">Enviar na demonstração</button><button type="button" id="supportChatClear" class="secondary">Recomeçar</button></div>
+<p id="supportChatStatus" class="muted" role="status">Nenhuma mensagem desta prévia é enviada ou armazenada.</p>
+</div>
 <div id="ticketsList" aria-live="polite"></div>
 </div></section>
 <section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
@@ -187,5 +197,6 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=50"></script>
 <script src="tickets.js?v=1"></script>
+<script src="support-chat.js?v=1"></script>
 </body>
 </html>
