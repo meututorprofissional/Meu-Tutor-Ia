@@ -85,23 +85,68 @@ document.getElementById('selectAllCards').onchange=e=>{
 document.getElementById('deleteSelectedCards').onclick=()=>{
  const ids=[...selectedCardIds];
  if(!ids.length)return;
- if(!confirm('Excluir '+ids.length+' cartão(ões) selecionado(s)? Essa ação não pode ser desfeita.'))return;
- db.cards=db.cards.filter(c=>!selectedCardIds.has(c.id));
- if(currentCard&&selectedCardIds.has(currentCard.id)){currentCard=null;lastCardId=null;answerShown=false}
- if(quizRun&&quizRun.ids.some(cid=>selectedCardIds.has(cid)))quizRun=null;
- selectedCardIds.clear();
- document.getElementById('cardManageMsg').textContent=ids.length+' cartão(ões) excluído(s).';
- save();
+ if(!confirm('Mover '+ids.length+' cartão(ões) selecionado(s) para a lixeira? Você poderá restaurá-los neste navegador.'))return;
+ moveCardsToTrash(ids);
 };
 document.getElementById('deleteAllCards').onclick=()=>{
  if(!db.cards.length)return;
- if(!confirm('Tem certeza de que deseja excluir TODOS os '+db.cards.length+' cartões salvos? Essa ação não pode ser desfeita.'))return;
- const removed=new Set(db.cards.map(c=>c.id));
- db.cards=[];
- if(currentCard&&removed.has(currentCard.id)){currentCard=null;lastCardId=null;answerShown=false}
- quizRun=null;selectedCardIds.clear();
- document.getElementById('cardManageMsg').textContent='Todos os cartões salvos foram excluídos.';
+ if(!confirm('Mover TODOS os '+db.cards.length+' cartões salvos para a lixeira? Você poderá restaurá-los neste navegador.'))return;
+ moveCardsToTrash(db.cards.map(c=>c.id));
+};
+
+/* Lixeira local: cartões removidos ficam recuperáveis neste navegador. */
+const CARD_TRASH_KEY='meuTutorIA.cardTrash.v1';
+function readCardTrash(){try{const value=JSON.parse(localStorage.getItem(CARD_TRASH_KEY)||'[]');return Array.isArray(value)?value:[]}catch{return []}}
+let cardTrash=readCardTrash();
+function moveCardsToTrash(ids){
+ const chosen=new Set(ids),removed=db.cards.filter(c=>chosen.has(c.id));
+ if(!removed.length)return;
+ const nextTrash=[...removed.map(card=>({card,deletedAt:new Date().toISOString(),topicName:topicName(card.topicId)})),...cardTrash];
+ try{localStorage.setItem(CARD_TRASH_KEY,JSON.stringify(nextTrash))}
+ catch(error){document.getElementById('cardManageMsg').textContent='Não foi possível guardar os cartões na lixeira. Nenhum cartão foi excluído.';return}
+ cardTrash=nextTrash;
+ db.cards=db.cards.filter(c=>!chosen.has(c.id));
+ if(currentCard&&chosen.has(currentCard.id)){currentCard=null;lastCardId=null;answerShown=false}
+ if(quizRun&&quizRun.ids.some(cid=>chosen.has(cid)))quizRun=null;
+ selectedCardIds.clear();
+ document.getElementById('cardManageMsg').textContent=removed.length+' cartão(ões) movido(s) para a lixeira. Você pode restaurá-los.';
  save();
+}
+function renderCardTrash(){
+ const el=document.getElementById('cardTrashList'),count=document.getElementById('cardTrashCount');
+ if(!el||!count)return;
+ count.textContent=cardTrash.length+' cartão(ões) na lixeira deste navegador.';
+ el.replaceChildren();
+ if(!cardTrash.length){const p=document.createElement('p');p.className='muted';p.textContent='A lixeira está vazia. Ela não recupera exclusões feitas antes desta atualização.';el.append(p);return}
+ cardTrash.forEach(entry=>{
+  if(!entry||!entry.card)return;
+  const item=document.createElement('div');item.className='item';
+  const title=document.createElement('strong');title.textContent=entry.card.front||'Cartão sem pergunta';
+  const answer=document.createElement('p');answer.textContent=entry.card.back||'';
+  const meta=document.createElement('p');meta.className='muted';meta.textContent=(entry.topicName||'Assunto não identificado')+' · excluído em '+date(entry.deletedAt);
+  const restore=document.createElement('button');restore.className='secondary';restore.type='button';restore.textContent='↩ Restaurar';
+  restore.onclick=()=>{
+   if(db.cards.some(c=>c.id===entry.card.id)){document.getElementById('cardTrashMsg').textContent='Este cartão já existe nos cartões salvos.';return}
+   const nextTrash=cardTrash.filter(x=>x!==entry);
+   try{localStorage.setItem(CARD_TRASH_KEY,JSON.stringify(nextTrash))}
+   catch{document.getElementById('cardTrashMsg').textContent='Não foi possível atualizar a lixeira. Tente novamente.';return}
+   const oldCards=db.cards;
+   db.cards=[entry.card,...db.cards];
+   try{localStorage.setItem(KEY,JSON.stringify(db))}
+   catch{db.cards=oldCards;localStorage.setItem(CARD_TRASH_KEY,JSON.stringify(cardTrash));document.getElementById('cardTrashMsg').textContent='Não foi possível restaurar o cartão. Seus dados foram preservados.';return}
+   cardTrash=nextTrash;
+   if(window.syncTutorData)window.syncTutorData(db);
+   document.getElementById('cardTrashMsg').textContent='Cartão restaurado com sucesso.';
+   save();
+  };
+  item.append(title,answer,meta,restore);el.append(item);
+ });
+}
+document.getElementById('emptyCardTrash').onclick=()=>{
+ if(!cardTrash.length)return;
+ if(!confirm('Excluir DEFINITIVAMENTE os '+cardTrash.length+' cartões da lixeira deste navegador? Eles não poderão ser restaurados por esta função.'))return;
+ try{localStorage.removeItem(CARD_TRASH_KEY);cardTrash=[];document.getElementById('cardTrashMsg').textContent='Lixeira esvaziada definitivamente.';renderCardTrash()}
+ catch{document.getElementById('cardTrashMsg').textContent='Não foi possível esvaziar a lixeira.'}
 };
 
 function save(){localStorage.setItem(KEY,JSON.stringify(db));if(window.syncTutorData)window.syncTutorData(db);render()}
@@ -272,6 +317,7 @@ function render(){
  document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item saved-card-item"><div class="saved-card-content"><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></div><input type="checkbox" aria-label="Selecionar cartão: ${esc(c.front)}" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
  document.querySelectorAll('.saved-card-select').forEach(box=>box.onchange=()=>{if(box.checked)selectedCardIds.add(box.dataset.cardId);else selectedCardIds.delete(box.dataset.cardId);updateCardSelectionUI()});
  updateCardSelectionUI();
+ renderCardTrash();
 
  document.getElementById('quizList').innerHTML=db.attempts.filter(a=>a.type==='quiz').slice(0,8).map(a=>`<div class="item"><strong>${esc(a.question)}</strong><p>${esc(a.answer)}</p><span class="pill">${a.rating==='good'?'Consegui explicar':a.rating==='partial'?'Lembrei parcialmente':'Preciso praticar'}</span> <span class="muted">${date(a.date)} · ${esc(topicName(a.topicId))}</span>${a.reflection?`<p><strong>Para revisar:</strong> ${esc(a.reflection)}</p>`:''}</div>`).join('')||'<div class="empty">Ainda não há testes registrados.</div>';
 
