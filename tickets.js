@@ -6,11 +6,10 @@
   if (!status || !list || !refresh) return;
   let client;
   try {
+    // Same default Supabase auth storage as the existing profile module.
     if (window.supabase && config.supabaseUrl && config.supabaseAnonKey)
-      client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey, { auth: { storageKey: 'meu-tutor-ia-auth' } });
+      client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
   } catch (error) { console.warn('Central de atendimento:', error); }
-  // Use the same default Supabase auth storage as the profile module.
-  if (client) client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
   const line = (parent, tag, value, className) => {
     const el = document.createElement(tag);
     el.textContent = value;
