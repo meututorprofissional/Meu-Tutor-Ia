@@ -47,7 +47,13 @@
     })();
     return checking;
   }
+  let loading = false;
   async function load() {
+    if (loading) return;
+    loading = true;
+    const drafts = new Map();
+    list.querySelectorAll('textarea[data-conversation-id]').forEach(el => drafts.set(el.dataset.conversationId, el.value));
+    const previousScroll = window.scrollY;
     list.replaceChildren();
     refresh.disabled = true;
     status.textContent = 'Verificando acesso administrativo…';
@@ -89,6 +95,8 @@
           replyForm.style.marginTop = '12px';
           const replyLabel = add(replyForm, 'label', 'Responder ao usuário');
           const replyInput = document.createElement('textarea');
+          replyInput.dataset.conversationId = conversation.id;
+          replyInput.value = drafts.get(conversation.id) || '';
           replyInput.maxLength = 1000;
           replyInput.required = true;
           replyInput.rows = 3;
@@ -135,7 +143,7 @@
     } catch (error) {
       console.error('Painel administrativo:',error);
       status.textContent = 'Não foi possível carregar os atendimentos. Verifique sua sessão e tente novamente.';
-    } finally { refresh.disabled = false; }
+    } finally { refresh.disabled = false; loading = false; if (drafts.size) window.scrollTo(0,previousScroll); }
   }
   refresh.addEventListener('click',load);
   document.addEventListener('click',e => {
@@ -147,4 +155,8 @@
   });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) checkAccess(); });
   checkAccess();
+  // Atualiza apenas com a aba visível e o painel aberto; preserva rascunhos.
+  setInterval(() => {
+    if (!document.hidden && document.getElementById('admin-support')?.classList.contains('active') && !list.querySelector('textarea:focus')) load();
+  }, 10000);
 })();
