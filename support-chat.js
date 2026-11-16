@@ -1,48 +1,11 @@
 (() => {
-  const log = document.getElementById('supportChatMessages');
-  const input = document.getElementById('supportChatInput');
-  const status = document.getElementById('supportChatStatus');
-  if (!log || !input || !status) return;
-  let humanRequested = false;
-  function message(who, body) {
-    const el = document.createElement('div');
-    el.className = 'item';
-    el.style.margin = '0';
-    el.style.background = who === 'Você' ? '#eef2ff' : '#fff';
-    const label = document.createElement('strong');
-    label.textContent = who;
-    const text = document.createElement('p');
-    text.textContent = body;
-    text.style.whiteSpace = 'pre-wrap';
-    el.append(label, text);
-    log.appendChild(el);
-    log.scrollTop = log.scrollHeight;
-  }
-  function reset() {
-    humanRequested = false;
-    log.replaceChildren();
-    input.value = '';
-    message('🤖 Assistente virtual — demonstração', 'Olá! 💜 Posso orientar sobre estudos, flashcards, testes e uso do aplicativo. Você também pode pedir atendimento humano a qualquer momento.');
-    status.textContent = 'Prévia local: sem IA conectada, sem atendente online e sem envio de chamados.';
-  }
-  document.getElementById('supportChatAI').addEventListener('click', () => {
-    message('🤖 Assistente virtual — demonstração', 'Escolha um assunto e descreva o problema. Nesta prévia ainda não há respostas geradas por IA.');
-  });
-  document.getElementById('supportChatHuman').addEventListener('click', () => {
-    humanRequested = true;
-    message('🎧 Atendimento humano — demonstração', 'Você escolheu falar com uma pessoa. Na versão futura, o pedido será encaminhado à equipe e o histórico da conversa será mantido. Nenhum pedido real foi criado agora.');
-    status.textContent = 'Atendimento humano simulado; não há ninguém conectado a esta conversa.';
-  });
-  document.getElementById('supportChatSend').addEventListener('click', () => {
-    const value = input.value.trim();
-    if (!value) { status.textContent = 'Digite uma mensagem para testar.'; return; }
-    message('Você', value);
-    input.value = '';
-    message('🤖 Assistente virtual — demonstração', humanRequested
-      ? 'Sua mensagem apareceu nesta prévia. Quando o atendimento real estiver pronto, ela poderá ser encaminhada ao atendente. Por enquanto, use “Enviar novo relato” para contatar o suporte.'
-      : 'Mensagem recebida apenas nesta demonstração. Ainda não analiso problemas de verdade aqui. Para enviar um relato real, use “Enviar novo relato”.');
-    status.textContent = 'Mensagem exibida somente nesta página; não foi enviada.';
-  });
-  document.getElementById('supportChatClear').addEventListener('click', reset);
-  reset();
+const log=document.getElementById('supportChatMessages'),input=document.getElementById('supportChatInput'),status=document.getElementById('supportChatStatus'),mode=document.getElementById('supportChatMode'),form=document.getElementById('supportChatForm');
+if(!log||!input||!status||!form)return;
+let human=false;
+function add(who,body,mine=false){const el=document.createElement('div');el.className='support-bubble'+(mine?' mine':'');const title=document.createElement('strong');title.textContent=who;const p=document.createElement('p');p.textContent=body;el.append(title,p);log.appendChild(el);log.scrollTop=log.scrollHeight;}
+function reset(){human=false;mode.textContent='Prévia do atendimento';log.replaceChildren();input.value='';add('🤖 Assistente virtual','Olá! 💜 Sou a assistente virtual do Meu Tutor IA. Como posso ajudar? Você pode solicitar um atendente humano quando quiser.');status.textContent='Prévia local: não envia mensagens ou chamados.';}
+document.getElementById('supportChatAI').addEventListener('click',()=>{human=false;mode.textContent='Ajuda virtual • demonstração';add('🤖 Assistente virtual','Conte o que aconteceu. Esta é uma prévia visual: a IA ainda não está conectada a este chat.');input.focus();});
+document.getElementById('supportChatHuman').addEventListener('click',()=>{human=true;mode.textContent='Atendente solicitado • simulação';add('🎧 Sistema de atendimento','Você escolheu atendimento humano. Na versão completa, a equipe receberá a conversa. Nenhum pedido real foi enviado agora.');status.textContent='Solicitação simulada; nenhum atendente foi notificado.';input.focus();});
+form.addEventListener('submit',event=>{event.preventDefault();const value=input.value.trim();if(!value)return;add('Você',value,true);input.value='';add('🤖 Assistente virtual',human?'Mensagem exibida na demonstração. Para contatar a equipe de verdade, use Enviar relato.':'Esta conversa ainda é uma prévia visual, sem IA conectada. Para obter suporte real, use Enviar relato.');status.textContent='Mensagem apenas de teste; não foi enviada.';});
+document.getElementById('supportChatClear').addEventListener('click',reset);reset();
 })();
