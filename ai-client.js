@@ -136,7 +136,7 @@
 
     el.innerHTML = sections
       .map(([title, body]) =>
-        `<h3>${escapeHtml(title)}</h3><p style="white-space:pre-wrap">${escapeHtml(body)}</p>`
+        `<h3>${escapeHtml(title)}</h3><p style="white-space:pre-wrap">${escapeHtml(readable(body))}</p>`
       )
       .join('') || '<p>A IA não retornou conteúdo para mostrar.</p>';
 
