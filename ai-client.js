@@ -469,9 +469,8 @@
         checkbox.addEventListener('change',()=>{card.selected=checkbox.checked;updateSaveButton()});
         const title=document.createElement('strong');title.textContent=(index+1)+'. '+card.front;
         label.append(checkbox,title);
-        const answer=document.createElement('p');answer.textContent=card.back;
         const meta=document.createElement('p');meta.className='muted';meta.textContent='Quiz de múltipla escolha · '+card.options.length+' alternativas';
-        item.append(label,answer,meta);preview.appendChild(item);
+        item.append(label,meta);preview.appendChild(item);
       });
       updateSaveButton();
     }
