@@ -465,7 +465,18 @@
         }
         if(!generated.length)throw new Error('A IA não retornou perguntas válidas. Tente novamente.');
         prepareOptions();
-        if(!generated.length)throw new Error('A IA retornou alternativas inválidas. Nenhum cartão foi salvo. Tente novamente ou use outro assunto.');
+        if(!generated.length){
+          // Uma única tentativa adicional com instruções explícitas.
+          // Não relaxar as regras: respostas erradas não podem virar quizzes.
+          message.textContent='As alternativas vieram inválidas. Tentando corrigir com a IA uma vez…';
+          const retryPrompt='Gere '+count+' questões inéditas de múltipla escolha em português brasileiro sobre '+topic+'. Responda exclusivamente com JSON: {"flashcards":[{"front":"pergunta","back":"resposta correta exatamente igual a uma opção","options":["opção 1","opção 2","opção 3","opção 4"],"correctIndex":0,"explanation":"explicação"}]}. Cada questão deve ter quatro alternativas não vazias, distintas, plausíveis e da mesma categoria, com a resposta back reproduzida EXATAMENTE em apenas uma das quatro options. Não use respostas de outras questões como distratores. Baseie as respostas no material a seguir, quando disponível. MATERIAL: '+(topicRecord.source||'Assunto: '+topic);
+          const retryResponse=await fetch(endpoint.replace(/\/$/,'')+'/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'activities',topic,source:retryPrompt,notes:topicRecord.notes||''})});
+          const retryData=await retryResponse.json().catch(()=>({}));
+          if(!retryResponse.ok)throw new Error(retryData.error||'Falha na nova tentativa ('+retryResponse.status+').');
+          generated=extractCards(retryData).map(normalize).filter(Boolean).slice(0,count);
+          prepareOptions();
+        }
+        if(!generated.length)throw new Error('A IA não conseguiu criar quatro alternativas válidas, mesmo após nova tentativa. Nenhum cartão foi salvo.');
         review.hidden=false;renderPreview();
         message.textContent=generated.length<count?'A IA gerou '+generated.length+' de '+count+' perguntas que passaram na validação. Confira antes de salvar…':'Quiz pronto! Confira as perguntas e toque em Salvar para começar.';
         // Aguardar confirmação do estudante antes de salvar novos cartões.
