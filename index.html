@@ -49,7 +49,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 #cardList .saved-card-content>p{margin:6px 0}
 </style></head>
 <body>
-<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button></nav></header>
+<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button></nav></header>
 <div id="updateNotice" role="status" style="display:none;max-width:1050px;margin:12px auto 0;padding:12px 16px;background:#fff8df;border:1px solid #efdf9f;border-radius:12px">
   <strong>Atualização disponível!</strong> Uma nova versão do Meu Tutor IA está pronta.
   <button id="applyUpdate" style="margin-left:8px">Atualizar agora</button>
@@ -148,14 +148,32 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <p id="syncStatus" class="muted" role="status" aria-live="polite"></p></div>
 <div class="panel"><h2>☁️ Seus estudos e privacidade</h2><p class="muted">Quando a conta estiver ativada, seus assuntos, flashcards e tentativas poderão ser sincronizados entre dispositivos. Até lá, eles continuam neste navegador. Não apague os dados locais nem desinstale o app antes de configurar e testar a migração.</p><div class="notice">Importante: não compartilhe sua senha ou códigos de acesso. O Meu Tutor IA não pede sua senha do Google ou Facebook diretamente.</div></div>
 </section>
+<section id="feedback" class="screen">
+<div class="panel">
+<h2>💬 Ajuda e feedback</h2>
+<p class="muted">Encontrou um problema no Meu Tutor IA ou tem uma ideia? Envie um relato para ajudar a melhorar o aplicativo.</p>
+<form id="feedbackForm">
+<label for="feedbackKind">Tipo de relato</label>
+<select id="feedbackKind" required><option value="erro">🐞 Reportar erro</option><option value="melhoria">💡 Sugerir melhoria</option><option value="comentario">💬 Enviar comentário</option></select>
+<label for="feedbackSubject">Assunto</label>
+<input id="feedbackSubject" maxlength="120" minlength="4" required placeholder="Ex.: O quiz não abriu">
+<label for="feedbackMessage">Descreva o que aconteceu ou sua sugestão</label>
+<textarea id="feedbackMessage" minlength="10" maxlength="2000" required placeholder="Conte o que aconteceu, em qual tela e o que você esperava."></textarea>
+<p class="muted">Não envie senhas, chaves de API, dados bancários ou informações pessoais sensíveis. Sua mensagem será armazenada para análise do responsável pelo aplicativo.</p>
+<button id="feedbackSubmit" type="submit">Enviar relato</button>
+<p id="feedbackStatus" class="muted" role="status" aria-live="polite"></p>
+</form>
+</div>
+</section>
 <section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
-<script src="app.js?v=47"></script>
+<script src="app.js?v=48"></script>
 <script src="updates.js"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profile.js"></script>
+<script src="feedback.js?v=48"></script>
 </body>
 </html>
