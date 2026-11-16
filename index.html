@@ -55,7 +55,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 .support-typing{min-width:135px}.typing-dots{display:flex;align-items:center;gap:5px;height:22px}.typing-dots i{display:block;width:7px;height:7px;border-radius:50%;background:#7567cf;animation:support-dot 1.15s infinite ease-in-out}.typing-dots i:nth-child(2){animation-delay:.16s}.typing-dots i:nth-child(3){animation-delay:.32s}@keyframes support-dot{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}@media(prefers-reduced-motion:reduce){.typing-dots i{animation:none;opacity:.7}}
 </style></head>
 <body>
-<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button></nav></header>
+<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
 <div id="updateNotice" role="status" style="display:none;max-width:1050px;margin:12px auto 0;padding:12px 16px;background:#fff8df;border:1px solid #efdf9f;border-radius:12px">
   <strong>Atualização disponível!</strong> Uma nova versão do Meu Tutor IA está pronta.
   <button id="applyUpdate" style="margin-left:8px">Atualizar agora</button>
@@ -203,7 +203,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <p id="ticketsStatus" class="muted" role="status" aria-live="polite">Entre na sua conta para consultar seus chamados.</p>
 <div id="ticketsList" aria-live="polite"></div>
 </div></section>
-<section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
+<section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas e relatos enviados. Nesta primeira etapa, o painel é somente leitura.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
 <script src="app.js?v=49"></script>
 <script src="updates.js"></script>
@@ -216,6 +216,6 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <script src="feedback.js?v=50"></script>
 <script src="tickets.js?v=1"></script>
 <script src="support-chat.js?v=11"></script>
-<script src="human-support.js?v=1"></script>
+<script src="human-support.js?v=1"></script>\n<script src="admin-support.js?v=1"></script>
 </body>
 </html>
