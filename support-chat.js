@@ -19,17 +19,16 @@ function record(items,parent,who,body,mine=false){items.push({who,body,mine});sh
 function resetAI(){if(busy)return;aiHistory=[];record(aiHistory,ai,'🤖 Assistente virtual','Olá! 💜 Sou a IA de atendimento em teste. Conte sua dúvida sobre o Meu Tutor IA. Não envie senhas nem dados pessoais.');$('supportChatInput').value='';$('supportChatStatus').textContent='IA experimental: respostas podem conter erros. Conversa não é salva.';}
 function resetHuman(){humanHistory=[];transferred=false;record(humanHistory,human,'🎧 Sistema de atendimento','Esta é a página exclusiva do atendimento humano. Nenhum funcionário está conectado nesta demonstração.');$('humanChatInput').value='';$('humanChatStatus').textContent='Nenhum chamado ou mensagem real foi enviado.';}
 async function answer(question){
-const endpoint=String(window.MEU_TUTOR_AI_ENDPOINT||'').replace(/\/$/,'');
-if(!endpoint)throw new Error('Servidor da IA não configurado.');
-const recent=aiHistory.slice(-7).map(m=>m.who+': '+m.body).join('\n').slice(-2200);
+const endpoint='https://meu-tutor-ia-suporte.charlesvictordacosta.workers.dev/api/support';
+const recent=aiHistory.slice(-7).map(m=>m.who+': '+m.body).join('\n').slice(-1400);
 const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),25000);
 try{
-const response=await fetch(endpoint+'/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'teach',topic:'Orientação de suporte do aplicativo Meu Tutor IA',source:guide,notes:'Conversa recente:\n'+recent+'\n\nResponda à última dúvida do usuário: '+question}),signal:controller.signal});
+const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,history:recent}),signal:controller.signal});
 const data=await response.json().catch(()=>({}));
 if(!response.ok)throw new Error(String(data.error||'Servidor indisponível.'));
-const reply=String(data.explanation||'').trim();
+const reply=String(data.answer||'').trim();
 if(!reply)throw new Error('A IA não retornou uma resposta.');
-return reply.slice(0,1800);
+return reply.slice(0,1600);
 }finally{clearTimeout(timeout);}
 }
 $('supportChatForm').addEventListener('submit',async e=>{
