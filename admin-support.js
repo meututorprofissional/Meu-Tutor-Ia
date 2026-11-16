@@ -136,6 +136,10 @@
   document.addEventListener('click',e => {
     if (e.target instanceof Element && e.target.closest('[data-screen="admin-support"],[data-go="admin-support"]')) load();
   });
-  client.auth.onAuthStateChange((event) => {\n    if (event === 'SIGNED_OUT') { activeUserId = null; setAccess(false); }\n    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') setTimeout(checkAccess, 0);\n  });\n  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkAccess(); });
+  client.auth.onAuthStateChange((event) => {
+    if (event === 'SIGNED_OUT') { activeUserId = null; setAccess(false); }
+    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') setTimeout(checkAccess, 0);
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkAccess(); });
   checkAccess();
 })();
