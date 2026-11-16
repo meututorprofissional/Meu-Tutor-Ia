@@ -14,22 +14,38 @@
     parent.appendChild(el);
     return el;
   };
+  let activeUserId = null;
+  let checking = null;
+  function setAccess(allowed) {
+    authorized = allowed;
+    nav.style.display = allowed ? '' : 'none';
+  }
   async function checkAccess() {
-    try {
-      const { data, error } = await client.auth.getUser();
-      if (error) throw error;
-      const isAdmin = data.user?.app_metadata?.support_admin === true;
-      authorized = Boolean(isAdmin);
-      nav.style.display = isAdmin ? '' : 'none';
-      if (!isAdmin && document.getElementById('admin-support')?.classList.contains('active')) {
-        document.querySelector('[data-screen="home"]')?.click();
-      }
-      return authorized;
-    } catch (error) {
-      authorized = false;
-      // Erros temporários de rede/sessão não devem revogar visualmente a permissão.
-      return authorized;
-    }
+    if (checking) return checking;
+    checking = (async () => {
+      try {
+        const { data: sessionData } = await client.auth.getSession();
+        const currentId = sessionData.session?.user?.id || null;
+        if (!currentId) {
+          activeUserId = null;
+          setAccess(false);
+          return false;
+        }
+        if (activeUserId && currentId !== activeUserId) setAccess(false);
+        activeUserId = currentId;
+        const { data, error } = await client.auth.getUser();
+        if (error) throw error;
+        if (data.user?.id !== currentId) throw new Error('Sessão alterada durante a consulta');
+        const isAdmin = data.user.app_metadata?.support_admin === true;
+        setAccess(isAdmin);
+        return isAdmin;
+      } catch (error) {
+        // Erro transitório não é prova de perda de permissão.
+        // O backend e as políticas RLS continuam responsáveis pela autorização.
+        return authorized;
+      } finally { checking = null; }
+    })();
+    return checking;
   }
   async function load() {
     list.replaceChildren();
@@ -40,7 +56,7 @@
         status.textContent = 'Acesso restrito. Entre novamente com a conta administradora.';
         return;
       }
-      // Renova o JWT: a permissão administrativa pode ter sido concedida após o login.\n      const { error: refreshError } = await client.auth.refreshSession();\n      if (refreshError) throw refreshError;\n      const [conversations, tickets] = await Promise.all([
+      const [conversations, tickets] = await Promise.all([
         client.from('support_conversations').select('id,user_id,status,created_at').order('created_at', {ascending:false}).limit(40),
         client.from('tutor_feedback').select('id,kind,subject,message,status,created_at,user_id').order('created_at', {ascending:false}).limit(40)
       ]);
@@ -120,6 +136,6 @@
   document.addEventListener('click',e => {
     if (e.target instanceof Element && e.target.closest('[data-screen="admin-support"],[data-go="admin-support"]')) load();
   });
-  client.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') setTimeout(checkAccess,0); });
+  client.auth.onAuthStateChange((event) => {\n    if (event === 'SIGNED_OUT') { activeUserId = null; setAccess(false); }\n    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') setTimeout(checkAccess, 0);\n  });\n  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkAccess(); });
   checkAccess();
 })();
