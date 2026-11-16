@@ -42,7 +42,8 @@
         const article = document.createElement('article');
         article.className = 'item';
         line(article, 'strong', ticket.subject);
-        line(article, 'p', 'Tipo: ' + ticket.kind + ' · Situação: ' + ticket.status + ' · ' + new Date(ticket.created_at).toLocaleDateString('pt-BR'), 'muted');
+        line(article,'small','Protocolo: '+String(ticket.id).slice(0,8).toUpperCase(),'muted');
+        line(article, 'p', 'Tipo: ' + ticket.kind + ' · Situação: ' + ticket.status + ' · ' + new Date(ticket.created_at).toLocaleString('pt-BR'), 'muted');
         line(article, 'p', ticket.message);
         const replies = (ticket.tutor_feedback_replies || []).slice().sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
         replies.forEach(reply => {
