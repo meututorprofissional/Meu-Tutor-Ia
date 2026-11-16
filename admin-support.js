@@ -102,6 +102,11 @@
           replyInput.value = drafts.get(conversation.id) || '';
           replyInput.maxLength = 1000;
           replyInput.required = true;
+          const typingLine=add(card,'p','','muted');
+          typingLine.dataset.typingConversation=conversation.id;
+          let typingTimer=null,typingNow=false;
+          async function sendTyping(on){try{const {data}=await client.auth.getUser();if(!data.user)return;await client.from('support_typing').upsert({conversation_id:conversation.id,user_id:data.user.id,is_admin:true,expires_at:new Date(Date.now()+(on?6500:0)).toISOString()});}catch(_){}}
+          replyInput.addEventListener('input',()=>{if(!typingNow){typingNow=true;sendTyping(true);}clearTimeout(typingTimer);typingTimer=setTimeout(()=>{typingNow=false;sendTyping(false);},3500);});
           replyInput.rows = 3;
           replyInput.placeholder = 'Escreva sua resposta como equipe de suporte...';
           replyLabel.appendChild(replyInput);
@@ -120,7 +125,7 @@
               if (authError || authData.user?.app_metadata?.support_admin !== true) throw new Error('Acesso administrativo não confirmado.');
               const { error: insertError } = await client.from('support_messages').insert({ conversation_id: conversation.id, sender_id: authData.user.id, body });
               if (insertError) throw insertError;
-              replyInput.value = '';
+              replyInput.value = '';typingNow=false;clearTimeout(typingTimer);sendTyping(false);
               replyStatus.textContent = 'Resposta registrada! O usuário poderá vê-la ao abrir o atendimento.';
               const line = add(card, 'div', '', 'item');
               add(line, 'strong', 'Equipe');
@@ -158,6 +163,12 @@
   });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) checkAccess(); });
   checkAccess();
+  setInterval(async()=>{
+    if(document.hidden||!document.getElementById('admin-support')?.classList.contains('active')||!authorized)return;
+    const indicators=[...list.querySelectorAll('[data-typing-conversation]')];
+    if(!indicators.length)return;
+    try{const {data,error}=await client.from('support_typing').select('conversation_id,is_admin,expires_at').eq('is_admin',false).gt('expires_at',new Date().toISOString());if(error)return;const ids=new Set((data||[]).map(x=>x.conversation_id));indicators.forEach(el=>el.textContent=ids.has(el.dataset.typingConversation)?'Usuário está digitando…':'');}catch(_){}
+  },2000);
   // Atualiza apenas com a aba visível e o painel aberto; preserva rascunhos.
   setInterval(() => {
     if (document.hidden || !document.getElementById('admin-support')?.classList.contains('active') || loading || list.querySelector('textarea:focus')) return;
