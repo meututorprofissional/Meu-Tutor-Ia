@@ -417,6 +417,15 @@
       }
       return true;
     }
+    function apiFailure(response,data){
+      const raw=String(data?.error||data?.message||'').trim();
+      const status=response.status;
+      if(status===401||status===403)return 'O servidor de IA recusou a autenticação (HTTP '+status+'). Verifique a chave e as permissões configuradas no Cloudflare Worker.';
+      if(status===402)return 'A conta do provedor de IA pode estar sem créditos ou com cobrança pendente (HTTP 402). Confira o painel do provedor.';
+      if(status===429)return 'O provedor de IA atingiu um limite de solicitações (HTTP 429). Aguarde antes de tentar novamente.';
+      if(status>=500)return 'O servidor de IA apresentou falha (HTTP '+status+'). '+(raw||'Confira os registros do Cloudflare Worker.');
+      return (raw||'A solicitação foi recusada')+' (HTTP '+status+').';
+    }
     function prepareOptions(){
       // Normaliza as alternativas sem criar respostas artificiais.
       generated=generated.filter(card=>{
@@ -462,7 +471,7 @@
             :'Crie exatamente '+batchCount+' flashcards para um quiz de múltipla escolha em português brasileiro sobre "'+topic+'". Cada cartão deve ter front (pergunta), back (resposta correta), options (4 alternativas incluindo a correta), correctIndex (índice de 0 a 3 da correta dentro de options) e explanation (explicação curta). As quatro alternativas devem ser completas, distintas, da mesma categoria da resposta (por exemplo, quatro cidades para uma pergunta sobre cidade), com exatamente uma correta e três distratores plausíveis. Não use respostas de outras perguntas como distratores. Retorne os cartões em flashcards e evite duplicatas.';
           const response=await fetch(endpoint.replace(/\/$/,'')+'/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'activities',topic,source,notes:topicRecord.notes||''})});
           const data=await response.json().catch(()=>({}));
-          if(!response.ok)throw new Error(data.error||'Falha na solicitação ('+response.status+').');
+          if(!response.ok)throw new Error(apiFailure(response,data));
           extractCards(data).map(normalize).filter(Boolean).forEach(card=>{if(generated.length<count&&!generated.some(old=>old.front.toLowerCase()===card.front.toLowerCase()))generated.push(card)});
         }
         if(!generated.length)throw new Error('A IA não retornou perguntas válidas. Tente novamente.');
@@ -474,7 +483,7 @@
           const retryPrompt='Gere '+count+' questões inéditas de múltipla escolha em português brasileiro sobre '+topic+'. Responda exclusivamente com JSON: {"flashcards":[{"front":"pergunta","back":"resposta correta exatamente igual a uma opção","options":["opção 1","opção 2","opção 3","opção 4"],"correctIndex":0,"explanation":"explicação"}]}. Cada questão deve ter quatro alternativas não vazias, distintas, plausíveis e da mesma categoria, com a resposta back reproduzida EXATAMENTE em apenas uma das quatro options. Não use respostas de outras questões como distratores. Baseie as respostas no material a seguir, quando disponível. MATERIAL: '+(topicRecord.source||'Assunto: '+topic);
           const retryResponse=await fetch(endpoint.replace(/\/$/,'')+'/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'activities',topic,source:retryPrompt,notes:topicRecord.notes||''})});
           const retryData=await retryResponse.json().catch(()=>({}));
-          if(!retryResponse.ok)throw new Error(retryData.error||'Falha na nova tentativa ('+retryResponse.status+').');
+          if(!retryResponse.ok)throw new Error(apiFailure(retryResponse,retryData));
           generated=extractCards(retryData).map(normalize).filter(Boolean).slice(0,count);
           prepareOptions();
         }
