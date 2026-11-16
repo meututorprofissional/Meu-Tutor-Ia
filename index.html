@@ -160,6 +160,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <label for="feedbackMessage">Descreva o que aconteceu ou sua sugestão</label>
 <textarea id="feedbackMessage" minlength="10" maxlength="2000" required placeholder="Conte o que aconteceu, em qual tela e o que você esperava."></textarea>
 <p class="muted">Não envie senhas, chaves de API, dados bancários ou informações pessoais sensíveis. Sua mensagem será armazenada para análise do responsável pelo aplicativo.</p>
+<div class="cf-turnstile" data-sitekey="0x4AAAAAAGDsNyz7lu5ejx8j" style="margin:14px 0"></div>
 <button id="feedbackSubmit" type="submit">Enviar relato</button>
 <p id="feedbackStatus" class="muted" role="status" aria-live="polite"></p>
 </form>
@@ -174,6 +175,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profile.js"></script>
-<script src="feedback.js?v=48"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="feedback.js?v=49"></script>
 </body>
 </html>
