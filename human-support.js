@@ -5,7 +5,7 @@ if(!box||!form)return;
 const config=window.MEU_TUTOR_AUTH_CONFIG||{};
 const client=window.supabase&&config.supabaseUrl&&config.supabaseAnonKey?window.supabase.createClient(config.supabaseUrl,config.supabaseAnonKey):null;
 const key='meuTutorIA.supportHumanConversation.v1';
-let active=null,busy=false,loading=false,lastSignature=null;
+let active=null,busy=false,loading=false,lastSignature=null,typingTimer=null,lastTyping=false;
 const stamp=t=>new Date(t).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'medium'});
 function note(t){status.textContent=t;}
 function bubble(who,body,mine,createdAt){const el=document.createElement('div');el.className='support-bubble'+(mine?' mine':'');const label=document.createElement('strong');label.textContent=who;const p=document.createElement('p');p.textContent=body;el.append(label,p);if(createdAt){const time=document.createElement('small');time.className='muted';time.textContent=stamp(createdAt);el.appendChild(time);}box.appendChild(el);box.scrollTop=box.scrollHeight;}
@@ -31,6 +31,8 @@ note('Atendimento registrado no Supabase. A equipe ainda não está conectada; n
 }catch(e){note(e.message||'Não foi possível carregar o atendimento.');}
 finally{loading=false;if(!nearBottom)box.scrollTop=previous;}
 }
+async function publishTyping(value){if(!active||!client)return;try{const me=await user();await client.from('support_typing').upsert({conversation_id:active,user_id:me.id,is_admin:false,expires_at:new Date(Date.now()+(value?6500:0)).toISOString()});}catch(_){}}
+input.addEventListener('input',()=>{if(!active)return;if(!lastTyping){lastTyping=true;publishTyping(true);}clearTimeout(typingTimer);typingTimer=setTimeout(()=>{lastTyping=false;publishTyping(false);},3500);});
 form.addEventListener('submit',async e=>{
 e.preventDefault();if(busy)return;const value=input.value.trim();if(!value||value.length>1000)return;
 busy=true;const send=form.querySelector('button[type=submit]');send.disabled=true;note('Registrando sua mensagem...');
@@ -38,7 +40,7 @@ try{
 const me=await user();
 if(!active){const {data,error}=await client.from('support_conversations').insert({user_id:me.id}).select('id').single();if(error)throw error;active=data.id;localStorage.setItem(key,active);}
 const {error}=await client.from('support_messages').insert({conversation_id:active,sender_id:me.id,body:value});if(error)throw error;
-input.value='';busy=false;await load();note('Mensagem registrada com sucesso. A equipe responderá quando o atendimento humano estiver disponível.');
+input.value='';clearTimeout(typingTimer);lastTyping=false;publishTyping(false);busy=false;await load();note('Mensagem registrada com sucesso. A equipe responderá quando o atendimento humano estiver disponível.');
 }catch(err){note('Não foi possível enviar: '+(err.message||'tente novamente')+'. Sua mensagem foi mantida.');}
 finally{busy=false;send.disabled=false;}
 });
@@ -46,6 +48,7 @@ clear.addEventListener('click',()=>{note('Para preservar seu atendimento, o hist
 document.addEventListener('click',e=>{if(e.target instanceof Element&&e.target.closest('[data-go="support-human"],[data-screen="support-human"],#supportTransfer'))load();});
 load();
 // Consulta periódica enquanto o atendimento estiver aberto; não apaga mensagens nem rascunhos.
+setInterval(async()=>{if(document.hidden||!document.getElementById('support-human')?.classList.contains('active')||!active)return;try{const {data}=await client.from('support_typing').select('is_admin,expires_at').eq('conversation_id',active).eq('is_admin',true).gt('expires_at',new Date().toISOString()).limit(1);const label=document.getElementById('humanTypingIndicator');if(label)label.textContent=data?.length?'Equipe de suporte está digitando…':'';}catch(_){}},2000);
 setInterval(()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active')&&!busy)load();},8000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active'))load();});
 })();
