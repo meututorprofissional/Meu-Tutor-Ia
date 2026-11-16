@@ -9,7 +9,25 @@
   let authorized = false;
   let realtimeChannel = null;
   let realtimeDebounce = null;
-  function subscribeAdmin(){if(realtimeChannel)return;realtimeChannel=client.channel('support-admin-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'support_messages'},()=>{if(document.hidden||!document.getElementById('admin-support')?.classList.contains('active'))return;clearTimeout(realtimeDebounce);realtimeDebounce=setTimeout(()=>{if(!list.querySelector('textarea:focus'))load();},350);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'support_conversations'},()=>{if(!document.hidden&&document.getElementById('admin-support')?.classList.contains('active'))load();}).subscribe();}
+  let lastFullLoad = 0;
+  async function refreshMessagesOnly(){
+    if(!authorized || document.hidden || !document.getElementById('admin-support')?.classList.contains('active'))return;
+    const cards=[...list.querySelectorAll('[data-support-conversation]')];
+    for(const card of cards){
+      const id=card.dataset.supportConversation;
+      const {data,error}=await client.from('support_messages').select('id,body,sender_id,created_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(80);
+      if(error||!data)continue;
+      const container=card.querySelector('[data-support-messages]');if(!container)continue;
+      const existing=new Set([...container.children].map(el=>el.dataset.messageId));
+      for(const message of data){if(existing.has(message.id))continue;
+        const line=add(container,'div','','item');line.dataset.messageId=message.id;
+        const mine=message.sender_id!==card.dataset.ownerId;
+        line.style.maxWidth='88%';line.style.marginLeft=mine?'auto':'0';line.style.background=mine?'#e9e5ff':'var(--surface, #f4f5fa)';line.style.borderRadius='16px';
+        add(line,'strong',mine?'Equipe':'Usuário');add(line,'p',message.body);add(line,'small',new Date(message.created_at).toLocaleString('pt-BR'),'muted');
+      }
+    }
+  }
+  function subscribeAdmin(){if(realtimeChannel)return;realtimeChannel=client.channel('support-admin-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'support_messages'},()=>{if(document.hidden||!document.getElementById('admin-support')?.classList.contains('active'))return;clearTimeout(realtimeDebounce);realtimeDebounce=setTimeout(()=>{refreshMessagesOnly();},350);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'support_conversations'},()=>{if(!document.hidden&&document.getElementById('admin-support')?.classList.contains('active'))load();}).subscribe();}
   const add = (parent, tag, content, className) => {
     const el = document.createElement(tag);
     el.textContent = content == null ? '' : String(content);
@@ -61,17 +79,13 @@
     list.querySelectorAll('textarea[data-conversation-id]').forEach(el => drafts.set(el.dataset.conversationId, el.value));
     const previousScroll = window.scrollY;
     refresh.disabled = true;
-    status.textContent = 'Verificando acesso administrativo…';
+    if(!list.children.length)status.textContent = 'Verificando acesso administrativo…';
     try {
       if (!(await checkAccess())) {
         status.textContent = 'Acesso restrito. Entre novamente com a conta administradora.';
         return;
       }
-      // RLS reads the JWT claims, which may be older than getUser() app_metadata.
-      // Refresh before privileged reads so the server receives current admin claims.
-      const { error: refreshError } = await client.auth.refreshSession();
-      if (refreshError) throw refreshError;
-      if (!(await checkAccess())) throw new Error('Permissão administrativa não confirmada.');
+      // A sessão é renovada automaticamente pelo cliente; não renovar em cada mensagem.
       const [conversations, tickets] = await Promise.all([
         client.from('support_conversations').select('id,user_id,status,created_at').order('created_at', {ascending:false}).limit(40),
         client.from('tutor_feedback').select('id,kind,subject,message,status,created_at,user_id').order('created_at', {ascending:false}).limit(40)
@@ -87,12 +101,15 @@
       if (!convs.length) add(list,'p','Nenhuma conversa registrada.','muted');
       for (const conversation of convs) {
         const card = add(list,'article','','item');
+        card.dataset.supportConversation=conversation.id;card.dataset.ownerId=conversation.user_id;
+        const messageContainer=document.createElement('div');messageContainer.dataset.supportMessages='';
         add(card,'strong','Conversa · ' + (conversation.status || 'sem situação'));
         add(card,'p',new Date(conversation.created_at).toLocaleString('pt-BR'),'muted');
-        const { data: messages, error } = await client.from('support_messages').select('body,sender_id,created_at').eq('conversation_id',conversation.id).order('created_at',{ascending:true}).limit(80);
+        const { data: messages, error } = await client.from('support_messages').select('id,body,sender_id,created_at').eq('conversation_id',conversation.id).order('created_at',{ascending:true}).limit(80);
         if (error) { add(card,'p','Não foi possível carregar as mensagens.','muted'); continue; }
+        card.appendChild(messageContainer);
         for (const message of messages || []) {
-          const line = add(card,'div','','item');
+          const line = add(messageContainer,'div','','item');line.dataset.messageId=message.id;
           line.style.maxWidth='88%';line.style.marginLeft=message.sender_id===conversation.user_id?'0':'auto';line.style.background=message.sender_id===conversation.user_id?'var(--surface, #f4f5fa)':'#e9e5ff';line.style.borderRadius='16px';
           add(line,'strong',message.sender_id === conversation.user_id ? 'Usuário' : 'Equipe');
           add(line,'p',message.body);
@@ -132,7 +149,7 @@
               if (insertError) throw insertError;
               replyInput.value = '';typingNow=false;clearTimeout(typingTimer);sendTyping(false);
               replyStatus.textContent = 'Resposta registrada! O usuário poderá vê-la ao abrir o atendimento.';
-              const line = add(card, 'div', '', 'item');
+              const line = add(messageContainer, 'div', '', 'item');
               add(line, 'strong', 'Equipe');
               add(line, 'p', body);
               add(line, 'small', new Date().toLocaleString('pt-BR'), 'muted');
@@ -156,7 +173,7 @@
     } catch (error) {
       console.error('Painel administrativo:',error);
       status.textContent = 'Não foi possível carregar os atendimentos. Verifique sua sessão e tente novamente.';
-    } finally { refresh.disabled = false; loading = false; if (drafts.size) window.scrollTo(0,previousScroll); }
+    } finally { refresh.disabled = false; loading = false; if (Math.abs(window.scrollY-previousScroll)>2) window.scrollTo(0,previousScroll); }
   }
   refresh.addEventListener('click',load);
   document.addEventListener('click',e => {
@@ -186,7 +203,7 @@
       const stamp = messages.data?.[0]?.id || '';
       const convStamp = (conversations.data || []).map(c => c.id + ':' + c.status).join('|');
       if (lastMessageStamp === null) { lastMessageStamp = stamp; if (convStamp !== lastConversationStamp) load(); return; }
-      if (stamp !== lastMessageStamp || convStamp !== lastConversationStamp) { lastMessageStamp = stamp; load(); }
+      if (stamp !== lastMessageStamp || convStamp !== lastConversationStamp) { lastMessageStamp = stamp; if(convStamp!==lastConversationStamp)load();else refreshMessagesOnly(); }
     })().catch(() => {});
   }, 4000);
 })();
