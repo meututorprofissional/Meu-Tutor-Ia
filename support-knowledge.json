@@ -1,0 +1,73 @@
+{
+  "version": "2026-11-16",
+  "title": "Central de Conhecimento — suporte Meu Tutor IA",
+  "purpose": "Fonte de fatos confirmados para a assistente de atendimento. Não é uma lista de promessas.",
+  "sections": [
+    {
+      "name": "Navegação e perfil",
+      "facts": [
+        "O botão de avatar/perfil no Início abre a tela Meu perfil.",
+        "Meu perfil exibe informações da conta e permite configurar nome e foto.",
+        "Meus chamados não é a página de perfil."
+      ]
+    },
+    {
+      "name": "Estudos",
+      "facts": [
+        "Meu estudo registra assunto, material original/conteúdo estudado e anotações do estudante.",
+        "A metodologia inclui estudo, anotações próprias, flashcards, teste de recordação e revisão.",
+        "Não alterar ou substituir o texto original enviado pelo estudante."
+      ]
+    },
+    {
+      "name": "Flashcards",
+      "facts": [
+        "A seção Flashcards permite criar e praticar cartões associados aos estudos.",
+        "Existe uma Lixeira de flashcards abaixo dos cartões salvos.",
+        "Cartões movidos à lixeira a partir de 16/11/2026 podem ser restaurados no mesmo navegador.",
+        "A lixeira não recupera exclusões anteriores e não substitui exportação/backup JSON.",
+        "Esvaziar a lixeira é definitivo e exige confirmação."
+      ]
+    },
+    {
+      "name": "Teste e progresso",
+      "facts": [
+        "Teste oferece exercícios de recordação.",
+        "Progresso mostra registros do navegador e sugestões de revisão; não mede automaticamente o domínio real do conteúdo.",
+        "Há opção de exportar dados para backup JSON."
+      ]
+    },
+    {
+      "name": "Atendimento",
+      "facts": [
+        "Central de atendimento separa Falar com IA e Atendimento humano.",
+        "A IA responde perguntas em modo experimental; pode errar e não tem acesso a dados privados do usuário.",
+        "O chat humano ainda é demonstração: o botão de transferência não notifica funcionário.",
+        "Ajuda e feedback permite enviar relatos reais à equipe.",
+        "Meus chamados mostra relatos associados à conta, não necessariamente relatos anônimos antigos."
+      ]
+    }
+  ],
+  "troubleshooting": [
+    {
+      "problem": "Flashcards desaparecidos",
+      "firstQuestions": [
+        "Está usando o mesmo navegador e aparelho em que salvou os cartões?",
+        "Você os moveu para a lixeira?",
+        "Tem um arquivo de backup JSON?"
+      ],
+      "safeGuidance": [
+        "Verificar a seção Flashcards e a lixeira no mesmo navegador.",
+        "Não limpar cache, apagar armazenamento, desinstalar ou redefinir antes de verificar backup.",
+        "Se não resolver, orientar Enviar relato real."
+      ]
+    }
+  ],
+  "rules": [
+    "Nunca inventar botões, lixeiras, sincronização, recuperação garantida ou ações administrativas.",
+    "Quando não souber, dizer que não tem certeza e perguntar o que aparece na tela.",
+    "Não solicitar senhas, códigos, CPF ou dados sensíveis.",
+    "Não prometer transferência real para humano enquanto o chat humano for demonstração.",
+    "Respostas claras e naturais, detalhadas quando necessário, sem símbolos Markdown literais."
+  ]
+}
