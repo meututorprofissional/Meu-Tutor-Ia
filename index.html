@@ -47,9 +47,13 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 #cardList .saved-card-item{display:flex;align-items:flex-start;gap:10px}
 #cardList .saved-card-content{flex:1;min-width:0}
 #cardList .saved-card-content>p{margin:6px 0}
+
+/* Central de atendimento: prévia independente, sem alterar dados existentes */
+.support-shell{max-width:780px;margin:0 auto;padding:14px}.support-hero{background:linear-gradient(120deg,#25205b,#5b45d8 70%,#6679ed);color:#fff;border-radius:20px;padding:22px;margin-bottom:14px}.support-brand{display:flex;align-items:center;gap:10px;margin-bottom:15px}.support-brand img{border-radius:12px}.support-brand strong,.support-brand small{display:block}.support-brand small{font-size:.8rem;color:#ddd6fe}.support-hero h2{font-size:1.45rem;margin:0}.support-hero p{margin:4px 0 0;color:#e0e7ff}.support-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}.support-option{background:#fff;color:#312e81;border:1px solid #e0e7ff;border-radius:15px;text-align:left;padding:13px;display:flex;flex-direction:column;gap:2px;min-width:0}.support-option span{font-size:1.4rem}.support-option strong{font-size:.93rem}.support-option small{font-size:.76rem;color:#64748b}.support-conversation{border:1px solid #e5e7eb;border-radius:18px;overflow:hidden;background:#f8f9fc}.support-chat-head{background:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #e5e7eb}.support-chat-head strong,.support-chat-head small{display:block}.support-chat-head small{font-size:.76rem;color:#64748b}.support-preview{font-size:.65rem;font-weight:800;background:#fef3c7;color:#92400e;padding:5px 7px;border-radius:99px}.support-conversation #supportChatMessages{display:flex;flex-direction:column;gap:12px;min-height:230px;max-height:390px;overflow:auto;padding:15px}.support-bubble{max-width:86%;align-self:flex-start;border-radius:17px 17px 17px 5px;background:#fff;padding:10px 13px;box-shadow:0 1px 3px #1118270d;overflow-wrap:anywhere}.support-bubble.mine{align-self:flex-end;background:#e3e5ff;border-radius:17px 17px 5px 17px}.support-bubble strong{display:block;font-size:.74rem;color:#5548b0;margin-bottom:4px}.support-bubble p{margin:0;white-space:pre-wrap;font-size:.94rem}.support-composer{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid #e5e7eb}.support-composer input{min-width:0;flex:1;border-radius:999px}.support-composer button{width:46px;flex:0 0 46px;border-radius:50%;font-size:1.15rem;padding:0}.support-chat-footer{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:0 12px 12px;background:#fff}.support-chat-footer button{font-size:.8rem;padding:8px 10px}.support-chat-footer p{margin:0;color:#6b7280;font-size:.73rem;text-align:right}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:520px){.support-shell{padding:10px}.support-hero{padding:17px}.support-chat-head{flex-wrap:wrap}.support-bubble{max-width:90%}}
 </style></head>
 <body>
-<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button></nav></header>
+<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button></nav></header>
 <div id="updateNotice" role="status" style="display:none;max-width:1050px;margin:12px auto 0;padding:12px 16px;background:#fff8df;border:1px solid #efdf9f;border-radius:12px">
   <strong>Atualização disponível!</strong> Uma nova versão do Meu Tutor IA está pronta.
   <button id="applyUpdate" style="margin-left:8px">Atualizar agora</button>
@@ -166,6 +170,14 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 </form>
 </div>
 </section>
+<section id="support" class="screen"><div class="panel support-shell">
+<div class="support-hero"><div class="support-brand"><img src="icon-192.png" alt="" width="44" height="44"><div><strong>Central Meu Tutor IA</strong><small>IA + atendimento humano</small></div></div><h2>Como podemos ajudar? 💜</h2><p>Escolha uma opção ou comece uma conversa.</p></div>
+<div class="support-options"><button type="button" id="supportChatAI" class="support-option"><span>🤖</span><strong>Falar com IA</strong><small>Ajuda virtual</small></button><button type="button" id="supportChatHuman" class="support-option"><span>🎧</span><strong>Atendente</strong><small>Solicitar pessoa</small></button><button type="button" class="support-option" data-go="tickets"><span>📨</span><strong>Meus chamados</strong><small>Acompanhar</small></button><button type="button" class="support-option" data-go="feedback"><span>💡</span><strong>Enviar relato</strong><small>Suporte real</small></button></div>
+<div class="support-conversation"><div class="support-chat-head"><div><strong>🤖 Assistente virtual</strong><small id="supportChatMode">Prévia do atendimento</small></div><span class="support-preview">DEMONSTRAÇÃO</span></div>
+<div id="supportChatMessages" role="log" aria-live="polite"></div>
+<form id="supportChatForm" class="support-composer"><label class="sr-only" for="supportChatInput">Sua mensagem</label><input id="supportChatInput" maxlength="1000" autocomplete="off" placeholder="Digite sua mensagem..." required><button id="supportChatSend" type="submit" aria-label="Enviar mensagem de teste">➤</button></form>
+<div class="support-chat-footer"><button type="button" id="supportChatClear" class="secondary">↻ Recomeçar</button><p id="supportChatStatus" role="status">Simulação: nenhuma mensagem será enviada.</p></div></div>
+</div></section>
 <section id="tickets" class="screen">
 <div class="panel">
 <p class="overline">Central de atendimento</p>
@@ -173,16 +185,6 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <p class="muted">Acompanhe aqui os relatos vinculados à sua conta e as respostas da equipe do Meu Tutor IA.</p>
 <div class="row"><button type="button" class="secondary" data-go="feedback">💬 Enviar novo relato</button><button type="button" id="ticketsRefresh" class="secondary">↻ Atualizar</button></div>
 <p id="ticketsStatus" class="muted" role="status" aria-live="polite">Entre na sua conta para consultar seus chamados.</p>
-<div class="item" id="supportChat">
-<h3>🤖 Conversa com o suporte <span class="pill">Prévia</span></h3>
-<p class="muted">Conheça o futuro atendimento híbrido. Esta demonstração não envia mensagens nem abre chamados reais.</p>
-<div id="supportChatMessages" role="log" aria-live="polite" style="display:grid;gap:10px;max-height:360px;overflow-y:auto;padding:12px;background:#f8f9fc;border-radius:12px"></div>
-<div class="row" style="margin-top:12px"><button type="button" id="supportChatAI" class="secondary">🤖 Ajuda virtual</button><button type="button" id="supportChatHuman" class="secondary">🎧 Pedir atendente</button></div>
-<label for="supportChatInput">Sua mensagem (simulação)</label>
-<textarea id="supportChatInput" maxlength="1000" placeholder="Descreva sua dúvida ou problema..."></textarea>
-<div class="row"><button type="button" id="supportChatSend">Enviar na demonstração</button><button type="button" id="supportChatClear" class="secondary">Recomeçar</button></div>
-<p id="supportChatStatus" class="muted" role="status">Nenhuma mensagem desta prévia é enviada ou armazenada.</p>
-</div>
 <div id="ticketsList" aria-live="polite"></div>
 </div></section>
 <section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
@@ -197,6 +199,6 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=50"></script>
 <script src="tickets.js?v=1"></script>
-<script src="support-chat.js?v=1"></script>
+<script src="support-chat.js?v=2"></script>
 </body>
 </html>
