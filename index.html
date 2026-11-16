@@ -89,7 +89,15 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
   </div>
 </div>
 
-<div class="panel"><h2>Seus assuntos</h2><div id="studyList"></div></div>
+<div class="panel"><h2>Seus assuntos</h2>
+<p class="muted">Organize seus assuntos. Excluir um assunto não exclui os cartões salvos nem o histórico de estudos.</p>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0">
+<label style="display:flex;align-items:center;gap:8px;margin:0"><input id="selectAllTopics" type="checkbox" style="width:auto"> Selecionar todos</label>
+<button class="secondary" id="deleteSelectedTopics" disabled>Excluir selecionados (0)</button>
+<button class="secondary" id="deleteAllTopics" disabled>Excluir todos</button>
+</div>
+<p id="topicManageMsg" class="muted" role="status" aria-live="polite"></p>
+<div id="studyList"></div></div>
 </section>
 <section id="cards" class="screen">
 <div class="panel" id="fcAiPanel"><h2>Flashcards</h2><p class="muted">Escolha um assunto e a IA cria as perguntas e as respostas para você praticar.</p>
@@ -142,7 +150,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 </section>
 <section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
-<script src="app.js"></script>
+<script src="app.js?v=46"></script>
 <script src="updates.js"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
