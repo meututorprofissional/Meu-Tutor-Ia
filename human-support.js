@@ -49,6 +49,6 @@ document.addEventListener('click',e=>{if(e.target instanceof Element&&e.target.c
 load();
 // Consulta periódica enquanto o atendimento estiver aberto; não apaga mensagens nem rascunhos.
 setInterval(async()=>{if(document.hidden||!document.getElementById('support-human')?.classList.contains('active')||!active)return;try{const {data}=await client.from('support_typing').select('is_admin,expires_at').eq('conversation_id',active).eq('is_admin',true).gt('expires_at',new Date().toISOString()).limit(1);const label=document.getElementById('humanTypingIndicator');if(label)label.textContent=data?.length?'Equipe de suporte está digitando…':'';}catch(_){}},2000);
-setInterval(()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active')&&!busy)load();},8000);
+setInterval(()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active')&&!busy)load();},3000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active'))load();});
 })();
