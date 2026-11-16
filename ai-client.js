@@ -515,22 +515,26 @@
           // A API pode entregar flashcards sem opções: não apresentar um quiz incorreto.
           throw new Error('O servidor devolveu perguntas, mas não entregou quatro alternativas válidas por pergunta. É necessário ajustar a geração de alternativas no Cloudflare Worker. Nenhum cartão foi salvo.');
         }
-        review.hidden=false;renderPreview();
-        message.textContent=generated.length<count?'A IA gerou '+generated.length+' de '+count+' perguntas que passaram na validação. Confira antes de salvar…':'Quiz pronto! Confira as perguntas e toque em Salvar para começar.';
-        // Aguardar confirmação do estudante antes de salvar novos cartões.
+        // Inicia o quiz diretamente, sem prévia nem seleção manual.
+        review.hidden=true;
+        const now=new Date().toISOString();
+        const saved=generated.map(card=>({
+          id:id(),topicId:topicRecord.id,front:card.front,back:card.back,
+          options:card.options,correctIndex:card.correctIndex,
+          explanation:card.explanation,created:now,reviews:0,
+          lastRating:null,nextReview:null
+        }));
+        db.cards.unshift(...saved);
+        save();
+        generated=[];
+        message.textContent='Quiz pronto! '+saved.length+' pergunta(s) válida(s). Boa prática!';
+        if(typeof window.startFlashcardQuiz==='function'){
+          window.startFlashcardQuiz(saved.map(card=>card.id));
+        }else{
+          throw new Error('A tela de prática não está disponível.');
+        }
       }catch(error){message.textContent='Não foi possível gerar o quiz: '+error.message}
       finally{createButton.disabled=false}
-    });
-    saveButton.addEventListener('click',()=>{
-      if(!generated.length)return;
-      const topicRecord=(db.topics||[]).find(item=>item.id===topicSelect.value);
-      if(!topicRecord){message.textContent='Escolha um assunto cadastrado antes de salvar.';return}
-      const now=new Date().toISOString();
-      const saved=chosen.map(card=>({id:id(),topicId:topicRecord.id,front:card.front,back:card.back,options:card.options,correctIndex:card.correctIndex,explanation:card.explanation,created:now,reviews:0,lastRating:null,nextReview:null}));
-      db.cards.unshift(...saved);save();refreshTopicOptions();topicSelect.value=topicRecord.id;generated=[];renderPreview();review.hidden=true;
-      message.textContent=saved.length+' cartões salvos! Começando o quiz…';
-      if(typeof window.startFlashcardQuiz==='function')window.startFlashcardQuiz(saved.map(card=>card.id));
-      else if(typeof window.practiceNow==='function')window.practiceNow();
     });
     refreshTopicOptions();
   }
