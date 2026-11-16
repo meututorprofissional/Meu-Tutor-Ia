@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v41-quiz-diagnostics';
+const CACHE_VERSION = 'meu-tutor-ia-v42-api-errors';
 
 const APP_FILES = [
   './',
