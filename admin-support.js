@@ -144,14 +144,15 @@
             try {
               const { data: authData, error: authError } = await client.auth.getUser();
               if (authError || authData.user?.app_metadata?.support_admin !== true) throw new Error('Acesso administrativo não confirmado.');
-              const { error: insertError } = await client.from('support_messages').insert({ conversation_id: conversation.id, sender_id: authData.user.id, body });
+              const { data: inserted, error: insertError } = await client.from('support_messages').insert({ conversation_id: conversation.id, sender_id: authData.user.id, body }).select('id,created_at').single();
               if (insertError) throw insertError;
               replyInput.value = '';typingNow=false;clearTimeout(typingTimer);sendTyping(false);
               replyStatus.textContent = 'Resposta registrada! O usuário poderá vê-la ao abrir o atendimento.';
-              const line = add(messageContainer, 'div', '', 'item');
+              if(messageContainer.querySelector('[data-message-id="'+inserted.id+'"]'))return;
+              const line = add(messageContainer, 'div', '', 'item');line.dataset.messageId=inserted.id;
               add(line, 'strong', 'Equipe');
               add(line, 'p', body);
-              add(line, 'small', new Date().toLocaleString('pt-BR'), 'muted');
+              add(line, 'small', new Date(inserted.created_at).toLocaleString('pt-BR'), 'muted');
             } catch (error) {
               console.error('Erro ao responder atendimento:', error);
               replyStatus.textContent = 'Não foi possível enviar. Confira sua sessão e tente novamente.';
