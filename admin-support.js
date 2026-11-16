@@ -183,5 +183,5 @@
       if (lastMessageStamp === null) { lastMessageStamp = stamp; if (convStamp !== lastConversationStamp) load(); return; }
       if (stamp !== lastMessageStamp || convStamp !== lastConversationStamp) { lastMessageStamp = stamp; load(); }
     })().catch(() => {});
-  }, 10000);
+  }, 4000);
 })();
