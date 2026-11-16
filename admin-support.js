@@ -40,7 +40,7 @@
         status.textContent = 'Acesso restrito. Entre novamente com a conta administradora.';
         return;
       }
-      const [conversations, tickets] = await Promise.all([
+      // Renova o JWT: a permissão administrativa pode ter sido concedida após o login.\n      const { error: refreshError } = await client.auth.refreshSession();\n      if (refreshError) throw refreshError;\n      const [conversations, tickets] = await Promise.all([
         client.from('support_conversations').select('id,user_id,status,created_at').order('created_at', {ascending:false}).limit(40),
         client.from('tutor_feedback').select('id,kind,subject,message,status,created_at,user_id').order('created_at', {ascending:false}).limit(40)
       ]);
