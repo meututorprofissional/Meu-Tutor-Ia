@@ -26,6 +26,18 @@
     if (el) el.textContent = message;
   };
 
+  const readable = value => {
+    if (typeof value === 'string') return value;
+    if (Array.isArray(value)) return value.map(readable).filter(Boolean).join('\n');
+    if (value && typeof value === 'object') {
+      return ['text','content','analysis','understanding','summary','explanation','message','description']
+        .map(key => value[key]).filter(value => value != null)
+        .map(readable).filter(Boolean).join('\n') ||
+        Object.entries(value).map(([key, part]) => key + ': ' + readable(part)).join('\n');
+    }
+    return String(value ?? '');
+  };
+
   const escapeHtml = value =>
     String(value ?? '').replace(/[&<>"']/g, ch => ({
       '&': '&amp;',
@@ -448,12 +460,25 @@
       preview.innerHTML='';
       generated.forEach((card,index)=>{
         const item=document.createElement('div');item.className='item';
+        const label=document.createElement('label');
+        label.style.display='flex';label.style.alignItems='center';label.style.gap='10px';
+        const checkbox=document.createElement('input');
+        checkbox.type='checkbox';checkbox.checked=card.selected!==false;
+        checkbox.style.width='auto';checkbox.style.flex='none';
+        checkbox.setAttribute('aria-label','Selecionar pergunta '+(index+1));
+        checkbox.addEventListener('change',()=>{card.selected=checkbox.checked;updateSaveButton()});
         const title=document.createElement('strong');title.textContent=(index+1)+'. '+card.front;
+        label.append(checkbox,title);
         const answer=document.createElement('p');answer.textContent=card.back;
         const meta=document.createElement('p');meta.className='muted';meta.textContent='Quiz de múltipla escolha · '+card.options.length+' alternativas';
-        item.append(title,answer,meta);preview.appendChild(item);
+        item.append(label,answer,meta);preview.appendChild(item);
       });
-      saveButton.disabled=!generated.length;
+      updateSaveButton();
+    }
+    function updateSaveButton(){
+      const count=generated.filter(card=>card.selected!==false).length;
+      saveButton.disabled=count===0;
+      saveButton.textContent=count ? 'Salvar '+count+' selecionado(s) e praticar' : 'Selecione pelo menos uma pergunta';
     }
     createButton.addEventListener('click',async()=>{
       const topicRecord=(db.topics||[]).find(item=>item.id===topicSelect.value);
@@ -502,7 +527,7 @@
       const topicRecord=(db.topics||[]).find(item=>item.id===topicSelect.value);
       if(!topicRecord){message.textContent='Escolha um assunto cadastrado antes de salvar.';return}
       const now=new Date().toISOString();
-      const saved=generated.map(card=>({id:id(),topicId:topicRecord.id,front:card.front,back:card.back,options:card.options,correctIndex:card.correctIndex,explanation:card.explanation,created:now,reviews:0,lastRating:null,nextReview:null}));
+      const saved=chosen.map(card=>({id:id(),topicId:topicRecord.id,front:card.front,back:card.back,options:card.options,correctIndex:card.correctIndex,explanation:card.explanation,created:now,reviews:0,lastRating:null,nextReview:null}));
       db.cards.unshift(...saved);save();refreshTopicOptions();topicSelect.value=topicRecord.id;generated=[];renderPreview();review.hidden=true;
       message.textContent=saved.length+' cartões salvos! Começando o quiz…';
       if(typeof window.startFlashcardQuiz==='function')window.startFlashcardQuiz(saved.map(card=>card.id));
