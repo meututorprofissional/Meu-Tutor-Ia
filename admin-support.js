@@ -9,7 +9,6 @@
   let authorized = false;
   let realtimeChannel = null;
   let realtimeDebounce = null;
-  let lastFullLoad = 0;
   async function refreshMessagesOnly(){
     if(!authorized || document.hidden || !document.getElementById('admin-support')?.classList.contains('active'))return;
     const cards=[...list.querySelectorAll('[data-support-conversation]')];
@@ -205,5 +204,5 @@
       if (lastMessageStamp === null) { lastMessageStamp = stamp; if (convStamp !== lastConversationStamp) load(); return; }
       if (stamp !== lastMessageStamp || convStamp !== lastConversationStamp) { lastMessageStamp = stamp; if(convStamp!==lastConversationStamp)load();else refreshMessagesOnly(); }
     })().catch(() => {});
-  }, 4000);
+  }, 15000);
 })();
