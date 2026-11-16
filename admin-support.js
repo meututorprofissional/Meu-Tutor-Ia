@@ -63,6 +63,44 @@
           add(line,'p',message.body);
           add(line,'small',new Date(message.created_at).toLocaleString('pt-BR'),'muted');
         }
+        if (conversation.status !== 'encerrado') {
+          const replyForm = document.createElement('form');
+          replyForm.style.marginTop = '12px';
+          const replyLabel = add(replyForm, 'label', 'Responder ao usuário');
+          const replyInput = document.createElement('textarea');
+          replyInput.maxLength = 1000;
+          replyInput.required = true;
+          replyInput.rows = 3;
+          replyInput.placeholder = 'Escreva sua resposta como equipe de suporte...';
+          replyLabel.appendChild(replyInput);
+          const replyButton = add(replyForm, 'button', 'Enviar resposta');
+          replyButton.type = 'submit';
+          const replyStatus = add(replyForm, 'p', '', 'muted');
+          replyStatus.setAttribute('role', 'status');
+          replyForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const body = replyInput.value.trim();
+            if (!body || body.length > 1000) return;
+            replyButton.disabled = true;
+            replyStatus.textContent = 'Enviando resposta...';
+            try {
+              const { data: authData, error: authError } = await client.auth.getUser();
+              if (authError || authData.user?.app_metadata?.support_admin !== true) throw new Error('Acesso administrativo não confirmado.');
+              const { error: insertError } = await client.from('support_messages').insert({ conversation_id: conversation.id, sender_id: authData.user.id, body });
+              if (insertError) throw insertError;
+              replyInput.value = '';
+              replyStatus.textContent = 'Resposta registrada! O usuário poderá vê-la ao abrir o atendimento.';
+              const line = add(card, 'div', '', 'item');
+              add(line, 'strong', 'Equipe');
+              add(line, 'p', body);
+              add(line, 'small', new Date().toLocaleString('pt-BR'), 'muted');
+            } catch (error) {
+              console.error('Erro ao responder atendimento:', error);
+              replyStatus.textContent = 'Não foi possível enviar. Confira sua sessão e tente novamente.';
+            } finally { replyButton.disabled = false; }
+          });
+          card.appendChild(replyForm);
+        }
       }
       add(list,'h3','📨 Relatos e chamados');
       if (!feedback.length) add(list,'p','Nenhum relato registrado.','muted');
