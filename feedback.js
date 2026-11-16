@@ -24,7 +24,7 @@
     try{
       const response=await fetch(config.supabaseUrl+'/rest/v1/tutor_feedback',{
         method:'POST',
-        headers:{'apikey':config.supabaseAnonKey,'Authorization':'Bearer '+config.supabaseAnonKey,'Content-Type':'application/json','Prefer':'return=minimal'},
+        headers:{'apikey':config.supabaseAnonKey,'Content-Type':'application/json','Prefer':'return=minimal'},
         body:JSON.stringify({kind,subject,message})
       });
       if(!response.ok)throw new Error('HTTP '+response.status);
