@@ -37,9 +37,12 @@
       });
       if (response.status === 429) { status.textContent = 'Limite de envios atingido. Aguarde um pouco e tente novamente.'; return; }
       if (!response.ok) throw new Error('HTTP ' + response.status);
+      const result = await response.json().catch(() => ({}));
       localStorage.setItem(lastKey, String(Date.now()));
       form.reset();
-      status.textContent = accessToken ? 'Relato enviado! Acompanhe em Meus chamados. 💜' : 'Relato enviado! Para acompanhar futuros relatos em Meus chamados, entre com Google antes de enviar. 💜';
+      status.textContent = result.linked === true
+        ? 'Relato enviado e vinculado à sua conta! Acompanhe em Meus chamados. 💜'
+        : 'Relato enviado com sucesso! Ele chegou ao suporte, mas não foi vinculado à sua conta. Para acompanhar os próximos em Meus chamados, confira seu login Google antes de enviar.';
     } catch (error) {
       console.error('Falha ao enviar feedback', error);
       status.textContent = 'Não foi possível enviar agora. Confira a verificação de segurança e tente novamente. Seu texto continua preenchido.';
