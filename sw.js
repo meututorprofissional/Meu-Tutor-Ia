@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v43-selectable-quiz';
+const CACHE_VERSION = 'meu-tutor-ia-v44-hidden-quiz-answers';
 
 const APP_FILES = [
   './',
