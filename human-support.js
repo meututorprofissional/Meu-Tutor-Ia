@@ -8,7 +8,7 @@ const key='meuTutorIA.supportHumanConversation.v1';
 let active=null,busy=false,loading=false,lastSignature=null,typingTimer=null,lastTyping=false,realtimeChannel=null;
 const stamp=t=>new Date(t).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'medium'});
 function note(t){status.textContent=t;}
-function bubble(who,body,mine,createdAt){const el=document.createElement('div');el.className='support-bubble'+(mine?' mine':'');const label=document.createElement('strong');label.textContent=who;const p=document.createElement('p');p.textContent=body;el.append(label,p);if(createdAt){const time=document.createElement('small');time.className='muted';time.textContent=stamp(createdAt);el.appendChild(time);}box.appendChild(el);box.scrollTop=box.scrollHeight;}
+function bubble(who,body,mine,createdAt){const el=document.createElement('div');el.className='support-bubble'+(mine?' mine':'');const label=document.createElement('strong');label.textContent=who;const p=document.createElement('p');p.textContent=body;el.append(label,p);if(createdAt){const time=document.createElement('small');time.className='muted';time.textContent=stamp(createdAt);el.appendChild(time);}box.appendChild(el);if(box.scrollHeight-box.scrollTop-box.clientHeight<180)box.scrollTop=box.scrollHeight;}
 async function user(){if(!client)throw Error('Serviço indisponível.');const {data,error}=await client.auth.getUser();if(error||!data.user)throw Error('Entre com Google em Meu perfil antes de solicitar atendimento humano.');return data.user;}
 async function load(){
 if(loading||busy)return;loading=true;
@@ -38,7 +38,7 @@ async function publishTyping(value){if(!active||!client)return;try{const me=awai
 input.addEventListener('input',()=>{if(!active)return;if(!lastTyping){lastTyping=true;publishTyping(true);}clearTimeout(typingTimer);typingTimer=setTimeout(()=>{lastTyping=false;publishTyping(false);},3500);});
 form.addEventListener('submit',async e=>{
 e.preventDefault();if(busy)return;const value=input.value.trim();if(!value||value.length>1000)return;
-busy=true;const send=form.querySelector('button[type=submit]');send.disabled=true;note('Registrando sua mensagem...');
+busy=true;const send=form.querySelector('button[type=submit]');send.disabled=true;note('Enviando mensagem...');
 try{
 const me=await user();
 if(!active){const {data,error}=await client.from('support_conversations').insert({user_id:me.id}).select('id').single();if(error)throw error;active=data.id;localStorage.setItem(key,active);}
@@ -52,6 +52,6 @@ document.addEventListener('click',e=>{if(e.target instanceof Element&&e.target.c
 load();
 // Consulta periódica enquanto o atendimento estiver aberto; não apaga mensagens nem rascunhos.
 setInterval(async()=>{if(document.hidden||!document.getElementById('support-human')?.classList.contains('active')||!active)return;try{const {data}=await client.from('support_typing').select('is_admin,expires_at').eq('conversation_id',active).eq('is_admin',true).gt('expires_at',new Date().toISOString()).limit(1);const label=document.getElementById('humanTypingIndicator');if(label)label.textContent=data?.length?'Equipe de suporte está digitando…':'';}catch(_){}},2000);
-setInterval(()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active')&&!busy)load();},3000);
+setInterval(()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active')&&!busy)load();},15000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&document.getElementById('support-human')?.classList.contains('active'))load();});
 })();
