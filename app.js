@@ -23,6 +23,49 @@ document.addEventListener('click', event => {
 }, true);
 
 function load(){try{return {...empty(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return empty()}}
+const selectedTopicIds=new Set();
+function updateTopicSelectionUI(){
+ const valid=new Set(db.topics.map(t=>t.id));
+ for(const tid of selectedTopicIds)if(!valid.has(tid))selectedTopicIds.delete(tid);
+ const all=document.getElementById('selectAllTopics');
+ const chosen=document.getElementById('deleteSelectedTopics');
+ const every=document.getElementById('deleteAllTopics');
+ if(all){all.checked=db.topics.length>0&&selectedTopicIds.size===db.topics.length;all.indeterminate=selectedTopicIds.size>0&&selectedTopicIds.size<db.topics.length;all.disabled=!db.topics.length}
+ if(chosen){chosen.disabled=!selectedTopicIds.size;chosen.textContent='Excluir selecionados ('+selectedTopicIds.size+')'}
+ if(every)every.disabled=!db.topics.length;
+}
+document.getElementById('selectAllTopics').onchange=e=>{
+ selectedTopicIds.clear();
+ if(e.target.checked)db.topics.forEach(t=>selectedTopicIds.add(t.id));
+ render();
+};
+document.getElementById('studyList').addEventListener('change',e=>{
+ const box=e.target.closest('[data-topic-id]');
+ if(!box)return;
+ if(box.checked)selectedTopicIds.add(box.dataset.topicId);
+ else selectedTopicIds.delete(box.dataset.topicId);
+ updateTopicSelectionUI();
+});
+function removeTopics(ids){
+ const removed=new Set(ids);
+ db.topics=db.topics.filter(t=>!removed.has(t.id));
+ // Preserve cards and historical attempts, including their original topic IDs.
+ selectedTopicIds.clear();
+ document.getElementById('topicManageMsg').textContent=ids.length+' assunto(s) excluído(s). Cartões e histórico preservados.';
+ save();
+}
+document.getElementById('deleteSelectedTopics').onclick=()=>{
+ const ids=[...selectedTopicIds];
+ if(!ids.length)return;
+ if(!confirm('Excluir '+ids.length+' assunto(s) selecionado(s)? Os cartões e o histórico serão preservados, mas os textos e anotações desses assuntos serão removidos. Essa ação não pode ser desfeita.'))return;
+ removeTopics(ids);
+};
+document.getElementById('deleteAllTopics').onclick=()=>{
+ if(!db.topics.length)return;
+ const ids=db.topics.map(t=>t.id);
+ if(!confirm('ATENÇÃO: excluir TODOS os '+ids.length+' assuntos e suas anotações? Os cartões e o histórico serão preservados. Essa ação não pode ser desfeita.'))return;
+ removeTopics(ids);
+};
 const selectedCardIds=new Set();
 function updateCardSelectionUI(){
  const valid=new Set(db.cards.map(c=>c.id));
@@ -223,9 +266,9 @@ document.getElementById('saveQuiz').onclick=()=>{
 function render(){
  refreshSelects();
 
- document.getElementById('studyList').innerHTML=db.topics.length?db.topics.map(t=>`<div class="item"><strong>${esc(t.name)}</strong><span class="muted">Atualizado: ${date(t.updated||t.created)}</span><p>${esc((t.notes||'Sem anotações registradas').slice(0,220))}</p><button class="secondary" onclick="editTopic('${t.id}')">Ver / editar</button> <button class="secondary" onclick="makeQuiz('${t.id}')">Criar teste</button></div>`).join(''):'<div class="empty">Nenhum assunto registrado ainda.</div>';
+ document.getElementById('studyList').innerHTML=db.topics.length?db.topics.map(t=>`<div class="item"><label style="display:flex;align-items:center;gap:10px"><input type="checkbox" style="width:auto;flex:none" data-topic-id="${esc(t.id)}" aria-label="Selecionar assunto: ${esc(t.name)}" ${selectedTopicIds.has(t.id)?'checked':''}><strong>${esc(t.name)}</strong></label><span class="muted">Atualizado: ${date(t.updated||t.created)}</span><p>${esc((t.notes||'Sem anotações registradas').slice(0,220))}</p><button class="secondary" onclick="editTopic('${t.id}')">Ver / editar</button> <button class="secondary" onclick="makeQuiz('${t.id}')">Criar teste</button></div>`).join(''):'<div class="empty">Nenhum assunto registrado ainda.</div>';
 
- document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item saved-card-item"><div class="saved-card-content"><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></div><input type="checkbox" aria-label="Selecionar cartão: ${esc(c.front)}" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
+ updateTopicSelectionUI();\n document.getElementById('cardList').innerHTML=db.cards.length?db.cards.map(c=>`<div class="item saved-card-item"><div class="saved-card-content"><strong>${esc(c.front)}</strong><p>${esc(c.back)}</p><span class="muted">${esc(topicName(c.topicId))} · revisões: ${c.reviews||0}</span></div><input type="checkbox" aria-label="Selecionar cartão: ${esc(c.front)}" class="saved-card-select" data-card-id="${esc(c.id)}" ${selectedCardIds.has(c.id)?'checked':''}></div>`).join(''):'<div class="empty">Nenhum cartão salvo.</div>';
  document.querySelectorAll('.saved-card-select').forEach(box=>box.onchange=()=>{if(box.checked)selectedCardIds.add(box.dataset.cardId);else selectedCardIds.delete(box.dataset.cardId);updateCardSelectionUI()});
  updateCardSelectionUI();
 
