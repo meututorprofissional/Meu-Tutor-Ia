@@ -27,8 +27,8 @@
       return authorized;
     } catch (error) {
       authorized = false;
-      nav.style.display = 'none';
-      return false;
+      // Erros temporários de rede/sessão não devem revogar visualmente a permissão.
+      return authorized;
     }
   }
   async function load() {
@@ -120,6 +120,6 @@
   document.addEventListener('click',e => {
     if (e.target instanceof Element && e.target.closest('[data-screen="admin-support"],[data-go="admin-support"]')) load();
   });
-  client.auth.onAuthStateChange(() => { setTimeout(checkAccess,0); });
+  client.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') setTimeout(checkAccess,0); });
   checkAccess();
 })();
