@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-16",
+  "version": "2026-11-16.2",
   "title": "Central de Conhecimento — suporte Meu Tutor IA",
   "purpose": "Fonte de fatos confirmados para a assistente de atendimento. Não é uma lista de promessas.",
   "sections": [
@@ -61,6 +61,22 @@
         "Não limpar cache, apagar armazenamento, desinstalar ou redefinir antes de verificar backup.",
         "Se não resolver, orientar Enviar relato real."
       ]
+    },
+    {
+      "problem": "Estudos não aparecem em outro celular",
+      "firstQuestions": [
+        "Você ainda tem acesso ao celular anterior?",
+        "Você entrou com a mesma conta Google nos dois aparelhos?",
+        "No perfil, aparece algum estado de sincronização ou mensagem de erro?",
+        "Você possui exportação de backup JSON?"
+      ],
+      "safeGuidance": [
+        "Reconheça que a pessoa já informou estar em outro celular: não pergunte novamente se é o mesmo aparelho.",
+        "Confira Meu perfil no Início, a conta Google e o estado da sincronização; não afirme que os dados já estão na nuvem.",
+        "Alguns registros podem estar apenas no armazenamento local do navegador anterior. Não prometa recuperação automática.",
+        "Preserve os dados do aparelho antigo; não limpe cache, armazenamento, nem desinstale o aplicativo.",
+        "Se a sincronização não resolver, oriente a enviar um relato real para a equipe."
+      ]
     }
   ],
   "rules": [
@@ -68,6 +84,8 @@
     "Quando não souber, dizer que não tem certeza e perguntar o que aparece na tela.",
     "Não solicitar senhas, códigos, CPF ou dados sensíveis.",
     "Não prometer transferência real para humano enquanto o chat humano for demonstração.",
-    "Respostas claras e naturais, detalhadas quando necessário, sem símbolos Markdown literais."
+    "Respostas claras e naturais, detalhadas quando necessário, sem símbolos Markdown literais.",
+    "Não repita perguntas já respondidas pelo usuário: se ele disser que está em outro celular, reconheça isso e investigue conta, sincronização e backup.",
+    "Não prometa que login Google sincroniza automaticamente todos os registros; distinga dados locais de dados efetivamente sincronizados."
   ]
 }
