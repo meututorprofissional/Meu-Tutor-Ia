@@ -48,6 +48,8 @@
     return checking;
   }
   let loading = false;
+  let lastMessageStamp = null;
+  let lastConversationStamp = null;
   async function load() {
     if (loading) return;
     loading = true;
@@ -74,6 +76,7 @@
       if (conversations.error) throw conversations.error;
       if (tickets.error) throw tickets.error;
       const convs = conversations.data || [];
+      lastConversationStamp = convs.map(c => c.id + ':' + c.status).join('|');
       const feedback = tickets.data || [];
       status.textContent = convs.length + ' conversas humanas e ' + feedback.length + ' relatos encontrados. Painel de consulta: respostas serão habilitadas após os testes.';
       add(list, 'h3', '🎧 Conversas de atendimento humano');
@@ -157,6 +160,17 @@
   checkAccess();
   // Atualiza apenas com a aba visível e o painel aberto; preserva rascunhos.
   setInterval(() => {
-    if (!document.hidden && document.getElementById('admin-support')?.classList.contains('active') && !list.querySelector('textarea:focus')) load();
+    if (document.hidden || !document.getElementById('admin-support')?.classList.contains('active') || loading || list.querySelector('textarea:focus')) return;
+    (async () => {
+      const [messages, conversations] = await Promise.all([
+        client.from('support_messages').select('id,created_at').order('created_at',{ascending:false}).limit(1),
+        client.from('support_conversations').select('id,status').order('created_at',{ascending:false}).limit(40)
+      ]);
+      if (messages.error || conversations.error) return;
+      const stamp = messages.data?.[0]?.id || '';
+      const convStamp = (conversations.data || []).map(c => c.id + ':' + c.status).join('|');
+      if (lastMessageStamp === null) { lastMessageStamp = stamp; if (convStamp !== lastConversationStamp) load(); return; }
+      if (stamp !== lastMessageStamp || convStamp !== lastConversationStamp) { lastMessageStamp = stamp; load(); }
+    })().catch(() => {});
   }, 10000);
 })();
