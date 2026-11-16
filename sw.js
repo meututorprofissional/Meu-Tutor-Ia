@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v44-hidden-quiz-answers';
+const CACHE_VERSION = 'meu-tutor-ia-v45-direct-quiz';
 
 const APP_FILES = [
   './',
