@@ -7,6 +7,9 @@
   if (!nav || !status || !list || !refresh || !window.supabase || !config.supabaseUrl || !config.supabaseAnonKey) return;
   const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
   let authorized = false;
+  let realtimeChannel = null;
+  let realtimeDebounce = null;
+  function subscribeAdmin(){if(realtimeChannel)return;realtimeChannel=client.channel('support-admin-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'support_messages'},()=>{if(document.hidden||!document.getElementById('admin-support')?.classList.contains('active'))return;clearTimeout(realtimeDebounce);realtimeDebounce=setTimeout(()=>{if(!list.querySelector('textarea:focus'))load();},350);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'support_conversations'},()=>{if(!document.hidden&&document.getElementById('admin-support')?.classList.contains('active'))load();}).subscribe();}
   const add = (parent, tag, content, className) => {
     const el = document.createElement(tag);
     el.textContent = content == null ? '' : String(content);
@@ -38,6 +41,7 @@
         if (data.user?.id !== currentId) throw new Error('Sessão alterada durante a consulta');
         const isAdmin = data.user.app_metadata?.support_admin === true;
         setAccess(isAdmin);
+        if(isAdmin)subscribeAdmin();else if(realtimeChannel){client.removeChannel(realtimeChannel);realtimeChannel=null;}
         return isAdmin;
       } catch (error) {
         // Erro transitório não é prova de perda de permissão.
@@ -56,7 +60,6 @@
     const drafts = new Map();
     list.querySelectorAll('textarea[data-conversation-id]').forEach(el => drafts.set(el.dataset.conversationId, el.value));
     const previousScroll = window.scrollY;
-    list.replaceChildren();
     refresh.disabled = true;
     status.textContent = 'Verificando acesso administrativo…';
     try {
@@ -75,6 +78,7 @@
       ]);
       if (conversations.error) throw conversations.error;
       if (tickets.error) throw tickets.error;
+      list.replaceChildren();
       const convs = conversations.data || [];
       lastConversationStamp = convs.map(c => c.id + ':' + c.status).join('|');
       const feedback = tickets.data || [];
@@ -89,6 +93,7 @@
         if (error) { add(card,'p','Não foi possível carregar as mensagens.','muted'); continue; }
         for (const message of messages || []) {
           const line = add(card,'div','','item');
+          line.style.maxWidth='88%';line.style.marginLeft=message.sender_id===conversation.user_id?'0':'auto';line.style.background=message.sender_id===conversation.user_id?'var(--surface, #f4f5fa)':'#e9e5ff';line.style.borderRadius='16px';
           add(line,'strong',message.sender_id === conversation.user_id ? 'Usuário' : 'Equipe');
           add(line,'p',message.body);
           add(line,'small',new Date(message.created_at).toLocaleString('pt-BR'),'muted');
@@ -158,7 +163,7 @@
     if (e.target instanceof Element && e.target.closest('[data-screen="admin-support"],[data-go="admin-support"]')) load();
   });
   client.auth.onAuthStateChange((event) => {
-    if (event === 'SIGNED_OUT') { activeUserId = null; setAccess(false); }
+    if (event === 'SIGNED_OUT') { activeUserId = null; setAccess(false);if(realtimeChannel){client.removeChannel(realtimeChannel);realtimeChannel=null;} }
     if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') setTimeout(checkAccess, 0);
   });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) checkAccess(); });
