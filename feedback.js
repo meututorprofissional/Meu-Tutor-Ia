@@ -28,16 +28,18 @@
     button.disabled = true;
     status.textContent = 'Verificando e enviando seu relato...';
     try {
+      let accessToken = null;
+      try { if(window.supabase && config.supabaseAnonKey){ const authClient=window.supabase.createClient(config.supabaseUrl,config.supabaseAnonKey); const {data}=await authClient.auth.getSession();accessToken=data.session?.access_token||null; } } catch (_) {}
       const response = await fetch(config.supabaseUrl + '/functions/v1/enviar-feedback-seguro', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(accessToken ? { Authorization: 'Bearer '+accessToken } : {}) },
         body: JSON.stringify({ kind, subject, message, turnstileToken: token })
       });
       if (response.status === 429) { status.textContent = 'Limite de envios atingido. Aguarde um pouco e tente novamente.'; return; }
       if (!response.ok) throw new Error('HTTP ' + response.status);
       localStorage.setItem(lastKey, String(Date.now()));
       form.reset();
-      status.textContent = 'Relato enviado com sucesso! Obrigado por ajudar a melhorar o Meu Tutor IA. 💜';
+      status.textContent = accessToken ? 'Relato enviado! Acompanhe em Meus chamados. 💜' : 'Relato enviado! Para acompanhar futuros relatos em Meus chamados, entre com Google antes de enviar. 💜';
     } catch (error) {
       console.error('Falha ao enviar feedback', error);
       status.textContent = 'Não foi possível enviar agora. Confira a verificação de segurança e tente novamente. Seu texto continua preenchido.';
