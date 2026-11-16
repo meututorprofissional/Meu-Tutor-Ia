@@ -418,14 +418,16 @@
       return true;
     }
     function prepareOptions(){
-      // Nunca montar alternativas usando respostas de perguntas diferentes.
-      // Somente quizzes com quatro opções distintas e uma resposta correta.
+      // Normaliza as alternativas sem criar respostas artificiais.
       generated=generated.filter(card=>{
         if(card.options.length!==4)return false;
         const options=card.options.map(value=>String(value).trim());
         if(options.some(value=>!value))return false;
         if(new Set(options.map(value=>value.toLocaleLowerCase('pt-BR'))).size!==4)return false;
-        const matches=options.map((value,index)=>value.toLocaleLowerCase('pt-BR')===card.back.toLocaleLowerCase('pt-BR')?index:-1).filter(index=>index>=0);
+        // O servidor pode retornar uma resposta resumida e uma opção com contexto extra.
+        // O índice fornecido só é confiável quando a opção aponta para a mesma resposta.
+        const normalizeText=value=>String(value).normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.!?]+$/g,'').replace(/\\s+/g,' ').trim().toLocaleLowerCase('pt-BR');
+        const matches=options.map((value,index)=>normalizeText(value)===normalizeText(card.back)?index:-1).filter(index=>index>=0);
         if(matches.length!==1)return false;
         if(!sameAnswerCategory(card))return false;
         card.options=options;
@@ -476,7 +478,10 @@
           generated=extractCards(retryData).map(normalize).filter(Boolean).slice(0,count);
           prepareOptions();
         }
-        if(!generated.length)throw new Error('A IA não conseguiu criar quatro alternativas válidas, mesmo após nova tentativa. Nenhum cartão foi salvo.');
+        if(!generated.length){
+          // A API pode entregar flashcards sem opções: não apresentar um quiz incorreto.
+          throw new Error('O servidor devolveu perguntas, mas não entregou quatro alternativas válidas por pergunta. É necessário ajustar a geração de alternativas no Cloudflare Worker. Nenhum cartão foi salvo.');
+        }
         review.hidden=false;renderPreview();
         message.textContent=generated.length<count?'A IA gerou '+generated.length+' de '+count+' perguntas que passaram na validação. Confira antes de salvar…':'Quiz pronto! Confira as perguntas e toque em Salvar para começar.';
         // Aguardar confirmação do estudante antes de salvar novos cartões.
