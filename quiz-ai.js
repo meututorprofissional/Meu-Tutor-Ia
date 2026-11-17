@@ -8,6 +8,7 @@
   const answer = document.getElementById('answer');
   const rating = document.getElementById('rating');
   const reflection = document.getElementById('reflection');
+  const confidence = document.getElementById('quizConfidence');
   if (!mode || !button || !topicSelect || !question) return;
   let generatedTopic = '', generatedQuestion = '';
   const evaluationPanel = document.getElementById('quizAiEvaluation');
@@ -93,6 +94,8 @@
     let remaining = explanation.replace(/(?:^|\n)\s*\**(?:RESPOSTA ESPERADA|RESPOSTA CORRETA|O QUE REVISAR|SUGESTÃO DE REVISÃO)\**\s*[:：]\s*[^\n]+/gi, '').trim();
     if (!remaining) remaining = explanation;
     evaluationResult.append(header, userBlock);
+    const confidenceLabel = ({sure:'Tenho certeza',unsure:'Tenho dúvida',unknown:'Não lembro com segurança'})[confidence?.value || 'sure'];
+    if (confidenceLabel) evaluationResult.append(section('Minha confiança', confidenceLabel));
     if (expected) evaluationResult.append(section('Resposta esperada', expected));
     evaluationResult.append(section('Explicação da IA', remaining));
     if (review) evaluationResult.append(section('O que revisar', review));
@@ -181,11 +184,13 @@
     const topic = (Array.isArray(data.topics) ? data.topics : []).find(t => t.id === topicId);
     if (!topic?.source) { evaluationStatus.textContent = 'Material original indisponível. Não é possível avaliar.'; return; }
     const source = String(topic.source).slice(0,12000);
+    const studentConfidence = confidence?.value || 'sure';
     const signature = JSON.stringify([topicId,promptQuestion,userAnswer,source]);
     if (signature === evaluatedSignature) { evaluationStatus.textContent = 'A avaliação desta resposta já está exibida.'; return; }
     const endpoint = String(window.MEU_TUTOR_AI_ENDPOINT || '').trim();
     if (!endpoint) { evaluationStatus.textContent = 'A IA não está configurada.'; return; }
     const notes = [
+      'Confiança autodeclarada do estudante (não afeta a correção): ' + ({sure:'Tenho certeza',unsure:'Tenho dúvida',unknown:'Não lembro com segurança'}[studentConfidence] || 'Não informada') + '.',
       'TAREFA DE AVALIAÇÃO DE RECORDAÇÃO: Compare exclusivamente com o material original fornecido.',
       'Pergunta: ' + promptQuestion,
       'Resposta do estudante: ' + userAnswer,
@@ -194,6 +199,7 @@
       'Use CORRETO somente quando todos os elementos essenciais solicitados estiverem respondidos corretamente. Use INCORRETO quando a resposta estiver errada ou não atender à pergunta. Use NÃO FOI POSSÍVEL VERIFICAR quando a fonte não permitir avaliar.',
       'Exemplo obrigatório: se perguntar "Em que ano nasceu Lionel Messi?" e a fonte disser 24 de junho de 1987, a resposta "1987, eu acho" é CORRETO: o ano foi dado. Não exija dia e mês. Expressões de dúvida ("eu acho", "talvez") não tornam um fato correto parcialmente correto.',
       'PARCIALMENTE CORRETO apenas se faltar ou estiver errada parte essencial do que foi perguntado, mas houver uma parte correta. Não use parcial por falta de detalhes que não foram pedidos.',
+      'Separe CORREÇÃO factual de CONFIANÇA: frases como "acho", "talvez", "não lembro com certeza" não são evidência de erro factual. Não misture as duas dimensões e não contradiga seu próprio veredito.',
       'Aceite diferenças de maiúsculas e acentos que não mudem o significado. Não penalize informação extra ausente.',
       'Depois explique o motivo, a resposta esperada sustentada pela fonte e o que revisar. Seja breve.',
       'Se o material não sustentar a conclusão, diga que não é possível verificar. Não use conhecimento externo.',
