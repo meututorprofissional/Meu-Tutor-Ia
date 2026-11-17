@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v52-card-trash';
+const CACHE_VERSION = 'meu-tutor-ia-v53-responsive-settings';
 
 const APP_FILES = [
   './',
@@ -13,7 +13,10 @@ const APP_FILES = [
   './ai-config.js',
   './ai-client.js',
   './auth-config.js',
-  './profile.js'
+  './profile.js',
+  './settings.js',
+  './support-notifications.js',
+  './tickets.js'
 ];
 
 self.addEventListener('install', event => {
