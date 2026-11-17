@@ -271,7 +271,10 @@ html,body{max-width:100%;overflow-x:clip}
 .admin-support-summary-labels small { color: var(--muted, #64677a); font-size: .8rem; }
 .admin-support-toggle { flex-shrink: 0; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: #6538d9; color: #fff; font-size: 1.45rem; font-weight: 700; }
 .admin-support-toggle::before { content: "+"; }
-.admin-support-accordion[open] .admin-support-toggle::before { content: "−"; }
+.admin-support-accordion[open] .admin-support-toggle { display: none; }
+.admin-support-footer { display: flex; justify-content: flex-end; margin-top: 12px; }
+.admin-support-close { display: grid; place-items: center; width: 42px; min-width: 42px; height: 42px; padding: 0; border: 0; border-radius: 10px; background: #6538d9; color: #fff; font-size: 1.65rem; font-weight: 700; cursor: pointer; }
+.admin-support-close:focus-visible { outline: 3px solid #30206b; outline-offset: 3px; }
 .admin-support-accordion[open] > summary { background: #f0eaff; border-radius: 11px 11px 0 0; }
 .admin-support-content { padding: 2px 16px 16px; border-top: 1px solid #e2dcef; }
 @media (max-width:600px) { .admin-support-summary { padding: 12px; } .admin-support-content { padding: 2px 12px 14px; } }
@@ -308,7 +311,7 @@ html,body{max-width:100%;overflow-x:clip}
 <script src="support-notifications.js?v=3"></script>
 <script src="support-chat.js?v=11"></script>
 <script src="human-support.js?v=7"></script>
-<script src="admin-support.js?v=19"></script>
+<script src="admin-support.js?v=20"></script>
 
 <script>
 (() => {
