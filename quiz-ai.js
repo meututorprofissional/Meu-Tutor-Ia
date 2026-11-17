@@ -44,6 +44,8 @@
     // Não classificar pela mera presença de "correto/incorreto" em qualquer lugar.
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+(?:claramente\s+)?incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+(?:claramente\s+)?corret[ao]\b/i.test(feedback)) key = 'CORRETO';
+    // Ex.: 'A resposta do estudante foi Ceará, que é incorreta.'
+    if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+[^.!?\n]{1,100}?,\s*que\s+é\s+incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
     if (!verdicts[key]) return { label: 'Não foi possível classificar', color: '#64748b', explanation: feedback, verified: false };
     const [label, color] = verdicts[key];
     return { label, color, explanation: marker ? feedback.replace(marker[0], '').trim() : feedback, verified: true };
