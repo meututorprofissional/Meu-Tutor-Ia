@@ -188,6 +188,7 @@ header .home-account-actions .support-notifications{top:calc(100% + 12px);right:
 <p id="authStatus" class="notice" role="status" aria-live="polite">A conta ainda precisa ser configurada pelo administrador. Seus estudos atuais continuam salvos neste navegador.</p>
 <div class="row"><button id="profileSignOut" class="secondary" type="button" hidden>Sair da conta</button><button id="profileSyncNow" class="secondary" type="button" hidden>Sincronizar estudos</button></div>
 <p id="syncStatus" class="muted" role="status" aria-live="polite"></p></div>
+<div class="panel" id="profileSecurityPanel"><h2>🛡️ Segurança e privacidade</h2><p class="muted">Confira a conta conectada e controle sua sessão neste dispositivo.</p><p><strong>Estado da sessão:</strong> <span id="securitySessionStatus">Verificando conta…</span></p><p><strong>Conta:</strong> <span id="securityAccountEmail">—</span></p><p class="muted">Sair da conta encerra o acesso neste navegador, mas não apaga seus estudos locais, sua conta ou os dados salvos na nuvem. Se estiver usando um dispositivo compartilhado, feche também o navegador após sair.</p><div class="row"><button type="button" class="secondary" id="securitySync" hidden>☁️ Sincronizar antes de sair</button><button type="button" class="secondary" id="securitySignOut" hidden>🚪 Sair com segurança</button></div><p id="securityStatus" class="muted" role="status" aria-live="polite"></p><hr><h3>Seus dados</h3><p class="muted">Faça um backup antes de trocar de aparelho. A opção de apagar dados locais fica separada e exige sua ação na tela Dados e backup.</p><button type="button" class="secondary" data-go="backup">📦 Abrir dados e backup</button></div>
 <div class="panel"><h2>☁️ Seus estudos e privacidade</h2><p class="muted">Seus assuntos, flashcards e tentativas ficam neste navegador e podem ser sincronizados com sua conta. Antes de trocar de dispositivo ou desinstalar o app, confirme que a sincronização foi concluída ou exporte um backup.</p><div class="notice">Importante: não compartilhe sua senha ou códigos de acesso. O Meu Tutor IA não pede sua senha do Google ou Facebook diretamente.</div></div>
 </section>
 <section id="settings" class="screen"><div class="panel"><p class="overline">Personalização</p><h2>⚙️ Configurações do aplicativo</h2><p class="muted">Ajuste a experiência do Meu Tutor IA neste dispositivo. Seus estudos e dados da conta não serão alterados.</p><label for="settingTextSize">Tamanho do texto</label><select id="settingTextSize"><option value="normal">Padrão</option><option value="large">Maior</option></select><label for="settingMotion">Animações da interface</label><select id="settingMotion"><option value="normal">Padrão</option><option value="reduced">Reduzidas</option></select><label for="settingSpacing">Espaçamento da interface</label><select id="settingSpacing"><option value="normal">Confortável</option><option value="compact">Compacto</option></select><hr><h3>🔔 Notificações do suporte</h3><p class="muted">Escolha como receber avisos de novas respostas aos seus chamados enquanto usa o aplicativo.</p><label for="settingSupportAlerts">Avisos de novas respostas</label><select id="settingSupportAlerts"><option value="on">Ativados</option><option value="off">Desativados</option></select><label for="settingUnreadBadge">Contador vermelho no sininho</label><select id="settingUnreadBadge"><option value="on">Mostrar</option><option value="off">Ocultar</option></select><p class="muted">Desativar os avisos não exclui respostas. Você continua podendo consultar tudo em Meus chamados e abrir o sininho manualmente. Estas opções não ativam notificações com o aplicativo fechado.</p><p class="muted">As preferências são salvas automaticamente neste navegador e podem ser diferentes no celular e no computador.</p><div class="row"><button type="button" class="secondary" id="resetAppSettings">Restaurar aparência padrão</button><button type="button" class="secondary" data-go="profile">Voltar ao perfil</button></div><p id="settingsStatus" class="muted" role="status" aria-live="polite"></p></div></section>
@@ -249,7 +250,7 @@ header .home-account-actions .support-notifications{top:calc(100% + 12px);right:
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="profile.js"></script>
+<script src="profile.js?v=2"></script>
 <script src="settings.js?v=2"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=5"></script>
@@ -278,9 +279,11 @@ header .home-account-actions .support-notifications{top:calc(100% + 12px);right:
    closeMenu();
    if(action==='notifications'){bell?.click();return;}
    if(action==='logout'){
-     const logout=document.getElementById('profileSignOut');
-     if(logout && !logout.hidden){logout.click();return;}
      if(typeof go==='function') go('profile');
+     const security=document.getElementById('profileSecurityPanel');
+     security?.scrollIntoView({block:'start',behavior:'smooth'});
+     const status=document.getElementById('securityStatus');
+     if(status) status.textContent='Confira sua conta e use “Sair com segurança” para encerrar a sessão.';
      return;
    }
    if(typeof go==='function') go(action==='settings' ? 'settings' : 'profile');
