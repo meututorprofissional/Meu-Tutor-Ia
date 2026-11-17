@@ -136,7 +136,25 @@
           body:JSON.stringify({task:'teach', topic:topic.name, source, notes}), signal:controller.signal
         });
       } finally { clearTimeout(timer); }
-      const result = await response.json().catch(() => ({}));
+      let result = await response.json().catch(() => ({}));
+      if (!response.ok && response.status === 502 && /formato inesperado/i.test(String(result.error || ''))) {
+        evaluationStatus.textContent = 'A IA respondeu em formato inválido. Fazendo uma segunda tentativa…';
+        // O Worker pode receber JSON malformado do modelo gratuito; tente somente mais uma vez.
+        // Mantenha o mesmo material original, a pergunta e a resposta sem alterações.
+        const retryController = new AbortController();
+        const retryTimer = setTimeout(() => retryController.abort(), 60000);
+        try {
+          response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              task: 'teach', topic: topic.name, source,
+              notes: 'Avalie esta resposta de forma BREVE usando somente o material original. Pergunta: ' + promptQuestion + '\nResposta: ' + userAnswer + '\nIndique acertos, erros e revisão em no máximo 5 frases. Não invente fatos.'
+            }),
+            signal: retryController.signal
+          });
+          result = await response.json().catch(() => ({}));
+        } finally { clearTimeout(retryTimer); }
+      }
       if (!response.ok) throw new Error(result.error || 'Servidor indisponível (' + response.status + ').');
       const feedback = readText(result.explanation || result.understanding || result.summary || result.result);
       if (!feedback.trim()) throw new Error('O servidor não retornou uma análise utilizável.');
