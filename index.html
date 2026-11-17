@@ -89,6 +89,24 @@ header .account-menu-count{margin-left:auto;background:#ef4444;color:white;borde
 header .home-account-actions .support-notifications{top:calc(100% + 12px);right:0}
 @media(max-width:600px){header .brand h1{font-size:1rem}header .brand p{font-size:.68rem}header .brand img{width:36px;height:36px}header .home-account-actions{gap:6px}header .home-account-actions .support-bell{width:40px;height:40px}header .home-account-actions .brain.profile-button{height:40px;min-width:65px;padding:3px 5px;gap:4px}header .home-account-actions #homeProfileAvatar{width:30px;height:30px;flex-basis:30px}header .home-account-actions .support-notifications{right:-70px}}
 @media(max-width:370px){header .brand p{display:none}header .brand{gap:6px}}
+
+/* Ajustes responsivos: manter controles acessíveis em telas estreitas. */
+html,body{max-width:100%;overflow-x:clip}
+.panel,.item,.home-left,.home-right,.support-shell{min-width:0}
+.panel input,.panel textarea,.panel select{max-width:100%}
+.panel p,.panel strong,.panel small,.item{overflow-wrap:anywhere}
+@media(max-width:700px){
+ .layout{width:100%;max-width:100%}
+ .panel .row{min-width:0}
+ .panel .row>button,.panel .row>.secondary{max-width:100%;white-space:normal}
+ .support-notifications{max-width:calc(100vw - 24px)}
+ .home-account-menu{max-width:calc(100vw - 24px)}
+}
+@media(max-width:390px){
+ .home-actions{grid-template-columns:1fr}
+ .support-options{grid-template-columns:1fr}
+ .panel .row>button{width:100%}
+}
 </style></head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
