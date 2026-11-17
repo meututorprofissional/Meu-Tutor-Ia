@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v62-quiz-timeout';
+const CACHE_VERSION = 'meu-tutor-ia-v63-quiz-lock';
 
 const APP_FILES = [
   './',
