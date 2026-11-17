@@ -10,10 +10,9 @@ let db=load(), currentCard=null, answerShown=false, lastCardId=null, quizRun=nul
 document.addEventListener('click', event => {
   const target = event.target;
   if (!(target instanceof Element)) return;
-  const button = target.closest('[data-screen], [data-go], #homeProfileButton');
+  const button = target.closest('[data-screen], [data-go]');
   if (!button) return;
-  const screen = button.dataset.screen || button.dataset.go ||
-    (button.id === 'homeProfileButton' ? 'profile' : '');
+  const screen = button.dataset.screen || button.dataset.go || '';
   if (!screen || !document.getElementById(screen)) return;
   try {
     go(screen);
