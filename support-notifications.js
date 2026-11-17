@@ -86,7 +86,7 @@
       } catch (_) {}
       draw();
     } catch (error) { console.warn('Notificações de suporte indisponíveis:', error); }
-    finally { loading = false; }
+    finally { loading = false; if (version !== requestVersion) setTimeout(load, 0); }
   }
   bell.addEventListener('click', () => {
     panel.hidden = !panel.hidden;
