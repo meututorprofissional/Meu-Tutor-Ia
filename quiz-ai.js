@@ -46,6 +46,9 @@
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+(?:claramente\s+)?corret[ao]\b/i.test(feedback)) key = 'CORRETO';
     // Ex.: 'A resposta do estudante foi Ceará, que é incorreta.'
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+[^.!?\n]{1,100}?,\s*que\s+é\s+incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
+    // Ex.: "O estudante respondeu corretamente que Messi nasceu em Rosário."
+    if (!key && /(?:o estudante|a estudante|o aluno|a aluna|você)\s+(?:respondeu|acertou)\s+(?:corretamente|certo)\b/i.test(feedback)) key = 'CORRETO';
+    if (!key && /(?:o estudante|a estudante|o aluno|a aluna|você)\s+respondeu\s+(?:incorretamente|errado)\b/i.test(feedback)) key = 'INCORRETO';
     if (!verdicts[key]) return { label: 'Não foi possível classificar', color: '#64748b', explanation: feedback, verified: false };
     const [label, color] = verdicts[key];
     return { label, color, explanation: marker ? feedback.replace(marker[0], '').trim() : feedback, verified: true };
@@ -183,6 +186,8 @@
       'Pergunta: ' + promptQuestion,
       'Resposta do estudante: ' + userAnswer,
       'COMECE a explicação com uma linha exata: RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR.',
+      'Avalie SOMENTE o que a pergunta solicita. Se perguntar a cidade, não exija data, país ou outros detalhes não pedidos.',
+      'Aceite diferenças de maiúsculas e acentos que não mudem o significado. Não penalize informação extra ausente.',
       'Depois explique o motivo, a resposta esperada sustentada pela fonte e o que revisar. Seja breve.',
       'Se o material não sustentar a conclusão, diga que não é possível verificar. Não use conhecimento externo.',
       'Não modifique a pergunta nem a resposta do estudante.'
@@ -213,7 +218,7 @@
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               task: 'teach', topic: topic.name, source,
-              notes: 'Avalie usando SOMENTE o material original. Comece a explicação com RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR. Pergunta: ' + promptQuestion + '\nResposta: ' + userAnswer + '\nExplique o motivo e o que revisar em até 5 frases. Não invente fatos.'
+              notes: 'Avalie usando SOMENTE o material original. Comece a explicação com RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR. Pergunta: ' + promptQuestion + '\nResposta: ' + userAnswer + '\nAvalie apenas o que a pergunta pede; não exija detalhes adicionais (como data se perguntou cidade). Aceite variações de acento. Explique o motivo em até 5 frases. Não invente fatos.'
             }),
             signal: retryController.signal
           });
