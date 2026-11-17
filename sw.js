@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v66-verdict-ui';
+const CACHE_VERSION = 'meu-tutor-ia-v67-verdict-parser';
 
 const APP_FILES = [
   './',
