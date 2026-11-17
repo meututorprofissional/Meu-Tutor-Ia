@@ -10,9 +10,28 @@
   const reflection = document.getElementById('reflection');
   if (!mode || !button || !topicSelect || !question) return;
   let generatedTopic = '', generatedQuestion = '';
+  const evaluationPanel = document.getElementById('quizAiEvaluation');
+  const evaluateButton = document.getElementById('quizEvaluate');
+  const evaluationStatus = document.getElementById('quizEvaluationStatus');
+  const evaluationResult = document.getElementById('quizEvaluationResult');
+  let evaluatedSignature = '';
+  const clearEvaluation = () => {
+    evaluatedSignature = '';
+    if (evaluationResult) { evaluationResult.hidden = true; evaluationResult.replaceChildren(); }
+    if (evaluationStatus) evaluationStatus.textContent = 'Responda primeiro. A IA analisará sua tentativa usando o material original.';
+  };
+  const readText = value => {
+    if (typeof value === 'string') return value;
+    if (Array.isArray(value)) return value.map(readText).filter(Boolean).join('\\n');
+    if (value && typeof value === 'object') return ['text','content','explanation','understanding','summary','message'].map(k => value[k]).filter(Boolean).map(readText).join('\\n');
+    return '';
+  };
+
   const syncMode = () => {
     const ai = mode.value === 'ai';
     controls.hidden = !ai;
+    if (evaluationPanel) evaluationPanel.hidden = !ai;
+    clearEvaluation();
     question.readOnly = ai;
     question.setAttribute('aria-readonly', String(ai));
     question.classList.toggle('quiz-ai-locked', ai);
@@ -69,13 +88,74 @@
       question.value = first.trim();
       generatedQuestion = question.value; generatedTopic = topicId;
       answer.value = ''; reflection.value = ''; rating.value = 'good';
+      clearEvaluation();
       status.textContent = 'Pergunta pronta! Responda sem consultar. Depois confira o material original, avalie sua recordação e registre a tentativa. A correção automática ainda não está disponível.';
       answer.focus();
     } catch (error) {
       status.textContent = error.name === 'AbortError' ? 'A IA não respondeu em até 60 segundos. Verifique a conexão e tente novamente.' : 'Não foi possível gerar: ' + error.message;
     } finally { button.disabled = false; }
   });
+  if (evaluateButton) evaluateButton.addEventListener('click', async () => {
+    if (mode.value !== 'ai') return;
+    const topicId = topicSelect.value;
+    const userAnswer = answer.value.trim();
+    const promptQuestion = question.value.trim();
+    if (!generatedQuestion || generatedTopic !== topicId || promptQuestion !== generatedQuestion) {
+      evaluationStatus.textContent = 'Gere uma pergunta com IA antes de solicitar a avaliação.';
+      return;
+    }
+    if (!userAnswer) { evaluationStatus.textContent = 'Escreva sua resposta antes de pedir a avaliação.'; answer.focus(); return; }
+    let data;
+    try { data = JSON.parse(localStorage.getItem('meuTutorIA.v2') || '{}'); } catch { data = {}; }
+    const topic = (Array.isArray(data.topics) ? data.topics : []).find(t => t.id === topicId);
+    if (!topic?.source) { evaluationStatus.textContent = 'Material original indisponível. Não é possível avaliar.'; return; }
+    const source = String(topic.source).slice(0,12000);
+    const signature = JSON.stringify([topicId,promptQuestion,userAnswer,source]);
+    if (signature === evaluatedSignature) { evaluationStatus.textContent = 'A avaliação desta resposta já está exibida.'; return; }
+    const endpoint = String(window.MEU_TUTOR_AI_ENDPOINT || '').trim();
+    if (!endpoint) { evaluationStatus.textContent = 'A IA não está configurada.'; return; }
+    const notes = [
+      'TAREFA DE AVALIAÇÃO DE RECORDAÇÃO: Compare exclusivamente com o material original fornecido.',
+      'Pergunta: ' + promptQuestion,
+      'Resposta do estudante: ' + userAnswer,
+      'Diga claramente o que está correto, o que está incorreto ou ausente e uma sugestão de revisão.',
+      'Se o material não sustentar a conclusão, diga que não é possível verificar. Não use conhecimento externo.',
+      'Não modifique a pergunta nem a resposta do estudante.'
+    ].join('\\n');
+    if (notes.length > 4000) { evaluationStatus.textContent = 'Resposta longa demais para avaliar. Use até cerca de 3.000 caracteres.'; return; }
+    evaluateButton.disabled = true;
+    evaluationResult.hidden = true;
+    evaluationStatus.textContent = 'Analisando sua resposta. Aguarde…';
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 60000);
+      let response;
+      try {
+        response = await fetch(endpoint.replace(/\\/$/, '') + '/api/tutor', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({task:'teach', topic:topic.name, source, notes}), signal:controller.signal
+        });
+      } finally { clearTimeout(timer); }
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Servidor indisponível (' + response.status + ').');
+      const feedback = readText(result.explanation || result.understanding || result.summary || result.result);
+      if (!feedback.trim()) throw new Error('O servidor não retornou uma análise utilizável.');
+      if (mode.value !== 'ai' || topicSelect.value !== topicId || question.value !== promptQuestion || answer.value.trim() !== userAnswer) {
+        evaluationStatus.textContent = 'A resposta mudou durante a análise. Solicite uma nova avaliação.';
+        return;
+      }
+      evaluationResult.textContent = feedback;
+      evaluationResult.style.whiteSpace = 'pre-wrap';
+      evaluationResult.hidden = false;
+      evaluatedSignature = signature;
+      evaluationStatus.textContent = 'Análise orientativa da IA. Confira o material original antes de registrar sua autoavaliação; a IA pode cometer erros.';
+    } catch (error) {
+      evaluationStatus.textContent = error.name === 'AbortError' ? 'A análise demorou mais de 60 segundos. Tente novamente.' : 'Não foi possível avaliar: ' + error.message;
+    } finally { evaluateButton.disabled = false; }
+  });
+  answer.addEventListener('input', clearEvaluation);
   topicSelect.addEventListener('change', () => {
+    clearEvaluation();
     if (mode.value === 'ai' && generatedTopic && generatedTopic !== topicSelect.value) {
       question.value = ''; generatedQuestion = ''; generatedTopic = '';
       status.textContent = 'Assunto alterado. Gere uma nova pergunta para este estudo.';
