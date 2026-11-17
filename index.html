@@ -272,11 +272,22 @@ header .home-account-actions .support-notifications{top:calc(100% + 12px);right:
  document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
  menu.addEventListener('click', e => {
    const button=e.target.closest('[data-account-action]'); if(!button)return;
-   const action=button.dataset.accountAction; closeMenu();
+   const action=button.dataset.accountAction;
+   closeMenu();
    if(action==='notifications'){bell?.click();return;}
-   if(action==='logout'){const logout=document.getElementById('profileSignOut');if(logout&&!logout.hidden){logout.click();}else{document.querySelector('[data-go="profile"]')?.click();}return;}
-   document.querySelector('[data-go="profile"]')?.click();
-   document.getElementById('profile')?.scrollIntoView({block:'start'});
+   if(action==='logout'){
+     const logout=document.getElementById('profileSignOut');
+     if(logout && !logout.hidden){logout.click();return;}
+     if(typeof go==='function') go('profile');
+     return;
+   }
+   if(typeof go==='function') go('profile');
+   else {
+     document.querySelectorAll('.screen').forEach(screen=>screen.classList.toggle('active',screen.id==='profile'));
+     document.querySelectorAll('nav [data-screen]').forEach(tab=>tab.classList.remove('active'));
+   }
+   const target=action==='settings' ? document.getElementById('profileName') || document.getElementById('profile') : document.getElementById('profile');
+   target?.scrollIntoView({block:'start',behavior:'smooth'});
  });
  if(badge && menuBadge){const observer=new MutationObserver(()=>{const count=badge.hidden?'':badge.textContent;menuBadge.textContent=count;menuBadge.hidden=!count;});observer.observe(badge,{attributes:true,childList:true,characterData:true,subtree:true});}
 })();
