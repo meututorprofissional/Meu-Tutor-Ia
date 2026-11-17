@@ -10,6 +10,7 @@
     if (window.supabase && config.supabaseUrl && config.supabaseAnonKey)
       client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
   } catch (error) { console.warn('Central de atendimento:', error); }
+  const statusLabels = { novo: 'Novo', em_analise: 'Em atendimento', em_atendimento: 'Em atendimento', respondido: 'Respondido', resolvido: 'Resolvido' };
   const line = (parent, tag, value, className) => {
     const el = document.createElement(tag);
     el.textContent = value;
@@ -43,7 +44,7 @@
         article.className = 'item';
         line(article, 'strong', ticket.subject);
         line(article,'small','Protocolo: '+String(ticket.id).slice(0,8).toUpperCase(),'muted');
-        line(article, 'p', 'Tipo: ' + ticket.kind + ' · Situação: ' + ticket.status + ' · ' + new Date(ticket.created_at).toLocaleString('pt-BR'), 'muted');
+        line(article, 'p', 'Tipo: ' + ticket.kind + ' · Situação: ' + (statusLabels[ticket.status] || ticket.status) + ' · ' + new Date(ticket.created_at).toLocaleString('pt-BR'), 'muted');
         line(article, 'p', ticket.message);
         const replies = (ticket.tutor_feedback_replies || []).slice().sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
         replies.forEach(reply => {
