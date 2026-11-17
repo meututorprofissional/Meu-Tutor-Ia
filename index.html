@@ -312,7 +312,8 @@ html,body{max-width:100%;overflow-x:clip}
    const target=action==='settings' ? document.getElementById('settings') : document.getElementById('profile');
    target?.scrollIntoView({block:'start',behavior:'smooth'});
  });
- if(badge && menuBadge){const observer=new MutationObserver(()=>{const count=badge.hidden?'':badge.textContent;menuBadge.textContent=count;menuBadge.hidden=!count;});observer.observe(badge,{attributes:true,childList:true,characterData:true,subtree:true});}
+ // Os contadores do sininho e do menu são controlados por support-notifications.js,
+ // que respeita a preferência de ocultar o contador. Não duplicar essa lógica aqui.
 })();
 </script>
 </body>
