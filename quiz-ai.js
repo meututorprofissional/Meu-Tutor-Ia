@@ -22,8 +22,8 @@
   };
   const readText = value => {
     if (typeof value === 'string') return value;
-    if (Array.isArray(value)) return value.map(readText).filter(Boolean).join('\\n');
-    if (value && typeof value === 'object') return ['text','content','explanation','understanding','summary','message'].map(k => value[k]).filter(Boolean).map(readText).join('\\n');
+    if (Array.isArray(value)) return value.map(readText).filter(Boolean).join('\n');
+    if (value && typeof value === 'object') return ['text','content','explanation','understanding','summary','message'].map(k => value[k]).filter(Boolean).map(readText).join('\n');
     return '';
   };
 
@@ -121,7 +121,7 @@
       'Diga claramente o que está correto, o que está incorreto ou ausente e uma sugestão de revisão.',
       'Se o material não sustentar a conclusão, diga que não é possível verificar. Não use conhecimento externo.',
       'Não modifique a pergunta nem a resposta do estudante.'
-    ].join('\\n');
+    ].join('\n');
     if (notes.length > 4000) { evaluationStatus.textContent = 'Resposta longa demais para avaliar. Use até cerca de 3.000 caracteres.'; return; }
     evaluateButton.disabled = true;
     evaluationResult.hidden = true;
@@ -131,7 +131,7 @@
       const timer = setTimeout(() => controller.abort(), 60000);
       let response;
       try {
-        response = await fetch(endpoint.replace(/\\/$/, '') + '/api/tutor', {
+        response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
           method:'POST', headers:{'Content-Type':'application/json'},
           body:JSON.stringify({task:'teach', topic:topic.name, source, notes}), signal:controller.signal
         });
