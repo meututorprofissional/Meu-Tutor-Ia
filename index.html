@@ -67,9 +67,31 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 .brand{padding-right:0}
 @media(max-width:700px){.home-account-actions{gap:7px}.home-account-actions .support-bell{width:42px;height:42px}.home-account-actions .support-notifications{right:-56px}}
 @media(max-width:390px){.home-account-actions .support-bell{width:40px;height:40px}.home-account-actions .support-notifications{right:-55px}}
+
+/* Controles da conta no cabeçalho, alinhados e com menu suspenso. */
+header .brand{display:flex;align-items:center;gap:11px;padding-right:0}
+header .brand>div:nth-child(2){min-width:0;flex:1}
+header .home-account-actions{margin-left:auto;gap:8px;flex:0 0 auto;z-index:45}
+header .home-account-actions .support-bell-wrap{z-index:46}
+header .home-account-actions .support-bell{width:46px;height:46px;border-radius:14px;background:#25204c;border:1px solid #7455ba;box-shadow:0 0 0 1px #7c3aed44;color:#fff;font-size:1.45rem}
+header .home-account-actions .support-bell:hover,header .home-account-actions .profile-button:hover{box-shadow:0 0 0 2px #a78bfa}
+header .home-account-actions .support-bell-count{top:-7px;right:-7px}
+header .home-account-actions .brain.profile-button{width:auto;min-width:78px;height:46px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;background:#25204c;border:1px solid #7455ba;box-shadow:0 0 0 1px #7c3aed44;color:#fff;overflow:visible;padding:4px 8px;flex:auto}
+header .home-account-actions #homeProfileAvatar{width:35px;height:35px;display:grid;place-items:center;flex:0 0 35px;border-radius:50%;background:#635bdf;color:#fff;font-size:1.05rem;overflow:hidden}
+header .account-chevron{font-size:1.1rem;line-height:1}
+header .account-menu-wrap{position:relative;z-index:45}
+header .home-account-menu{position:absolute;right:0;top:calc(100% + 12px);width:min(290px,calc(100vw - 24px));padding:9px;background:#fff;color:#1f2937;border:1px solid #e5e7eb;border-radius:18px;box-shadow:0 16px 38px #11182740;z-index:50}
+header .home-account-menu[hidden]{display:none!important}
+header .home-account-menu button{display:flex;align-items:center;gap:12px;width:100%;background:transparent;color:#1f2937;border:0;border-radius:11px;text-align:left;padding:12px;font-weight:650;box-shadow:none}
+header .home-account-menu button:hover{background:#f1edff;filter:none}
+header .home-account-menu button span:nth-child(1){flex:1}
+header .account-menu-count{margin-left:auto;background:#ef4444;color:white;border-radius:99px;padding:1px 8px;font-size:.75rem}
+header .home-account-actions .support-notifications{top:calc(100% + 12px);right:0}
+@media(max-width:600px){header .brand h1{font-size:1rem}header .brand p{font-size:.68rem}header .brand img{width:36px;height:36px}header .home-account-actions{gap:6px}header .home-account-actions .support-bell{width:40px;height:40px}header .home-account-actions .brain.profile-button{height:40px;min-width:65px;padding:3px 5px;gap:4px}header .home-account-actions #homeProfileAvatar{width:30px;height:30px;flex-basis:30px}header .home-account-actions .support-notifications{right:-70px}}
+@media(max-width:370px){header .brand p{display:none}header .brand{gap:6px}}
 </style></head>
 <body>
-<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
+<header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
 <div id="updateNotice" role="status" style="display:none;max-width:1050px;margin:12px auto 0;padding:12px 16px;background:#fff8df;border:1px solid #efdf9f;border-radius:12px">
   <strong>Atualização disponível!</strong> Uma nova versão do Meu Tutor IA está pronta.
   <button id="applyUpdate" style="margin-left:8px">Atualizar agora</button>
@@ -78,7 +100,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <div class="layout">
 <main>
 <section id="home" class="screen active">
-<div class="welcome"><div><p class="overline">SEU ESPAÇO DE APRENDIZAGEM</p><h2>Olá! Vamos aprender? 👋</h2></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir meu perfil" title="Meu perfil"><span id="homeProfileAvatar">👤</span></button></div></div>
+<div class="welcome"><div><p class="overline">SEU ESPAÇO DE APRENDIZAGEM</p><h2>Olá! Vamos aprender? 👋</h2></div></div>
 <div class="home-layout"><div class="home-left"><div class="panel"><h2>Continue aprendendo</h2><p class="section-intro">Escolha o próximo passo da sua jornada.</p><div class="home-actions"><button class="action-card" data-go="study"><span class="emoji">📚</span><strong>Meu estudo</strong><span>Registre o material e suas anotações.</span></button><button class="action-card" data-go="cards"><span class="emoji">🗂️</span><strong>Flashcards</strong><span>Treine sua memória com cartões.</span></button><button class="action-card" data-go="quiz"><span class="emoji">✅</span><strong>Teste</strong><span>Pratique recordar sem consultar.</span></button><button class="action-card" data-go="progress"><span class="emoji">📈</span><strong>Progresso</strong><span>Acompanhe os seus registros.</span></button><button class="action-card" data-go="feedback"><span class="emoji">💬</span><strong>Ajuda e feedback</strong><span>Envie sugestões ou relate problemas.</span></button><button class="action-card" data-go="tickets" aria-label="Abrir Meus chamados"><span class="emoji">✉️</span><strong>Meus chamados</strong><span>Acompanhe seus relatos e respostas do suporte.</span></button></div></div></div><div class="home-right"><div class="hero"><span class="badge">SEU TUTOR DE ESTUDOS</span><h2>Estude melhor. Aprenda de verdade.</h2><p>Um passo de cada vez: registre suas anotações, revise o que aprendeu e acompanhe sua evolução.</p><button data-go="study">Começar a estudar &nbsp; →</button></div><div class="panel"><h2>Revisões para hoje</h2><div id="homeReviews"></div></div><div class="panel"><h2>Seu método de estudo</h2><p class="muted">1. Leia o material original. 2. Escreva o que entendeu com suas palavras. 3. Compare suas anotações com a fonte. 4. Revise e teste o que lembra.</p><div class="notice">ℹ️ A IA analisa o material primeiro. Confira o que ela entendeu antes de pedir explicações, resumos e atividades. Revise os resultados antes de usá-los.</div></div></div></div>
 </section>
 <section id="study" class="screen">
@@ -234,5 +256,30 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <script src="support-chat.js?v=11"></script>
 <script src="human-support.js?v=7"></script>
 <script src="admin-support.js?v=17"></script>
+
+<script>
+(() => {
+ const profile = document.getElementById('homeProfileButton');
+ const menu = document.getElementById('homeAccountMenu');
+ const bell = document.getElementById('supportBell');
+ const panel = document.getElementById('supportNotifications');
+ const badge = document.getElementById('supportBellCount');
+ const menuBadge = document.getElementById('accountMenuUnread');
+ if (!profile || !menu) return;
+ const closeMenu = () => { menu.hidden = true; profile.setAttribute('aria-expanded','false'); };
+ profile.addEventListener('click', e => { e.stopPropagation(); const next = !menu.hidden; menu.hidden = next; profile.setAttribute('aria-expanded',String(!next)); if(panel) panel.hidden=true; if(bell) bell.setAttribute('aria-expanded','false'); });
+ document.addEventListener('click', e => { if(!e.target.closest('.account-menu-wrap')) closeMenu(); });
+ document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
+ menu.addEventListener('click', e => {
+   const button=e.target.closest('[data-account-action]'); if(!button)return;
+   const action=button.dataset.accountAction; closeMenu();
+   if(action==='notifications'){bell?.click();return;}
+   if(action==='logout'){const logout=document.getElementById('profileSignOut');if(logout&&!logout.hidden){logout.click();}else{document.querySelector('nav [data-screen="home"]')?.click();document.getElementById('homeProfileButton')?.click();}return;}
+   if(typeof go==='function') go('profile'); else document.querySelector('[data-go="profile"]')?.click();
+   document.getElementById('profile')?.scrollIntoView({block:'start'});
+ });
+ if(badge && menuBadge){const observer=new MutationObserver(()=>{const count=badge.hidden?'':badge.textContent;menuBadge.textContent=count;menuBadge.hidden=!count;});observer.observe(badge,{attributes:true,childList:true,characterData:true,subtree:true});}
+})();
+</script>
 </body>
 </html>
