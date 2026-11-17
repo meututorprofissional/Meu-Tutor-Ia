@@ -23,6 +23,26 @@
   let channel = null;
   let busy = false;
   let pending = false;
+  const notice = document.getElementById('ticketsNotice');
+  function checkNewReplies(userId, data) {
+    if (!notice) return;
+    const signatures = (data || []).flatMap(t => (t.tutor_feedback_replies || []).map(r => t.id + ':' + r.created_at + ':' + r.message));
+    const key = 'meuTutorIA.ticketNotices.' + userId;
+    let old;
+    try { old = JSON.parse(localStorage.getItem(key) || 'null'); } catch (_) { old = null; }
+    if (!Array.isArray(old)) {
+      try { localStorage.setItem(key, JSON.stringify(signatures)); } catch (_) {}
+      notice.hidden = true;
+      return;
+    }
+    const known = new Set(old);
+    const count = signatures.filter(x => !known.has(x)).length;
+    if (count > 0) {
+      notice.textContent = count === 1 ? '🔔 Nova resposta da equipe de suporte recebida!' : '🔔 ' + count + ' novas respostas da equipe de suporte!';
+      notice.hidden = false;
+      try { localStorage.setItem(key, JSON.stringify([...new Set([...old, ...signatures])])); } catch (_) {}
+    }
+  }
   function subscribe(userId) {
     if (activeUser === userId && channel) return;
     if (channel) { client.removeChannel(channel); channel = null; }
@@ -36,7 +56,7 @@
   async function load(silent = false) {
     if (busy) { pending = true; return; }
     busy = true;
-    if (!client) { status.textContent = 'O serviço de contas não está disponível no momento.'; return; }
+    if (!client) { status.textContent = 'O serviço de contas não está disponível no momento.'; busy = false; return; }
     if (!silent) status.textContent = 'Consultando seus chamados…';
     if (!silent) refresh.disabled = true;
     try {
@@ -44,6 +64,7 @@
       if (authError) throw authError;
       if (!sessionData.session?.user) {
         subscribe(null);
+        if (notice) notice.hidden = true;
         lastSnapshot = null;
         list.replaceChildren();
         status.textContent = 'Entre com Google na área Seu perfil para consultar os chamados vinculados à sua conta.';
@@ -54,8 +75,12 @@
         .select('id,kind,subject,message,status,created_at,tutor_feedback_replies(message,created_at)')
         .eq('user_id', sessionData.session.user.id).order('created_at', { ascending: false }).limit(50);
       if (error) throw error;
+      checkNewReplies(sessionData.session.user.id, data);
       const snapshot = JSON.stringify(data || []);
-      if (snapshot === lastSnapshot) return;
+      if (snapshot === lastSnapshot) {
+        status.textContent = data.length + (data.length === 1 ? ' chamado encontrado.' : ' chamados encontrados.');
+        return;
+      }
       lastSnapshot = snapshot;
       list.replaceChildren();
       if (!data?.length) {
