@@ -260,6 +260,24 @@ html,body{max-width:100%;overflow-x:clip}
 <p id="ticketsNotice" class="success" role="status" aria-live="polite" hidden></p>
 <div id="ticketsList" aria-live="polite"></div>
 </div></section>
+<style>
+/* Painel ADM: separação visual entre atendimentos, sem alterar dados ou ações. */
+#adminSupportList { display: flex; flex-direction: column; gap: 18px; padding-top: 8px; }
+#adminSupportList > h3 { margin: 18px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--surface, #f4f5fa); border-left: 4px solid #7564e9; }
+#adminSupportList > article.item { display: block; margin: 0; padding: 18px; border: 1px solid #cbd1e0; border-left: 5px solid #7564e9; border-radius: 16px; background: var(--card, #fff); box-shadow: 0 4px 14px rgba(25,28,70,.07); overflow-wrap: anywhere; }
+#adminSupportList > article.item[data-support-conversation] { border-left-color: #6354d9; }
+#adminSupportList > article.item:not([data-support-conversation]) { border-left-color: #299c83; }
+#adminSupportList > article.item > strong:first-child { display: block; font-size: 1.04rem; margin-bottom: 6px; }
+#adminSupportList > article.item [data-support-messages] { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+#adminSupportList > article.item [data-support-messages] > .item { margin-top: 0; margin-bottom: 0; padding: 12px 14px; }
+#adminSupportList > article.item form { padding-top: 12px; border-top: 1px solid #d9dce8; }
+#adminSupportList > article.item textarea { width: 100%; box-sizing: border-box; }
+@media (max-width: 600px) {
+ #adminSupportList { gap: 16px; }
+ #adminSupportList > article.item { padding: 13px; border-radius: 13px; }
+ #adminSupportList > article.item [data-support-messages] > .item { max-width: 94% !important; }
+}
+</style>
 <section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas, responda aos usuários e acompanhe relatos enviados.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Seus estudos são guardados neste navegador. Quando você entra em uma conta e a sincronização é concluída, eles também podem ser salvos na nuvem para acesso em outros dispositivos com a mesma conta. A sincronização depende da conexão e não substitui um backup próprio. Use “Exportar meus dados (JSON)” para guardar uma cópia e “Importar backup” para restaurar um arquivo. Antes de trocar ou limpar o dispositivo, confirme a sincronização e mantenha um backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
 <script src="app.js?v=49"></script>
