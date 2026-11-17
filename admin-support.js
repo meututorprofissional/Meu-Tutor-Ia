@@ -68,12 +68,37 @@
     })();
     return checking;
   }
+  // Acordeões nativos: mantêm mensagens e formulários existentes intactos.
+  function collapseCard(card, title, subtitle, openIds) {
+    const details = document.createElement('details');
+    details.className = 'admin-support-accordion';
+    details.open = openIds.has(card.dataset.supportConversation || card.dataset.supportTicket);
+    const summary = document.createElement('summary');
+    summary.className = 'admin-support-summary';
+    const labels = document.createElement('span');
+    labels.className = 'admin-support-summary-labels';
+    const heading = document.createElement('strong');
+    heading.textContent = title;
+    const meta = document.createElement('small');
+    meta.textContent = subtitle;
+    labels.append(heading, meta);
+    const indicator = document.createElement('span');
+    indicator.className = 'admin-support-toggle';
+    indicator.setAttribute('aria-hidden', 'true');
+    summary.append(labels, indicator);
+    const content = document.createElement('div');
+    content.className = 'admin-support-content';
+    while (card.firstChild) content.appendChild(card.firstChild);
+    details.append(summary, content);
+    card.appendChild(details);
+  }
   let loading = false;
   let lastMessageStamp = null;
   let lastConversationStamp = null;
   async function load() {
     if (loading) return;
     loading = true;
+    const openIds = new Set([...list.querySelectorAll('details.admin-support-accordion[open]')].map(el => el.closest('article')?.dataset.supportConversation || el.closest('article')?.dataset.supportTicket).filter(Boolean));
     const drafts = new Map();
     list.querySelectorAll('textarea[data-conversation-id]').forEach(el => drafts.set(el.dataset.conversationId, el.value));
     const previousScroll = window.scrollY;
@@ -160,6 +185,7 @@
           });
           card.appendChild(replyForm);
         }
+        collapseCard(card, 'Conversa · ' + (conversation.status || 'sem situação'), new Date(conversation.created_at).toLocaleString('pt-BR'), openIds);
       }
       add(list,'h3','📨 Relatos e chamados');
       if (!feedback.length) add(list,'p','Nenhum relato registrado.','muted');
@@ -247,7 +273,9 @@
           });
           card.appendChild(replyForm);
         }
+        card.dataset.supportTicket = ticket.id;
         if (!ticket.user_id) add(card,'small','Relato antigo sem conta vinculada.','muted');
+        collapseCard(card, ticket.subject || 'Sem assunto', (ticket.kind || 'Relato') + ' · ' + (ticket.status || 'recebido') + ' · ' + new Date(ticket.created_at).toLocaleString('pt-BR'), openIds);
       }
     } catch (error) {
       console.error('Painel administrativo:',error);
