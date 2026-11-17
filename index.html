@@ -201,6 +201,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <p class="muted">Acompanhe aqui os relatos vinculados à sua conta e as respostas da equipe do Meu Tutor IA.</p>
 <div class="row"><button type="button" class="secondary" data-go="feedback">💬 Enviar novo relato</button><button type="button" id="ticketsRefresh" class="secondary">↻ Atualizar</button></div>
 <p id="ticketsStatus" class="muted" role="status" aria-live="polite">Entre na sua conta para consultar seus chamados.</p>
+<p id="ticketsNotice" class="success" role="status" aria-live="polite" hidden></p>
 <div id="ticketsList" aria-live="polite"></div>
 </div></section>
 <section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas, responda aos usuários e acompanhe relatos enviados.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Os dados ficam apenas neste navegador e neste dispositivo. Para usar em outro dispositivo, exporte e importe um arquivo de backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
@@ -214,7 +215,7 @@ button,.btn{border:0;border-radius:12px;padding:10px 14px;background:linear-grad
 <script src="profile.js"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=5"></script>
-<script src="tickets.js?v=5"></script>
+<script src="tickets.js?v=6"></script>
 <script src="support-chat.js?v=11"></script>
 <script src="human-support.js?v=7"></script>
 <script src="admin-support.js?v=17"></script>
