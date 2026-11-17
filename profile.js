@@ -125,8 +125,8 @@
     setText('authStatus', session ? 'Conta conectada. Seus estudos podem ser sincronizados com segurança.' : 'Entre com Google ou Facebook para acessar seus estudos em outros dispositivos.');
   }
   async function saveCloudData(data) {
-    if (!client || !session?.user?.id || !data) return;
-    if (syncing) { pendingData = data; return; }
+    if (!client || !session?.user?.id || !data) return false;
+    if (syncing) { pendingData = data; return false; }
     syncing = true;
     let nextData = data;
     try {
@@ -144,9 +144,11 @@
         nextData = pendingData;
       } while (nextData);
       setText('syncStatus', 'Estudos sincronizados com sua conta.');
+      return true;
     } catch (error) {
       console.error('Meu Tutor IA: falha ao sincronizar', error);
       setText('syncStatus', 'Não foi possível sincronizar agora. Seus dados locais continuam salvos; tente novamente mais tarde.');
+      return false;
     } finally { syncing = false; }
   }
   async function initialSync() {
@@ -199,7 +201,7 @@
 
   window.syncTutorData = data => {
     if (!client || !session || !data) return Promise.resolve(false);
-    return saveCloudData(data).then(() => true);
+    return saveCloudData(data);
   };
 
   const nameButton = el('saveProfileName');
