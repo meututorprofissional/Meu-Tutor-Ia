@@ -223,8 +223,10 @@
             if(!message||message.length>2000)return;
             replyButton.disabled=true;replyNotice.textContent='Enviando resposta…';
             try{
+              const {data:refreshed,error:refreshError}=await client.auth.refreshSession();
+              if(refreshError || !refreshed?.session) throw new Error('Sessão expirada. Entre novamente na conta administradora.');
               const {data:auth,error:authError}=await client.auth.getUser();
-              if(authError||auth.user?.app_metadata?.support_admin!==true)throw new Error('Acesso administrativo não confirmado');
+              if(authError || auth.user?.app_metadata?.support_admin!==true) throw new Error('Permissão de administrador não confirmada. Entre novamente na conta ADM.');
               const {error:insertError}=await client.from('tutor_feedback_replies').insert({
                 feedback_id:ticket.id,message,author_id:auth.user.id
               });
@@ -234,7 +236,13 @@
               const {data:latest,error:readError}=await client.from('tutor_feedback_replies')
                 .select('id,message,created_at').eq('feedback_id',ticket.id).order('created_at',{ascending:true});
               if(!readError&&latest){replyHistory.replaceChildren();latest.forEach(renderReply);}
-            }catch(error){console.error('Resposta ao chamado:',error);replyNotice.textContent='Não foi possível enviar a resposta. Confira sua sessão e tente novamente.';}
+            }catch(error){
+              console.error('Resposta ao chamado:',error);
+              const code = String(error?.code || '');
+              if (/Sessão expirada|Permissão de administrador/.test(error?.message || '')) replyNotice.textContent = error.message;
+              else if (code === '42501' || code === 'PGRST301') replyNotice.textContent = 'Acesso negado ao enviar. Confira a permissão ADM e entre novamente. Código: ' + code;
+              else replyNotice.textContent = 'Não foi possível enviar a resposta. Código: ' + (code || 'indisponível') + '. Confira a conexão e tente novamente.';
+            }
             finally{replyButton.disabled=false;}
           });
           card.appendChild(replyForm);
