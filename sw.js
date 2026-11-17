@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v54-sync-result';
+const CACHE_VERSION = 'meu-tutor-ia-v55-backup-guidance';
 
 const APP_FILES = [
   './',
