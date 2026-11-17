@@ -44,6 +44,10 @@
     // Não classificar pela mera presença de "correto/incorreto" em qualquer lugar.
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+(?:claramente\s+)?incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+(?:claramente\s+)?corret[ao]\b/i.test(feedback)) key = 'CORRETO';
+    // Reconhece uma classificação explícita mesmo quando o modelo esquece o cabeçalho RESULTADO.
+    // Não interpreta menções genéricas a "parcialmente correto" como veredito.
+    if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida|o resultado|a classificação|o veredito)\\s+(?:foi|é|está|deve ser|seria)\\s+(?:considerad[ao]\\s+)?parcialmente corret[ao]\\b/i.test(feedback)) key = 'PARCIALMENTE CORRETO';
+    if (!key && /(?:o resultado|a classificação|o veredito)\\s+(?:foi|é|está|deve ser|seria)\\s+(?:considerad[ao]\\s+)?(?:não foi possível verificar|nao foi possivel verificar)\\b/i.test(feedback)) key = 'NAO FOI POSSIVEL VERIFICAR';
     // Ex.: 'A resposta do estudante foi Ceará, que é incorreta.'
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+[^.!?\n]{1,100}?,\s*que\s+é\s+incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
     // Ex.: "O estudante respondeu corretamente que Messi nasceu em Rosário."
@@ -188,6 +192,8 @@
       'COMECE a explicação com uma linha exata: RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR.',
       'Avalie SOMENTE o que a pergunta solicita. Se a pergunta exigir dois ou mais elementos (ex.: cidade E país) e a resposta trouxer apenas parte correta, classifique como PARCIALMENTE CORRETO. Se pedir apenas a cidade, não exija país, data ou detalhes adicionais.',
       'Use CORRETO somente quando todos os elementos essenciais solicitados estiverem respondidos corretamente. Use INCORRETO quando a resposta estiver errada ou não atender à pergunta. Use NÃO FOI POSSÍVEL VERIFICAR quando a fonte não permitir avaliar.',
+      'Exemplo obrigatório: se perguntar "Em que ano nasceu Lionel Messi?" e a fonte disser 24 de junho de 1987, a resposta "1987, eu acho" é CORRETO: o ano foi dado. Não exija dia e mês. Expressões de dúvida ("eu acho", "talvez") não tornam um fato correto parcialmente correto.',
+      'PARCIALMENTE CORRETO apenas se faltar ou estiver errada parte essencial do que foi perguntado, mas houver uma parte correta. Não use parcial por falta de detalhes que não foram pedidos.',
       'Aceite diferenças de maiúsculas e acentos que não mudem o significado. Não penalize informação extra ausente.',
       'Depois explique o motivo, a resposta esperada sustentada pela fonte e o que revisar. Seja breve.',
       'Se o material não sustentar a conclusão, diga que não é possível verificar. Não use conhecimento externo.',
