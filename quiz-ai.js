@@ -53,20 +53,42 @@
   const renderEvaluation = (feedback, userAnswer) => {
     const verdict = parseVerdict(feedback);
     evaluationResult.replaceChildren();
-    const heading = document.createElement('div');
-    heading.style.cssText = 'font-size:1.2rem;font-weight:750;margin-bottom:12px;color:' + verdict.color;
-    heading.textContent = verdict.label === 'Correto' ? '✓ Resposta correta' : verdict.label === 'Incorreto' ? '✕ Resposta incorreta' : verdict.label === 'Parcialmente correto' ? '◐ Resposta parcialmente correta' : 'ⓘ ' + verdict.label;
-    const answerLabel = document.createElement('p');
-    answerLabel.style.margin = '0 0 12px';
-    const strong = document.createElement('strong');
-    strong.textContent = 'Sua resposta: ';
-    answerLabel.append(strong, document.createTextNode(userAnswer));
-    const explanationLabel = document.createElement('strong');
-    explanationLabel.textContent = 'Explicação da IA';
-    const explanation = document.createElement('p');
-    explanation.style.whiteSpace = 'pre-wrap';
-    explanation.textContent = verdict.explanation || feedback;
-    evaluationResult.append(heading, answerLabel, explanationLabel, explanation);
+    evaluationResult.style.cssText = 'padding:clamp(14px,3vw,22px);border-radius:16px;overflow-wrap:anywhere;';
+    const make = (tag, content, css) => {
+      const el = document.createElement(tag);
+      el.textContent = content;
+      if (css) el.style.cssText = css;
+      return el;
+    };
+    const header = make('div', '', 'display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;');
+    const icon = verdict.label === 'Correto' ? '✓' : verdict.label === 'Incorreto' ? '✕' : verdict.label === 'Parcialmente correto' ? '◐' : 'ⓘ';
+    const heading = make('strong', icon + ' ' + (verdict.label === 'Correto' ? 'Resposta correta' : verdict.label === 'Incorreto' ? 'Resposta incorreta' : verdict.label === 'Parcialmente correto' ? 'Resposta parcialmente correta' : verdict.label), 'font-size:1.15rem;color:' + verdict.color + ';line-height:1.4;');
+    header.append(heading);
+    const section = (title, content) => {
+      const block = make('section', '', 'margin:0 0 16px;');
+      const label = make('div', title, 'font-size:.78rem;font-weight:750;letter-spacing:.04em;text-transform:uppercase;opacity:.72;margin-bottom:7px;');
+      const body = make('div', content, 'line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;');
+      block.append(label, body);
+      return block;
+    };
+    const userBlock = section('Sua resposta', userAnswer);
+    userBlock.style.cssText += 'padding:12px 14px;border-radius:10px;border:1px solid rgba(128,128,128,.22);';
+    const explanation = verdict.explanation || feedback;
+    // Só separar "resposta esperada" e "o que revisar" quando vierem rotulados pela IA.
+    // Nunca adivinhar esses campos a partir de frases soltas.
+    const extract = label => {
+      const re = new RegExp('(?:^|\\n)\\s*(?:\\*\\*)?'+label+'(?:\\*\\*)?\\s*[:：]\\s*([^\\n]+)', 'i');
+      const match = explanation.match(re);
+      return match ? match[1].trim().replace(/\*+$/, '').trim() : '';
+    };
+    const expected = extract('RESPOSTA ESPERADA|RESPOSTA CORRETA');
+    const review = extract('O QUE REVISAR|SUGESTÃO DE REVISÃO');
+    let remaining = explanation.replace(/(?:^|\n)\s*\**(?:RESPOSTA ESPERADA|RESPOSTA CORRETA|O QUE REVISAR|SUGESTÃO DE REVISÃO)\**\s*[:：]\s*[^\n]+/gi, '').trim();
+    if (!remaining) remaining = explanation;
+    evaluationResult.append(header, userBlock);
+    if (expected) evaluationResult.append(section('Resposta esperada', expected));
+    evaluationResult.append(section('Explicação da IA', remaining));
+    if (review) evaluationResult.append(section('O que revisar', review));
     return verdict.verified;
   };
   const syncMode = () => {
