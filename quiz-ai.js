@@ -254,6 +254,7 @@
     } finally { evaluateButton.disabled = false; }
   });
   answer.addEventListener('input', clearEvaluation);
+  confidence?.addEventListener('change', clearEvaluation);
   topicSelect.addEventListener('change', () => {
     clearEvaluation();
     if (mode.value === 'ai' && generatedTopic && generatedTopic !== topicSelect.value) {
