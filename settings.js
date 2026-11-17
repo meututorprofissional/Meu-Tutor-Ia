@@ -1,21 +1,22 @@
 (() => {
   'use strict';
   const KEY = 'meuTutorIA.settings.v1';
-  const defaults = { textSize: 'normal', motion: 'normal', spacing: 'normal' };
-  const allowed = { textSize: ['normal','large'], motion: ['normal','reduced'], spacing: ['normal','compact'] };
+  const defaults = { textSize: 'normal', motion: 'normal', spacing: 'normal', supportAlerts: 'on', unreadBadge: 'on' };
+  const allowed = { textSize: ['normal','large'], motion: ['normal','reduced'], spacing: ['normal','compact'], supportAlerts: ['on','off'], unreadBadge: ['on','off'] };
   const read = () => {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
       return Object.fromEntries(Object.keys(defaults).map(k => [k, allowed[k].includes(saved[k]) ? saved[k] : defaults[k]]));
     } catch { return { ...defaults }; }
   };
-  const controls = { textSize: document.getElementById('settingTextSize'), motion: document.getElementById('settingMotion'), spacing: document.getElementById('settingSpacing') };
+  const controls = { textSize: document.getElementById('settingTextSize'), motion: document.getElementById('settingMotion'), spacing: document.getElementById('settingSpacing'), supportAlerts: document.getElementById('settingSupportAlerts'), unreadBadge: document.getElementById('settingUnreadBadge') };
   const status = document.getElementById('settingsStatus');
   const apply = prefs => {
     document.documentElement.classList.toggle('tutor-text-large', prefs.textSize === 'large');
     document.documentElement.classList.toggle('tutor-reduced-motion', prefs.motion === 'reduced');
     document.documentElement.classList.toggle('tutor-compact', prefs.spacing === 'compact');
     for (const [key, node] of Object.entries(controls)) if (node) node.value = prefs[key];
+    document.dispatchEvent(new CustomEvent('tutor:notification-settings', { detail: { supportAlerts: prefs.supportAlerts, unreadBadge: prefs.unreadBadge } }));
   };
   const style = document.createElement('style');
   style.textContent = `
