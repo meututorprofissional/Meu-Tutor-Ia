@@ -186,6 +186,11 @@ html,body{max-width:100%;overflow-x:clip}
 <label for="quizTopic">Assunto</label><select id="quizTopic"></select>
 <label for="question">Pergunta <small id="quizQuestionLockHint" class="muted">(gerada pela IA — não editável no modo IA)</small></label><input id="question" placeholder="Ex: Qual é a função do sistema respiratório?">
 <label for="answer">Minha resposta (sem consultar)</label><textarea id="answer" placeholder="Explique com suas próprias palavras..."></textarea>
+<div id="quizAiEvaluation" hidden>
+<button id="quizEvaluate" type="button" class="secondary">🧠 Avaliar minha resposta com IA</button>
+<p id="quizEvaluationStatus" class="muted" role="status">Responda primeiro. A IA analisará sua tentativa usando o material original.</p>
+<div id="quizEvaluationResult" class="item" hidden aria-live="polite"></div>
+</div>
 <label for="rating">Como avalia sua recordação?</label><select id="rating"><option value="good">Consegui explicar</option><option value="partial">Lembrei de uma parte</option><option value="practice">Preciso praticar</option></select>
 <label for="reflection">O que faltou ou preciso revisar? (opcional)</label><textarea id="reflection" placeholder="Registre o que percebeu ao conferir o material."></textarea>
 <button id="saveQuiz">Registrar tentativa</button><p id="quizMsg" class="muted" role="status"></p></div>
@@ -305,7 +310,7 @@ html,body{max-width:100%;overflow-x:clip}
 <section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas, responda aos usuários e acompanhe relatos enviados.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Seus estudos são guardados neste navegador. Quando você entra em uma conta e a sincronização é concluída, eles também podem ser salvos na nuvem para acesso em outros dispositivos com a mesma conta. A sincronização depende da conexão e não substitui um backup próprio. Use “Exportar meus dados (JSON)” para guardar uma cópia e “Importar backup” para restaurar um arquivo. Antes de trocar ou limpar o dispositivo, confirme a sincronização e mantenha um backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
 <script src="app.js?v=49"></script>
-<script src="quiz-ai.js?v=3"></script>
+<script src="quiz-ai.js?v=4"></script>
 <script src="updates.js"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
