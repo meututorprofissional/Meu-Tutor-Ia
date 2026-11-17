@@ -37,7 +37,7 @@
     status.textContent = 'Criando uma pergunta com base no material original…';
     try {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 25000);
+      const timer = setTimeout(() => controller.abort(), 60000);
       let response;
       try {
         response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
@@ -63,7 +63,7 @@
       status.textContent = 'Pergunta pronta! Responda sem consultar. Depois confira o material original, avalie sua recordação e registre a tentativa. A correção automática ainda não está disponível.';
       answer.focus();
     } catch (error) {
-      status.textContent = error.name === 'AbortError' ? 'A IA demorou mais de 25 segundos. Tente novamente.' : 'Não foi possível gerar: ' + error.message;
+      status.textContent = error.name === 'AbortError' ? 'A IA não respondeu em até 60 segundos. Verifique a conexão e tente novamente.' : 'Não foi possível gerar: ' + error.message;
     } finally { button.disabled = false; }
   });
   topicSelect.addEventListener('change', () => {
