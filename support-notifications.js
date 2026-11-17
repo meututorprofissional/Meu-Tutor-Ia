@@ -8,6 +8,7 @@
   if (!bell || !panel || !entries || !window.supabase || !cfg.supabaseUrl || !cfg.supabaseAnonKey) return;
   const client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
   let currentUser = null, latest = [], loading = false;
+  let requestVersion = 0;
   function notificationPrefs() {
     try {
       const settings = JSON.parse(localStorage.getItem('meuTutorIA.settings.v1') || '{}');
@@ -32,7 +33,7 @@
     const prefs = notificationPrefs();
     badge.hidden = unread === 0 || !prefs.badge;
     const menuBadge = document.getElementById('accountMenuUnread');
-    if (menuBadge) menuBadge.hidden = unread === 0 || !prefs.badge;
+    if (menuBadge) { menuBadge.textContent = prefs.badge && unread ? badge.textContent : ''; menuBadge.hidden = unread === 0 || !prefs.badge; }
     if (prefs.alerts && lastUnread !== null && unread > lastUnread) {
       const notice = document.getElementById('ticketsNotice');
       if (notice) {
@@ -62,15 +63,18 @@
   async function load() {
     if (loading || document.visibilityState === 'hidden') return;
     loading = true;
+    const version = requestVersion;
     try {
       const { data: auth } = await client.auth.getSession();
       const uid = auth?.session?.user?.id || null;
-      if (!uid) { currentUser = null; latest = []; draw(); return; }
-      if (currentUser !== uid) { currentUser = uid; latest = []; }
+      if (version !== requestVersion) return;
+      if (!uid) { currentUser = null; latest = []; lastUnread = null; draw(); return; }
+      if (currentUser !== uid) { currentUser = uid; latest = []; lastUnread = null; }
       const { data, error } = await client.from('tutor_feedback')
         .select('id,subject,tutor_feedback_replies(id,message,created_at)')
         .eq('user_id', uid).order('created_at', { ascending: false }).limit(50);
       if (error) throw error;
+      if (version !== requestVersion || currentUser !== uid) return;
       latest = (data || []).flatMap(t => (t.tutor_feedback_replies || []).map(r => ({
         id: r.id, subject: t.subject || 'Chamado', message: r.message || '', created_at: r.created_at
       }))).sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 30);
@@ -96,8 +100,19 @@
     }
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { panel.hidden = true; bell.setAttribute('aria-expanded','false'); } });
-  document.addEventListener('tutor:notification-settings', () => draw());
-  client.auth.onAuthStateChange(() => setTimeout(load, 0));
+  document.addEventListener('tutor:notification-settings', () => {
+    const notice = document.getElementById('ticketsNotice');
+    if (!notificationPrefs().alerts && notice) notice.hidden = true;
+    draw();
+  });
+  client.auth.onAuthStateChange(() => {
+    requestVersion++;
+    currentUser = null; latest = []; lastUnread = null;
+    panel.hidden = true;
+    bell.setAttribute('aria-expanded', 'false');
+    draw();
+    setTimeout(load, 0);
+  });
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') load(); });
   setInterval(load, 15000);
   load();
