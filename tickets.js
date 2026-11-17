@@ -37,9 +37,12 @@
     }
     const known = new Set(old);
     const count = signatures.filter(x => !known.has(x)).length;
+    let alertsEnabled = true;
+    try { alertsEnabled = JSON.parse(localStorage.getItem('meuTutorIA.settings.v1') || '{}').supportAlerts !== 'off'; } catch (_) {}
+    if (!alertsEnabled) notice.hidden = true;
     if (count > 0) {
-      notice.textContent = count === 1 ? '🔔 Nova resposta da equipe de suporte recebida!' : '🔔 ' + count + ' novas respostas da equipe de suporte!';
-      notice.hidden = false;
+      if (alertsEnabled) notice.textContent = count === 1 ? '🔔 Nova resposta da equipe de suporte recebida!' : '🔔 ' + count + ' novas respostas da equipe de suporte!';
+      if (alertsEnabled) notice.hidden = false;
       try { localStorage.setItem(key, JSON.stringify([...new Set([...old, ...signatures])])); } catch (_) {}
     }
   }
