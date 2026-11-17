@@ -168,6 +168,31 @@
         add(card,'strong',ticket.subject || 'Sem assunto');
         add(card,'p',(ticket.kind || 'Relato') + ' · ' + (ticket.status || 'recebido') + ' · ' + new Date(ticket.created_at).toLocaleString('pt-BR'),'muted');
         add(card,'p',ticket.message);
+        const statusLabel = add(card,'label','Situação do chamado');
+        const statusSelect = document.createElement('select');
+        statusSelect.setAttribute('aria-label','Situação do chamado: ' + (ticket.subject || 'Sem assunto'));
+        const statuses = [['novo','Novo'],['em_atendimento','Em atendimento'],['respondido','Respondido'],['resolvido','Resolvido']];
+        for (const [value,label] of statuses) { const option = document.createElement('option');option.value=value;option.textContent=label;statusSelect.appendChild(option); }
+        statusSelect.value = ticket.status === 'em_analise' ? 'em_atendimento' : (ticket.status || 'novo');
+        statusLabel.appendChild(statusSelect);
+        const saveStatus = add(card,'button','Salvar situação');
+        saveStatus.type='button';
+        saveStatus.style.marginTop='8px';
+        const statusMessage = add(card,'p','','muted');
+        statusMessage.setAttribute('role','status');
+        saveStatus.addEventListener('click',async()=>{
+          if (!statuses.some(([value])=>value===statusSelect.value)) return;
+          saveStatus.disabled=true;statusMessage.textContent='Salvando situação…';
+          try {
+            const {data:auth,error:authError}=await client.auth.getUser();
+            if(authError || auth.user?.app_metadata?.support_admin!==true) throw new Error('Sem permissão administrativa');
+            const {data:updated,error}=await client.from('tutor_feedback').update({status:statusSelect.value}).eq('id',ticket.id).select('id,status').single();
+            if(error || !updated) throw error || new Error('Chamado não atualizado');
+            ticket.status=updated.status;
+            statusMessage.textContent='Situação salva: '+(statuses.find(([value])=>value===updated.status)?.[1]||updated.status)+'.';
+          } catch(error) {console.error('Atualização do chamado:',error);statusMessage.textContent='Não foi possível salvar. Confira sua permissão e tente novamente.';}
+          finally {saveStatus.disabled=false;}
+        });
         if (!ticket.user_id) add(card,'small','Relato antigo sem conta vinculada.','muted');
       }
     } catch (error) {
