@@ -301,9 +301,9 @@ document.getElementById('cardEasy').onclick=()=>rateCard('easy');
 document.getElementById('cardHard').onclick=()=>rateCard('hard');
 
 document.getElementById('saveQuiz').onclick=()=>{
- const topicId=document.getElementById('quizTopic').value,question=document.getElementById('question').value.trim(),answer=document.getElementById('answer').value.trim(),rating=document.getElementById('rating').value,reflection=document.getElementById('reflection').value.trim();
+ const topicId=document.getElementById('quizTopic').value,question=document.getElementById('question').value.trim(),answer=document.getElementById('answer').value.trim(),rating=document.getElementById('rating').value,confidence=document.getElementById('quizConfidence')?.value || 'sure',reflection=document.getElementById('reflection').value.trim();
  if(!question||!answer){document.getElementById('quizMsg').textContent='Preencha a pergunta e sua resposta antes de registrar.';return}
- db.attempts.unshift({id:id(),topicId,type:'quiz',rating,question,answer,reflection,date:new Date().toISOString()});
+ db.attempts.unshift({id:id(),topicId,type:'quiz',rating,confidence,question,answer,reflection,date:new Date().toISOString()});
  document.getElementById('question').value='';document.getElementById('answer').value='';document.getElementById('reflection').value='';document.getElementById('quizMsg').textContent='Tentativa registrada. Confira sua resposta com o material original e anote o que faltou.';save();
 };
 
