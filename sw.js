@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v68-feedback-layout';
+const CACHE_VERSION = 'meu-tutor-ia-v69-correct-answers';
 
 const APP_FILES = [
   './',
