@@ -27,6 +27,40 @@
     return '';
   };
 
+  // A classificação só é mostrada quando a IA fornece um marcador explícito.
+  // Não deduzir "correto" de palavras soltas dentro da explicação.
+  const parseVerdict = feedback => {
+    const match = feedback.match(/^\\s*(?:\\*\\*)?\\s*(?:RESULTADO|CLASSIFICAÇÃO|VEREDITO)\\s*(?:\\*\\*)?\\s*[:：-]\\s*(CORRETO|PARCIALMENTE CORRETO|INCORRETO|NÃO FOI POSSÍVEL VERIFICAR|NAO FOI POSSIVEL VERIFICAR)\\b/im);
+    if (!match) return { label: 'Não foi possível classificar', color: '#64748b', explanation: feedback, verified: false };
+    const key = match[1].normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toUpperCase();
+    const verdicts = {
+      'CORRETO': ['Correto', '#15803d'],
+      'PARCIALMENTE CORRETO': ['Parcialmente correto', '#a16207'],
+      'INCORRETO': ['Incorreto', '#b91c1c'],
+      'NAO FOI POSSIVEL VERIFICAR': ['Não foi possível verificar', '#64748b']
+    };
+    const [label, color] = verdicts[key];
+    return { label, color, explanation: feedback.replace(match[0], '').trim(), verified: true };
+  };
+  const renderEvaluation = (feedback, userAnswer) => {
+    const verdict = parseVerdict(feedback);
+    evaluationResult.replaceChildren();
+    const heading = document.createElement('div');
+    heading.style.cssText = 'font-size:1.2rem;font-weight:750;margin-bottom:12px;color:' + verdict.color;
+    heading.textContent = verdict.label === 'Correto' ? '✓ Resposta correta' : verdict.label === 'Incorreto' ? '✕ Resposta incorreta' : verdict.label === 'Parcialmente correto' ? '◐ Resposta parcialmente correta' : 'ⓘ ' + verdict.label;
+    const answerLabel = document.createElement('p');
+    answerLabel.style.margin = '0 0 12px';
+    const strong = document.createElement('strong');
+    strong.textContent = 'Sua resposta: ';
+    answerLabel.append(strong, document.createTextNode(userAnswer));
+    const explanationLabel = document.createElement('strong');
+    explanationLabel.textContent = 'Explicação da IA';
+    const explanation = document.createElement('p');
+    explanation.style.whiteSpace = 'pre-wrap';
+    explanation.textContent = verdict.explanation || feedback;
+    evaluationResult.append(heading, answerLabel, explanationLabel, explanation);
+    return verdict.verified;
+  };
   const syncMode = () => {
     const ai = mode.value === 'ai';
     controls.hidden = !ai;
@@ -89,7 +123,7 @@
       generatedQuestion = question.value; generatedTopic = topicId;
       answer.value = ''; reflection.value = ''; rating.value = 'good';
       clearEvaluation();
-      status.textContent = 'Pergunta pronta! Responda sem consultar. Depois confira o material original, avalie sua recordação e registre a tentativa. A correção automática ainda não está disponível.';
+      status.textContent = 'Pergunta pronta! Responda sem consultar. Depois confira o material original, avalie sua recordação e registre a tentativa. Depois você poderá pedir uma avaliação orientativa com IA.';
       answer.focus();
     } catch (error) {
       status.textContent = error.name === 'AbortError' ? 'A IA não respondeu em até 60 segundos. Verifique a conexão e tente novamente.' : 'Não foi possível gerar: ' + error.message;
@@ -118,7 +152,8 @@
       'TAREFA DE AVALIAÇÃO DE RECORDAÇÃO: Compare exclusivamente com o material original fornecido.',
       'Pergunta: ' + promptQuestion,
       'Resposta do estudante: ' + userAnswer,
-      'Diga claramente o que está correto, o que está incorreto ou ausente e uma sugestão de revisão.',
+      'COMECE a explicação com uma linha exata: RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR.',
+      'Depois explique o motivo, a resposta esperada sustentada pela fonte e o que revisar. Seja breve.',
       'Se o material não sustentar a conclusão, diga que não é possível verificar. Não use conhecimento externo.',
       'Não modifique a pergunta nem a resposta do estudante.'
     ].join('\n');
@@ -148,7 +183,7 @@
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               task: 'teach', topic: topic.name, source,
-              notes: 'Avalie esta resposta de forma BREVE usando somente o material original. Pergunta: ' + promptQuestion + '\nResposta: ' + userAnswer + '\nIndique acertos, erros e revisão em no máximo 5 frases. Não invente fatos.'
+              notes: 'Avalie usando SOMENTE o material original. Comece a explicação com RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR. Pergunta: ' + promptQuestion + '\nResposta: ' + userAnswer + '\nExplique o motivo e o que revisar em até 5 frases. Não invente fatos.'
             }),
             signal: retryController.signal
           });
@@ -162,11 +197,10 @@
         evaluationStatus.textContent = 'A resposta mudou durante a análise. Solicite uma nova avaliação.';
         return;
       }
-      evaluationResult.textContent = feedback;
-      evaluationResult.style.whiteSpace = 'pre-wrap';
+      const classified = renderEvaluation(feedback, userAnswer);
       evaluationResult.hidden = false;
       evaluatedSignature = signature;
-      evaluationStatus.textContent = 'Análise orientativa da IA. Confira o material original antes de registrar sua autoavaliação; a IA pode cometer erros.';
+      evaluationStatus.textContent = classified ? 'Avaliação orientativa da IA. Confira o material original; a IA pode cometer erros.' : 'A IA explicou a resposta, mas não informou uma classificação confiável. Confira o material original.';
     } catch (error) {
       evaluationStatus.textContent = error.name === 'AbortError' ? 'A análise demorou mais de 60 segundos. Tente novamente.' : 'Não foi possível avaliar: ' + error.message;
     } finally { evaluateButton.disabled = false; }
