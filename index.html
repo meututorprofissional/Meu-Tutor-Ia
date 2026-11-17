@@ -190,6 +190,7 @@ header .home-account-actions .support-notifications{top:calc(100% + 12px);right:
 <p id="syncStatus" class="muted" role="status" aria-live="polite"></p></div>
 <div class="panel"><h2>☁️ Seus estudos e privacidade</h2><p class="muted">Seus assuntos, flashcards e tentativas ficam neste navegador e podem ser sincronizados com sua conta. Antes de trocar de dispositivo ou desinstalar o app, confirme que a sincronização foi concluída ou exporte um backup.</p><div class="notice">Importante: não compartilhe sua senha ou códigos de acesso. O Meu Tutor IA não pede sua senha do Google ou Facebook diretamente.</div></div>
 </section>
+<section id="settings" class="screen"><div class="panel"><p class="overline">Personalização</p><h2>⚙️ Configurações do aplicativo</h2><p class="muted">Ajuste a experiência do Meu Tutor IA neste dispositivo. Seus estudos e dados da conta não serão alterados.</p><label for="settingTextSize">Tamanho do texto</label><select id="settingTextSize"><option value="normal">Padrão</option><option value="large">Maior</option></select><label for="settingMotion">Animações da interface</label><select id="settingMotion"><option value="normal">Padrão</option><option value="reduced">Reduzidas</option></select><label for="settingSpacing">Espaçamento da interface</label><select id="settingSpacing"><option value="normal">Confortável</option><option value="compact">Compacto</option></select><p class="muted">As preferências são salvas automaticamente neste navegador e podem ser diferentes no celular e no computador.</p><div class="row"><button type="button" class="secondary" id="resetAppSettings">Restaurar aparência padrão</button><button type="button" class="secondary" data-go="profile">Voltar ao perfil</button></div><p id="settingsStatus" class="muted" role="status" aria-live="polite"></p></div></section>
 <section id="feedback" class="screen">
 <div class="panel">
 <h2>💬 Ajuda e feedback</h2>
@@ -249,6 +250,7 @@ header .home-account-actions .support-notifications{top:calc(100% + 12px);right:
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profile.js"></script>
+<script src="settings.js?v=1"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=5"></script>
 <script src="tickets.js?v=6"></script>
@@ -281,12 +283,12 @@ header .home-account-actions .support-notifications{top:calc(100% + 12px);right:
      if(typeof go==='function') go('profile');
      return;
    }
-   if(typeof go==='function') go('profile');
+   if(typeof go==='function') go(action==='settings' ? 'settings' : 'profile');
    else {
-     document.querySelectorAll('.screen').forEach(screen=>screen.classList.toggle('active',screen.id==='profile'));
+     document.querySelectorAll('.screen').forEach(screen=>screen.classList.toggle('active',screen.id===(action==='settings' ? 'settings' : 'profile')));
      document.querySelectorAll('nav [data-screen]').forEach(tab=>tab.classList.remove('active'));
    }
-   const target=action==='settings' ? document.getElementById('profileName') || document.getElementById('profile') : document.getElementById('profile');
+   const target=action==='settings' ? document.getElementById('settings') : document.getElementById('profile');
    target?.scrollIntoView({block:'start',behavior:'smooth'});
  });
  if(badge && menuBadge){const observer=new MutationObserver(()=>{const count=badge.hidden?'':badge.textContent;menuBadge.textContent=count;menuBadge.hidden=!count;});observer.observe(badge,{attributes:true,childList:true,characterData:true,subtree:true});}
