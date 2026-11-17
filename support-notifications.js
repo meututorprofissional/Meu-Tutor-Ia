@@ -8,6 +8,13 @@
   if (!bell || !panel || !entries || !window.supabase || !cfg.supabaseUrl || !cfg.supabaseAnonKey) return;
   const client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
   let currentUser = null, latest = [], loading = false;
+  function notificationPrefs() {
+    try {
+      const settings = JSON.parse(localStorage.getItem('meuTutorIA.settings.v1') || '{}');
+      return { alerts: settings.supportAlerts !== 'off', badge: settings.unreadBadge !== 'off' };
+    } catch (_) { return { alerts: true, badge: true }; }
+  }
+  let lastUnread = null;
   const storageKey = uid => 'meuTutorIA.supportBell.seen.' + uid;
   const baselineKey = uid => 'meuTutorIA.supportBell.baseline.' + uid;
   const readSeen = uid => { try { return JSON.parse(localStorage.getItem(storageKey(uid)) || '[]'); } catch (_) { return []; } };
@@ -22,7 +29,18 @@
     const seen = new Set(currentUser ? readSeen(currentUser) : []);
     const unread = latest.filter(n => !seen.has(n.id)).length;
     badge.textContent = unread > 99 ? '99+' : String(unread);
-    badge.hidden = unread === 0;
+    const prefs = notificationPrefs();
+    badge.hidden = unread === 0 || !prefs.badge;
+    const menuBadge = document.getElementById('accountMenuUnread');
+    if (menuBadge) menuBadge.hidden = unread === 0 || !prefs.badge;
+    if (prefs.alerts && lastUnread !== null && unread > lastUnread) {
+      const notice = document.getElementById('ticketsNotice');
+      if (notice) {
+        notice.textContent = '🔔 Você recebeu uma nova resposta da equipe de suporte!';
+        notice.hidden = false;
+      }
+    }
+    lastUnread = unread;
     bell.setAttribute('aria-label', unread ? 'Notificações: ' + unread + ' não lidas' : 'Notificações, nenhuma nova');
     if (!currentUser) {
       const p = document.createElement('p'); p.className = 'muted'; p.textContent = 'Entre com Google em Meu perfil para ver suas notificações.'; entries.append(p); return;
@@ -78,6 +96,7 @@
     }
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { panel.hidden = true; bell.setAttribute('aria-expanded','false'); } });
+  document.addEventListener('tutor:notification-settings', () => draw());
   client.auth.onAuthStateChange(() => setTimeout(load, 0));
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') load(); });
   setInterval(load, 15000);
