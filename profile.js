@@ -106,6 +106,11 @@
     if (facebook) facebook.hidden = Boolean(session);
     if (signOut) signOut.hidden = !session;
     if (sync) sync.hidden = !session;
+    setText('securitySessionStatus', session ? 'Conectada' : 'Desconectada');
+    setText('securityAccountEmail', session?.user?.email || 'Nenhuma conta conectada');
+    const securitySignOut = el('securitySignOut'), securitySync = el('securitySync');
+    if (securitySignOut) securitySignOut.hidden = !session;
+    if (securitySync) securitySync.hidden = !session;
     if (photoInput) photoInput.disabled = false;
     if (uploadPhotoButton) uploadPhotoButton.disabled = !session || !photoInput?.files?.length;
     if (removePhotoButton) removePhotoButton.hidden = !session || !(profile().avatarUserId === session.user.id && profile().avatarPath);
@@ -330,12 +335,29 @@
   }
   if (el('profileGoogle')) el('profileGoogle').onclick = () => startOAuth('google');
   if (el('profileFacebook')) el('profileFacebook').onclick = () => startOAuth('facebook');
-  if (el('profileSignOut')) el('profileSignOut').onclick = async () => {
-    if (!client) return;
-    const {error} = await client.auth.signOut();
-    if (error) setText('authStatus', 'Não foi possível sair da conta agora.');
-    else { session = null; setText('syncStatus',''); showAuthState(); }
-  };
+  async function signOutSafely() {
+    if (!client || !session) {
+      setText('securityStatus', 'Nenhuma conta conectada neste dispositivo.');
+      return;
+    }
+    const button = el('securitySignOut');
+    if (button) button.disabled = true;
+    setText('securityStatus', 'Encerrando a sessão…');
+    try {
+      const { error } = await client.auth.signOut({ scope: 'local' });
+      if (error) throw error;
+      session = null;
+      setText('syncStatus', '');
+      setText('securityStatus', 'Você saiu da conta neste dispositivo. Seus estudos locais foram preservados.');
+      showAuthState();
+    } catch (error) {
+      setText('securityStatus', 'Não foi possível sair agora. Tente novamente.');
+      setText('authStatus', 'Não foi possível sair da conta agora.');
+    } finally { if (button) button.disabled = false; }
+  }
+  if (el('profileSignOut')) el('profileSignOut').onclick = signOutSafely;
+  if (el('securitySignOut')) el('securitySignOut').onclick = signOutSafely;
+  if (el('securitySync')) el('securitySync').onclick = () => initialSync();
   if (el('profileSyncNow')) el('profileSyncNow').onclick = () => initialSync();
 
   if (configured() && window.supabase?.createClient) {
