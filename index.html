@@ -262,6 +262,20 @@ html,body{max-width:100%;overflow-x:clip}
 </div></section>
 <style>
 /* Painel ADM: separação visual entre atendimentos, sem alterar dados ou ações. */
+#adminSupportList > article.item:has(.admin-support-accordion) { padding: 0; }
+.admin-support-accordion > summary { list-style: none; cursor: pointer; }
+.admin-support-accordion > summary::-webkit-details-marker { display: none; }
+.admin-support-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; }
+.admin-support-summary:focus-visible { outline: 3px solid #7564e9; outline-offset: -3px; border-radius: 12px; }
+.admin-support-summary-labels { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.admin-support-summary-labels small { color: var(--muted, #64677a); font-size: .8rem; }
+.admin-support-toggle { flex-shrink: 0; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: #6538d9; color: #fff; font-size: 1.45rem; font-weight: 700; }
+.admin-support-toggle::before { content: "+"; }
+.admin-support-accordion[open] .admin-support-toggle::before { content: "−"; }
+.admin-support-accordion[open] > summary { background: #f0eaff; border-radius: 11px 11px 0 0; }
+.admin-support-content { padding: 2px 16px 16px; border-top: 1px solid #e2dcef; }
+@media (max-width:600px) { .admin-support-summary { padding: 12px; } .admin-support-content { padding: 2px 12px 14px; } }
+
 #adminSupportList { display: flex; flex-direction: column; gap: 18px; padding-top: 8px; }
 #adminSupportList > h3 { margin: 18px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--surface, #f4f5fa); border-left: 4px solid #7564e9; }
 #adminSupportList > article.item { display: block; margin: 0; padding: 18px; border: 1px solid #cbd1e0; border-left: 5px solid #7564e9; border-radius: 16px; background: var(--card, #fff); box-shadow: 0 4px 14px rgba(25,28,70,.07); overflow-wrap: anywhere; }
@@ -294,7 +308,7 @@ html,body{max-width:100%;overflow-x:clip}
 <script src="support-notifications.js?v=3"></script>
 <script src="support-chat.js?v=11"></script>
 <script src="human-support.js?v=7"></script>
-<script src="admin-support.js?v=18"></script>
+<script src="admin-support.js?v=19"></script>
 
 <script>
 (() => {
