@@ -18,22 +18,46 @@
     parent.appendChild(el);
     return el;
   };
-  async function load() {
-    list.replaceChildren();
+  let lastSnapshot = null;
+  let activeUser = null;
+  let channel = null;
+  let busy = false;
+  let pending = false;
+  function subscribe(userId) {
+    if (activeUser === userId && channel) return;
+    if (channel) { client.removeChannel(channel); channel = null; }
+    activeUser = userId;
+    if (!userId) return;
+    channel = client.channel('meu-tutor-tickets-' + userId)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tutor_feedback', filter: 'user_id=eq.' + userId }, () => load(true))
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'tutor_feedback_replies' }, () => load(true))
+      .subscribe();
+  }
+  async function load(silent = false) {
+    if (busy) { pending = true; return; }
+    busy = true;
     if (!client) { status.textContent = 'O serviço de contas não está disponível no momento.'; return; }
-    status.textContent = 'Consultando seus chamados…';
-    refresh.disabled = true;
+    if (!silent) status.textContent = 'Consultando seus chamados…';
+    if (!silent) refresh.disabled = true;
     try {
       const { data: sessionData, error: authError } = await client.auth.getSession();
       if (authError) throw authError;
       if (!sessionData.session?.user) {
+        subscribe(null);
+        lastSnapshot = null;
+        list.replaceChildren();
         status.textContent = 'Entre com Google na área Seu perfil para consultar os chamados vinculados à sua conta.';
         return;
       }
+      subscribe(sessionData.session.user.id);
       const { data, error } = await client.from('tutor_feedback')
         .select('id,kind,subject,message,status,created_at,tutor_feedback_replies(message,created_at)')
         .eq('user_id', sessionData.session.user.id).order('created_at', { ascending: false }).limit(50);
       if (error) throw error;
+      const snapshot = JSON.stringify(data || []);
+      if (snapshot === lastSnapshot) return;
+      lastSnapshot = snapshot;
+      list.replaceChildren();
       if (!data?.length) {
         status.textContent = 'Nenhum chamado vinculado à sua conta ainda. Os relatos antigos, enviados sem identificação, não aparecem aqui.';
         return;
@@ -60,9 +84,25 @@
     } catch (error) {
       console.error('Falha ao consultar chamados:', error);
       status.textContent = 'Não foi possível carregar seus chamados. Tente novamente.';
-    } finally { refresh.disabled = false; }
+    } finally {
+      busy = false;
+      refresh.disabled = false;
+      if (pending) { pending = false; load(true); }
+    }
   }
-  refresh.addEventListener('click', load);
+  refresh.addEventListener('click', () => load(false));
+  setInterval(() => {
+    if (document.visibilityState === 'visible' && document.getElementById('tickets')?.classList.contains('active')) load(true);
+  }, 15000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && document.getElementById('tickets')?.classList.contains('active')) load(true);
+  });
+  if (client) client.auth.onAuthStateChange((event) => {
+    if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+      lastSnapshot = null;
+      if (document.getElementById('tickets')?.classList.contains('active')) setTimeout(() => load(true), 0);
+    }
+  });
   document.addEventListener('click', event => {
     if (event.target instanceof Element && event.target.closest('[data-screen="tickets"],[data-go="tickets"]')) load();
   });
