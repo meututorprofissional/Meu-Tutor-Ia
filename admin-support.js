@@ -89,6 +89,21 @@
     const content = document.createElement('div');
     content.className = 'admin-support-content';
     while (card.firstChild) content.appendChild(card.firstChild);
+    const footer = document.createElement('div');
+    footer.className = 'admin-support-footer';
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'admin-support-close';
+    closeButton.textContent = '−';
+    closeButton.setAttribute('aria-label', 'Fechar ' + title);
+    closeButton.title = 'Fechar atendimento';
+    closeButton.addEventListener('click', () => {
+      details.open = false;
+      // Após fechar uma conversa longa, mantenha o cartão visível na tela.
+      card.scrollIntoView({ block: 'start', behavior: 'instant' });
+    });
+    footer.appendChild(closeButton);
+    content.appendChild(footer);
     details.append(summary, content);
     card.appendChild(details);
   }
