@@ -30,17 +30,23 @@
   // A classificação só é mostrada quando a IA fornece um marcador explícito.
   // Não deduzir "correto" de palavras soltas dentro da explicação.
   const parseVerdict = feedback => {
-    const match = feedback.match(/^\\s*(?:\\*\\*)?\\s*(?:RESULTADO|CLASSIFICAÇÃO|VEREDITO)\\s*(?:\\*\\*)?\\s*[:：-]\\s*(CORRETO|PARCIALMENTE CORRETO|INCORRETO|NÃO FOI POSSÍVEL VERIFICAR|NAO FOI POSSIVEL VERIFICAR)\\b/im);
-    if (!match) return { label: 'Não foi possível classificar', color: '#64748b', explanation: feedback, verified: false };
-    const key = match[1].normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toUpperCase();
     const verdicts = {
       'CORRETO': ['Correto', '#15803d'],
       'PARCIALMENTE CORRETO': ['Parcialmente correto', '#a16207'],
       'INCORRETO': ['Incorreto', '#b91c1c'],
       'NAO FOI POSSIVEL VERIFICAR': ['Não foi possível verificar', '#64748b']
     };
+    const normalize = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
+    // Aceita o marcador pedido à IA, com ou sem negrito Markdown.
+    const marker = feedback.match(/^\s*\**\s*(?:RESULTADO|CLASSIFICAÇÃO|VEREDITO)\s*\**\s*[:：-]\s*(PARCIALMENTE CORRETO|NÃO FOI POSSÍVEL VERIFICAR|NAO FOI POSSIVEL VERIFICAR|INCORRETO|CORRETO)(?=\s|[.,;!*]|$)/im);
+    let key = marker ? normalize(marker[1]) : '';
+    // Fallback restrito: a IA identifica explicitamente a resposta do aluno como errada.
+    // Não classificar pela mera presença de "correto/incorreto" em qualquer lugar.
+    if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+(?:claramente\s+)?incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
+    if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+(?:claramente\s+)?corret[ao]\b/i.test(feedback)) key = 'CORRETO';
+    if (!verdicts[key]) return { label: 'Não foi possível classificar', color: '#64748b', explanation: feedback, verified: false };
     const [label, color] = verdicts[key];
-    return { label, color, explanation: feedback.replace(match[0], '').trim(), verified: true };
+    return { label, color, explanation: marker ? feedback.replace(marker[0], '').trim() : feedback, verified: true };
   };
   const renderEvaluation = (feedback, userAnswer) => {
     const verdict = parseVerdict(feedback);
