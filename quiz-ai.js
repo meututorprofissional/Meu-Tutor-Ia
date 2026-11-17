@@ -14,6 +14,10 @@
     const ai = mode.value === 'ai';
     controls.hidden = !ai;
     question.readOnly = ai;
+    question.setAttribute('aria-readonly', String(ai));
+    question.classList.toggle('quiz-ai-locked', ai);
+    question.title = ai ? 'Pergunta criada pela IA: não é possível editar neste modo.' : '';
+    question.value = '';
     question.placeholder = ai ? 'Toque em Gerar pergunta com IA.' : 'Escreva sua pergunta.';
     if (generatedQuestion && question.value === generatedQuestion) question.value = '';
     generatedQuestion = ''; generatedTopic = '';
@@ -56,6 +60,11 @@
       ];
       const first = candidates.map(item => typeof item === 'string' ? item : item?.question || item?.front || item?.pergunta).find(q => typeof q === 'string' && q.trim());
       if (!first) throw new Error('A IA não retornou uma pergunta válida. Tente novamente.');
+      // Não substituir a pergunta se o usuário mudou de modo ou assunto durante a espera.
+      if (mode.value !== 'ai' || topicSelect.value !== topicId) {
+        status.textContent = 'O modo ou assunto mudou. Gere uma nova pergunta se desejar.';
+        return;
+      }
       // Não exibir respostas geradas antes da tentativa.
       question.value = first.trim();
       generatedQuestion = question.value; generatedTopic = topicId;
