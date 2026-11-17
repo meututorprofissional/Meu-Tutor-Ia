@@ -193,6 +193,52 @@
           } catch(error) {console.error('Atualização do chamado:',error);statusMessage.textContent='Não foi possível salvar. Confira sua permissão e tente novamente.';}
           finally {saveStatus.disabled=false;}
         });
+        if (ticket.user_id) {
+          const replyHeading=add(card,'h4','Responder ao chamado');
+          replyHeading.style.marginBottom='6px';
+          const replyHistory=add(card,'div','','');
+          const renderReply=(reply)=>{
+            const panel=add(replyHistory,'div','','success');
+            panel.style.marginTop='8px';
+            add(panel,'strong','Equipe de suporte');
+            add(panel,'p',reply.message);
+            add(panel,'small',new Date(reply.created_at).toLocaleString('pt-BR'),'muted');
+          };
+          const {data:previousReplies,error:repliesError}=await client.from('tutor_feedback_replies')
+            .select('id,message,created_at').eq('feedback_id',ticket.id).order('created_at',{ascending:true});
+          if(repliesError) add(card,'p','Não foi possível consultar as respostas anteriores.','muted');
+          else (previousReplies||[]).forEach(renderReply);
+          const replyForm=document.createElement('form');
+          const replyInput=document.createElement('textarea');
+          replyInput.rows=3;replyInput.maxLength=2000;replyInput.required=true;
+          replyInput.placeholder='Escreva sua resposta para este chamado...';
+          replyInput.setAttribute('aria-label','Resposta para o chamado '+ticket.subject);
+          replyForm.appendChild(replyInput);
+          const replyButton=add(replyForm,'button','Enviar resposta ao chamado');
+          replyButton.type='submit';
+          const replyNotice=add(replyForm,'p','','muted');replyNotice.setAttribute('role','status');
+          replyForm.addEventListener('submit',async(event)=>{
+            event.preventDefault();
+            const message=replyInput.value.trim();
+            if(!message||message.length>2000)return;
+            replyButton.disabled=true;replyNotice.textContent='Enviando resposta…';
+            try{
+              const {data:auth,error:authError}=await client.auth.getUser();
+              if(authError||auth.user?.app_metadata?.support_admin!==true)throw new Error('Acesso administrativo não confirmado');
+              const {error:insertError}=await client.from('tutor_feedback_replies').insert({
+                feedback_id:ticket.id,message,author_id:auth.user.id
+              });
+              if(insertError)throw insertError;
+              replyInput.value='';
+              replyNotice.textContent='Resposta enviada. O usuário poderá vê-la em Meus chamados.';
+              const {data:latest,error:readError}=await client.from('tutor_feedback_replies')
+                .select('id,message,created_at').eq('feedback_id',ticket.id).order('created_at',{ascending:true});
+              if(!readError&&latest){replyHistory.replaceChildren();latest.forEach(renderReply);}
+            }catch(error){console.error('Resposta ao chamado:',error);replyNotice.textContent='Não foi possível enviar a resposta. Confira sua sessão e tente novamente.';}
+            finally{replyButton.disabled=false;}
+          });
+          card.appendChild(replyForm);
+        }
         if (!ticket.user_id) add(card,'small','Relato antigo sem conta vinculada.','muted');
       }
     } catch (error) {
