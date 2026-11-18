@@ -78,6 +78,10 @@ function renderProfileAchievements(){
    $('profileXpValue').textContent=inLevel.toLocaleString('pt-BR')+' / 1.000 XP';
    $('profileXpBar').style.width=percent+'%';
    $('profileXpMeter').setAttribute('aria-valuenow',String(inLevel));
+   const secondaryBar=$('profileXpBarSecondary'),secondaryLevel=$('profileLevelSecondary'),secondaryValue=$('profileXpSecondary');
+   if(secondaryBar)secondaryBar.style.width=percent+'%';
+   if(secondaryLevel)secondaryLevel.textContent='Nível '+level;
+   if(secondaryValue)secondaryValue.textContent=inLevel.toLocaleString('pt-BR')+' / 1.000 XP';
  }
  const preview=$('profileBetaPreview');
  if(preview){
