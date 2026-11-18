@@ -96,6 +96,19 @@
     const nameInput = el('profileName');
     if (nameInput) nameInput.value = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || '';
     setText('profileEmail', session?.user?.email || 'Perfil local neste dispositivo');
+    // A data de criação vem do usuário autenticado no Supabase Auth.
+    // Não estimar a data pelo primeiro estudo ou pelo armazenamento local.
+    const createdAt = session?.user?.created_at;
+    let memberSince = 'data não disponível';
+    if (createdAt) {
+      const date = new Date(createdAt);
+      if (!Number.isNaN(date.getTime())) {
+        memberSince = new Intl.DateTimeFormat('pt-BR', {
+          day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Fortaleza'
+        }).format(date);
+      }
+    }
+    setText('profileMemberSince', memberSince);
     const initial = name.trim().charAt(0).toUpperCase() || '👤';
     const savedProfile = profile();
     const ownedAvatarPath = session && savedProfile.avatarUserId === session.user.id ? savedProfile.avatarPath : null;
