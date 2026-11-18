@@ -1,6 +1,11 @@
 (() => {
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
   const notice = document.getElementById('updateNotice');
+  const checkButton = document.getElementById('checkForUpdates');
+  const checkStatus = document.getElementById('updateCheckStatus');
+  const CURRENT_APP_VERSION = 'meu-tutor-ia-v70-manual-updates';
+  let registration = null;
+  const setCheckStatus = message => { if (checkStatus) checkStatus.textContent = message; };
   const apply = document.getElementById('applyUpdate');
   const dismiss = document.getElementById('dismissUpdate');
   let waitingWorker = null;
@@ -11,6 +16,7 @@
     if (notice) notice.style.display = 'block';
   }
   navigator.serviceWorker.register('./sw.js', {updateViaCache: 'none'}).then(reg => {
+    registration = reg;
     // Se a nova versão já estiver esperando, oferecer atualização.
     if (reg.waiting && navigator.serviceWorker.controller) showUpdate(reg.waiting);
 
@@ -35,6 +41,31 @@
     window.setInterval(() => reg.update().catch(() => {}), 5 * 60 * 1000);
   }).catch(() => {});
 
+  if (checkButton) checkButton.addEventListener('click', async () => {
+    checkButton.disabled = true;
+    setCheckStatus('Verificando atualizações…');
+    try {
+      if (!navigator.onLine) throw new Error('Sem conexão. Conecte-se à internet e tente novamente.');
+      const reg = registration || await navigator.serviceWorker.ready;
+      await reg.update();
+      const response = await fetch('./sw.js?check=' + Date.now(), {cache:'no-store'});
+      if (!response.ok) throw new Error('Não foi possível consultar a versão publicada.');
+      const script = await response.text();
+      const remoteVersion = script.match(/const CACHE_VERSION\\s*=\\s*['"]([^'"]+)['"]/);
+      if (!remoteVersion) throw new Error('Não foi possível identificar a versão publicada.');
+      if (reg.waiting || remoteVersion[1] !== CURRENT_APP_VERSION) {
+        if (reg.waiting) showUpdate(reg.waiting);
+        setCheckStatus('Nova versão disponível! Toque em Atualizar agora no aviso acima.');
+        if (!reg.waiting && notice) notice.style.display = 'block';
+      } else {
+        setCheckStatus('Você está na versão mais recente (v70).');
+      }
+    } catch (error) {
+      setCheckStatus(error.message || 'Não foi possível verificar agora.');
+    } finally {
+      checkButton.disabled = false;
+    }
+  });
   if (apply) apply.addEventListener('click', () => {
     if (waitingWorker) waitingWorker.postMessage({type:'SKIP_WAITING'});
     else location.reload();
