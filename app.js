@@ -342,8 +342,16 @@ function render(){
  if(chart){
    const daily=weekDays.map(d=>weekAttempts.filter(a=>new Date(a.date).toDateString()===d.toDateString()).length);
    const max=Math.max(1,...daily);
-   chart.innerHTML=weekDays.map((d,i)=>'<div class="progress-bar-col"><span class="progress-note">'+daily[i]+'</span><div class="progress-bar" style="height:'+Math.max(3,Math.round(daily[i]/max*110))+'px"></div><small>'+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</small></div>').join('');
-   chart.setAttribute('aria-label','Atividades registradas por dia: '+daily.map((n,i)=>weekDays[i].toLocaleDateString('pt-BR')+': '+n).join('; '));
+   const w=680,h=200,left=28,right=15,top=22,bottom=35;
+   const x=i=>left+i*(w-left-right)/6;
+   const y=n=>top+(max-n)*(h-top-bottom)/max;
+   const points=daily.map((n,i)=>[x(i),y(n)]);
+   const path=points.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+   const area=path+' L'+x(6)+' '+(h-bottom)+' L'+x(0)+' '+(h-bottom)+' Z';
+   const grid=[0,.25,.5,.75,1].map(t=>'<line x1="'+left+'" y1="'+y(max*t)+'" x2="'+(w-right)+'" y2="'+y(max*t)+'" stroke="#e9e5f6"/>').join('');
+   const dots=points.map((p,i)=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5" fill="#fff" stroke="#6046df" stroke-width="3"/><text x="'+p[0]+'" y="'+(p[1]-12)+'" text-anchor="middle" font-size="12" fill="#4c3bb0">'+daily[i]+'</text><text x="'+p[0]+'" y="'+(h-10)+'" text-anchor="middle" font-size="12" fill="#667085">'+weekDays[i].toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</text>').join('');
+   chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-hidden="true"><defs><linearGradient id="progressAreaGradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8065f5" stop-opacity=".32"/><stop offset="1" stop-color="#8065f5" stop-opacity=".025"/></linearGradient></defs>'+grid+'<path d="'+area+'" fill="url(#progressAreaGradient)"/><path d="'+path+'" fill="none" stroke="#6046df" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>'+dots+'</svg>';
+   chart.setAttribute('aria-label','Tentativas registradas por dia: '+daily.map((n,i)=>weekDays[i].toLocaleDateString('pt-BR')+': '+n).join('; '));
  }
  const frequency=document.getElementById('progressFrequency');
  if(frequency) frequency.textContent='Frequência de estudo: '+activeDays+' de 7 dias ('+Math.round(activeDays/7*100)+'%).';
@@ -351,14 +359,29 @@ function render(){
  if(reviewSummary) reviewSummary.textContent=due+' cartão(ões) para revisar agora. As datas de revisão não medem seu domínio do assunto.';
  const other=db.attempts.filter(a=>!['good','practice','partial','hard'].includes(a.rating)).length;
  const distribution=document.getElementById('progressRatingDistribution');
+ const total=db.attempts.length;
+ const pct=n=>total?Math.round(n/total*100):0;
  if(distribution){
-   const total=db.attempts.length||1;
-   distribution.innerHTML='<span style="width:'+(good/total*100)+'%;background:#22c55e"></span><span style="width:'+(practice/total*100)+'%;background:#f59e0b"></span><span style="width:'+(other/total*100)+'%;background:#94a3b8"></span>';
+   const green=total?good/total*100:0, orange=total?practice/total*100:0;
+   distribution.style.background=total?'conic-gradient(#22c55e 0% '+green+'%, #f59e0b '+green+'% '+(green+orange)+'%, #94a3b8 '+(green+orange)+'% 100%)':'conic-gradient(#e7e5f4 0% 100%)';
  }
+ const donutNumber=document.getElementById('progressDonutNumber');
+ if(donutNumber)donutNumber.textContent=total;
  const legend=document.getElementById('progressRatingLegend');
- if(legend) legend.textContent='🟢 Consegui explicar: '+good+' · 🟠 Para praticar: '+practice+' · ⚪ Sem classificação: '+other;
+ if(legend) legend.innerHTML='<div>🟢 Consegui explicar: <strong>'+good+' ('+pct(good)+'%)</strong></div><div>🟠 Para praticar: <strong>'+practice+' ('+pct(practice)+'%)</strong></div><div>⚪ Sem classificação: <strong>'+other+' ('+pct(other)+'%)</strong></div>';
+ const reviewCards=document.getElementById('progressReviewCards');
+ if(reviewCards){
+   const base=new Date();base.setHours(0,0,0,0);
+   const days=[{offset:1,label:'Revisar amanhã',emoji:'🗓️'},{offset:3,label:'Revisar em três dias',emoji:'📅'},{offset:7,label:'Revisar em uma semana',emoji:'📆'}];
+   reviewCards.innerHTML=days.map(item=>{
+     const target=new Date(base);target.setDate(base.getDate()+item.offset);
+     const end=new Date(target);end.setDate(end.getDate()+1);
+     const count=db.cards.filter(c=>c.nextReview&&new Date(c.nextReview)>=target&&new Date(c.nextReview)<end).length;
+     return '<div class="progress-review-card"><div><strong>'+item.emoji+' '+item.label+'</strong><small>'+target.toLocaleDateString('pt-BR')+' · programados para essa data</small></div><span class="progress-count">'+count+' cartão(ões)</span></div>';
+   }).join('');
+ }
  const insights=document.getElementById('progressInsights');
- if(insights) insights.textContent=(due?'⏰ Você tem '+due+' cartão(ões) com revisão pendente. ':'✅ Nenhum cartão vencido agora. ')+(practice?'🎯 Há '+practice+' tentativa(s) marcadas para praticar. ':'')+'📚 Continue revisando e registre suas tentativas para acompanhar a evolução.';
+ if(insights) insights.innerHTML='<div class="progress-insight"><strong>⏰ Revisões pendentes</strong>'+ (due?'Há '+due+' cartão(ões) para revisar agora.':'Nenhum cartão vencido no momento.')+'</div><div class="progress-insight"><strong>🎯 Prática recomendada</strong>'+ (practice?'Você marcou '+practice+' tentativa(s) para praticar novamente.':'Nenhuma tentativa marcada para praticar.')+'</div><div class="progress-insight"><strong>📈 Consistência semanal</strong>Você registrou atividades em '+activeDays+' dos últimos 7 dias. Continue no seu ritmo.</div>';
  const goalText=document.getElementById('progressGoalText');
  const goalButton=document.getElementById('progressGoalButton');
  if(goalText){let goal=0;try{goal=Number(localStorage.getItem('meuTutorIA.weeklyGoal.v1'))||0}catch{}goalText.textContent=goal?activeDays+' de '+goal+' dia(s) de estudo nesta semana.':'Defina quantos dias deseja estudar por semana.';}
