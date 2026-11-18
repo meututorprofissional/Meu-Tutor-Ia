@@ -6,6 +6,7 @@
   const exhaustedNotice = document.getElementById('quizExhaustedNotice');
   const reviewQuestions = document.getElementById('quizReviewQuestions');
   const addContent = document.getElementById('quizAddContent');
+  let reviewRequested = false;
   const hideExhausted = () => { if (exhaustedNotice) exhaustedNotice.hidden = true; };
   if (addContent) addContent.addEventListener('click', () => {
     const target = document.querySelector('nav [data-screen="study"]');
@@ -29,7 +30,12 @@
       .map(item => item.question);
     const history = [...new Set([...generatedHistory, ...recordedHistory].map(q => String(q).trim()).filter(Boolean))];
     if (!history.length) {
-      status.textContent = 'Não encontrei perguntas antigas salvas neste assunto. Perguntas que não foram registradas antes da V71 não podem ser recuperadas automaticamente. Gere uma nova pergunta para começar a guardar o histórico.';
+      // A versão antiga guardava apenas os fatos já explorados, não o enunciado.
+      // Tentar reconstruir uma pergunta a partir do mesmo material, sem apagar o progresso.
+      reviewRequested = true;
+      hideExhausted();
+      status.textContent = 'Buscando uma pergunta para revisão no material original…';
+      button.click();
       return;
     }
     const selected = history[Math.floor(Math.random() * history.length)];
@@ -217,6 +223,8 @@
     if (source.length > 12000) { status.textContent = 'O material ultrapassa 12.000 caracteres. Reduza o texto para controlar os custos.'; return; }
     const endpoint = String(window.MEU_TUTOR_AI_ENDPOINT || '').trim();
     if (!endpoint) { status.textContent = 'A IA não está configurada neste aplicativo.'; return; }
+    const isReview = reviewRequested;
+    reviewRequested = false;
     button.disabled = true;
     hideExhausted();
     status.textContent = 'Criando uma pergunta com base no material original…';
@@ -289,18 +297,19 @@
       const fingerprint = item => normalizeEvidence(item.answer)
         .split(/\\s+(?:e|and)\\s+|[,;/]+/).map(part => part.trim()).filter(Boolean).sort().join(' | ');
       const unseen = questions.filter(item => !progress.seen.includes(fingerprint(item)));
-      if (!unseen.length) {
+      const candidates = isReview ? (questions.filter(item => progress.seen.includes(fingerprint(item))).length ? questions.filter(item => progress.seen.includes(fingerprint(item))) : questions) : unseen;
+      if (!candidates.length) {
         progress.misses = (Number(progress.misses) || 0) + 1;
         try { localStorage.setItem(recentKey, JSON.stringify(progress)); } catch {}
         if (progress.misses >= 2) {
-          status.textContent = 'Nenhuma pergunta nova encontrada nas últimas tentativas.';
+          status.textContent = 'Não encontrei perguntas novas nas últimas tentativas. Isso não garante que todo o material foi explorado.';
           if (exhaustedNotice) exhaustedNotice.hidden = false;
         } else {
           status.textContent = 'Não encontrei uma pergunta nova nesta tentativa. Toque em Gerar mais uma vez para conferir se ainda há informações diferentes no material.';
         }
         return;
       }
-      const first = unseen[Math.floor(Math.random() * unseen.length)];
+      const first = candidates[Math.floor(Math.random() * candidates.length)];
       // Não substituir a pergunta se o usuário mudou de modo ou assunto durante a espera.
       if (mode.value !== 'ai' || topicSelect.value !== topicId) {
         status.textContent = 'O modo ou assunto mudou. Gere uma nova pergunta se desejar.';
@@ -317,7 +326,7 @@
       } catch { /* armazenamento de sessão indisponível */ }
       answer.value = ''; reflection.value = ''; rating.value = 'good';
       clearEvaluation();
-      status.textContent = 'Pergunta pronta! Responda sem consultar. Depois confira o material original, avalie sua recordação e registre a tentativa. Depois você poderá pedir uma avaliação orientativa com IA.';
+      status.textContent = (isReview ? 'Pergunta para revisão pronta! ' : 'Pergunta pronta! ') + 'Responda sem consultar. Depois confira o material original, avalie sua recordação e registre a tentativa. Depois você poderá pedir uma avaliação orientativa com IA.';
       answer.focus();
     } catch (error) {
       status.textContent = error.name === 'AbortError' ? 'A IA não respondeu em até 60 segundos. Verifique a conexão e tente novamente.' : 'Não foi possível gerar: ' + error.message;
