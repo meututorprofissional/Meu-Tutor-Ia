@@ -7,6 +7,7 @@
   const reviewQuestions = document.getElementById('quizReviewQuestions');
   const addContent = document.getElementById('quizAddContent');
   let reviewRequested = false;
+  let lastReviewedQuestion = '';
   const hideExhausted = () => { if (exhaustedNotice) exhaustedNotice.hidden = true; };
   if (addContent) addContent.addEventListener('click', () => {
     const target = document.querySelector('nav [data-screen="study"]');
@@ -38,7 +39,10 @@
       button.click();
       return;
     }
-    const selected = history[Math.floor(Math.random() * history.length)];
+    const alternatives = history.filter(q => q !== lastReviewedQuestion);
+    const pool = alternatives.length ? alternatives : history;
+    const selected = pool[Math.floor(Math.random() * pool.length)];
+    lastReviewedQuestion = selected;
     question.value = selected;
     generatedQuestion = selected; generatedTopic = topicId;
     answer.value = ''; reflection.value = ''; rating.value = 'good';
@@ -309,7 +313,10 @@
         }
         return;
       }
-      const first = candidates[Math.floor(Math.random() * candidates.length)];
+      const reviewAlternatives = isReview ? candidates.filter(item => item.question !== lastReviewedQuestion) : candidates;
+      const pool = reviewAlternatives.length ? reviewAlternatives : candidates;
+      const first = pool[Math.floor(Math.random() * pool.length)];
+      if (isReview) lastReviewedQuestion = first.question;
       // Não substituir a pergunta se o usuário mudou de modo ou assunto durante a espera.
       if (mode.value !== 'ai' || topicSelect.value !== topicId) {
         status.textContent = 'O modo ou assunto mudou. Gere uma nova pergunta se desejar.';
