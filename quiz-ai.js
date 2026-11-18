@@ -30,6 +30,24 @@
 
   // A classificação só é mostrada quando a IA fornece um marcador explícito.
   // Não deduzir "correto" de palavras soltas dentro da explicação.
+  // Prefer a machine-readable verdict when the API provides one.
+  // The explanatory prose must never be used as a substitute for an invalid structured verdict.
+  const structuredVerdict = data => {
+    if (!data || typeof data !== 'object') return null;
+    const allowed = { correct: 'CORRETO', partial: 'PARCIALMENTE CORRETO', incorrect: 'INCORRETO', unverifiable: 'NAO FOI POSSIVEL VERIFICAR' };
+    const classification = allowed[String(data.classification || '').trim().toLowerCase()];
+    if (!classification || typeof data.explanation !== 'string' || !data.explanation.trim()) return null;
+    return { classification, explanation: data.explanation.trim(), expected_answer: typeof data.expected_answer === 'string' ? data.expected_answer : '' };
+  };
+  const extractStructuredVerdict = result => {
+    const direct = structuredVerdict(result?.evaluation);
+    if (direct) return direct;
+    // Backwards compatibility: older Workers may put the evaluation JSON in explanation.
+    const raw = result?.explanation;
+    if (typeof raw !== 'string') return null;
+    const cleaned = raw.trim().replace(/^\x60\x60\x60(?:json)?\s*/i, '').replace(/\s*\x60\x60\x60$/, '');
+    try { return structuredVerdict(JSON.parse(cleaned)); } catch { return null; }
+  };
   const parseVerdict = feedback => {
     const verdicts = {
       'CORRETO': ['Correto', '#15803d'],
@@ -86,7 +104,10 @@
     return { label, color, explanation: marker ? feedback.replace(marker[0], '').trim() : feedback, verified: true };
   };
   const renderEvaluation = (feedback, userAnswer) => {
-    const verdict = parseVerdict(feedback);
+    const structured = feedback && typeof feedback === 'object' ? feedback : null;
+    const verdict = structured
+      ? parseVerdict('RESULTADO: ' + structured.classification + '\n' + structured.explanation)
+      : parseVerdict(feedback);
     evaluationResult.replaceChildren();
     evaluationResult.style.cssText = 'padding:clamp(14px,3vw,22px);border-radius:16px;overflow-wrap:anywhere;';
     const make = (tag, content, css) => {
@@ -108,7 +129,7 @@
     };
     const userBlock = section('Sua resposta', userAnswer);
     userBlock.style.cssText += 'padding:12px 14px;border-radius:10px;border:1px solid rgba(128,128,128,.22);';
-    const explanation = verdict.explanation || feedback;
+    const explanation = structured ? structured.explanation : (verdict.explanation || feedback);
     // Só separar "resposta esperada" e "o que revisar" quando vierem rotulados pela IA.
     // Nunca adivinhar esses campos a partir de frases soltas.
     const extract = label => {
@@ -116,7 +137,7 @@
       const match = explanation.match(re);
       return match ? match[1].trim().replace(/\*+$/, '').trim() : '';
     };
-    const expected = extract('RESPOSTA ESPERADA|RESPOSTA CORRETA');
+    const expected = structured?.expected_answer || extract('RESPOSTA ESPERADA|RESPOSTA CORRETA');
     const review = extract('O QUE REVISAR|SUGESTÃO DE REVISÃO');
     let remaining = explanation.replace(/(?:^|\n)\s*\**(?:RESPOSTA ESPERADA|RESPOSTA CORRETA|O QUE REVISAR|SUGESTÃO DE REVISÃO)\**\s*[:：]\s*[^\n]+/gi, '').trim();
     if (!remaining) remaining = explanation;
@@ -221,7 +242,7 @@
       'TAREFA DE AVALIAÇÃO DE RECORDAÇÃO: Compare exclusivamente com o material original fornecido.',
       'Pergunta: ' + promptQuestion,
       'Resposta do estudante: ' + userAnswer,
-      'COMECE a explicação com uma linha exata: RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR.',
+      'Para avaliação, retorne no campo explanation APENAS um objeto JSON válido, sem markdown, com as chaves classification (correct, partial, incorrect ou unverifiable), explanation (justificativa curta) e expected_answer (resposta correta baseada na fonte). Não misture explicação e classificação.',
       'Avalie SOMENTE o que a pergunta solicita. Se a pergunta exigir dois ou mais elementos (ex.: cidade E país) e a resposta trouxer apenas parte correta, classifique como PARCIALMENTE CORRETO. Se pedir apenas a cidade, não exija país, data ou detalhes adicionais.',
       'Use CORRETO somente quando todos os elementos essenciais solicitados estiverem respondidos corretamente. Use INCORRETO quando a resposta estiver errada ou não atender à pergunta. Use NÃO FOI POSSÍVEL VERIFICAR quando a fonte não permitir avaliar.',
       'Exemplo obrigatório: se perguntar "Em que ano nasceu Lionel Messi?" e a fonte disser 24 de junho de 1987, a resposta "1987, eu acho" é CORRETO: o ano foi dado. Não exija dia e mês. Expressões de dúvida ("eu acho", "talvez") não tornam um fato correto parcialmente correto.',
@@ -266,8 +287,9 @@
         } finally { clearTimeout(retryTimer); }
       }
       if (!response.ok) throw new Error(result.error || 'Servidor indisponível (' + response.status + ').');
-      const feedback = readText(result.explanation || result.understanding || result.summary || result.result);
-      if (!feedback.trim()) throw new Error('O servidor não retornou uma análise utilizável.');
+      const structured = extractStructuredVerdict(result);
+      const feedback = structured || readText(result.explanation || result.understanding || result.summary || result.result);
+      if (!structured && !feedback.trim()) throw new Error('O servidor não retornou uma análise utilizável.');
       if (mode.value !== 'ai' || topicSelect.value !== topicId || question.value !== promptQuestion || answer.value.trim() !== userAnswer) {
         evaluationStatus.textContent = 'A resposta mudou durante a análise. Solicite uma nova avaliação.';
         return;
