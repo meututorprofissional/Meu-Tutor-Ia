@@ -13,7 +13,7 @@
   if (closeHistory && historyPanel) closeHistory.addEventListener('click', () => {
     historyPanel.hidden = true;
   });
-  const CURRENT_APP_VERSION = 'meu-tutor-ia-v75.0-manual-updates';
+  const CURRENT_APP_VERSION = 'meu-tutor-ia-v75.1-manual-updates';
   let registration = null;
   const setCheckStatus = message => { if (checkStatus) checkStatus.textContent = message; };
   const apply = document.getElementById('applyUpdate');
@@ -61,7 +61,7 @@
       const response = await fetch('./sw.js?check=' + Date.now(), {cache:'no-store'});
       if (!response.ok) throw new Error('Não foi possível consultar a versão publicada.');
       const script = await response.text();
-      const remoteVersion = script.match(/const CACHE_VERSION\\s*=\\s*['"]([^'"]+)['"]/);
+      const remoteVersion = script.match(/const CACHE_VERSION\s*=\s*['"]([^'"]+)['"]/);
       if (!remoteVersion) throw new Error('Não foi possível identificar a versão publicada.');
       if (reg.waiting || remoteVersion[1] !== CURRENT_APP_VERSION) {
         if (reg.waiting) showUpdate(reg.waiting);
