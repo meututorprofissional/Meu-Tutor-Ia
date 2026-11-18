@@ -199,8 +199,19 @@
         ...(Array.isArray(result.cards) ? result.cards : []),
         ...(Array.isArray(result.activities?.flashcards) ? result.activities.flashcards : [])
       ];
-      const first = candidates.map(item => typeof item === 'string' ? item : item?.question || item?.front || item?.pergunta).find(q => typeof q === 'string' && q.trim());
-      if (!first) throw new Error('A IA não retornou uma pergunta válida. Tente novamente.');
+      const questions = [...new Map(candidates
+        .map(item => typeof item === 'string' ? item : item?.question || item?.front || item?.pergunta)
+        .filter(q => typeof q === 'string' && q.trim())
+        .map(q => [q.trim().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/\\s+/g, ' '), q.trim()])).values()];
+      if (!questions.length) throw new Error('A IA não retornou uma pergunta válida. Tente novamente.');
+      const recentKey = 'meuTutorIA.quizRecent.' + topicId;
+      let recent = [];
+      try { recent = JSON.parse(sessionStorage.getItem(recentKey) || '[]'); } catch {}
+      if (!Array.isArray(recent)) recent = [];
+      const normalizeQuestion = q => String(q).normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/\\s+/g, ' ').trim();
+      const unseen = questions.filter(q => !recent.includes(normalizeQuestion(q)));
+      const pool = unseen.length ? unseen : questions.filter(q => normalizeQuestion(q) !== normalizeQuestion(generatedQuestion));
+      const first = (pool.length ? pool : questions)[Math.floor(Math.random() * (pool.length || questions.length))];
       // Não substituir a pergunta se o usuário mudou de modo ou assunto durante a espera.
       if (mode.value !== 'ai' || topicSelect.value !== topicId) {
         status.textContent = 'O modo ou assunto mudou. Gere uma nova pergunta se desejar.';
@@ -209,6 +220,9 @@
       // Não exibir respostas geradas antes da tentativa.
       question.value = first.trim();
       generatedQuestion = question.value; generatedTopic = topicId;
+      try {
+        sessionStorage.setItem(recentKey, JSON.stringify([...recent.filter(q => q !== normalizeQuestion(first)), normalizeQuestion(first)].slice(-12)));
+      } catch { /* armazenamento de sessão indisponível */ }
       answer.value = ''; reflection.value = ''; rating.value = 'good';
       clearEvaluation();
       status.textContent = 'Pergunta pronta! Responda sem consultar. Depois confira o material original, avalie sua recordação e registre a tentativa. Depois você poderá pedir uma avaliação orientativa com IA.';
