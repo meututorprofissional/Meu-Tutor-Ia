@@ -117,7 +117,7 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v70</span>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v71</span>
 </div>
 <div class="layout">
 <main>
@@ -186,7 +186,7 @@ html,body{max-width:100%;overflow-x:clip}
 #quizMode:has(option[value="manual"]:checked) ~ label #quizQuestionLockHint { display: none; }
 </style>
 <label for="quizMode">Modo de teste</label><select id="quizMode"><option value="ai">Teste com IA (perguntas geradas)</option><option value="manual">Teste manual (criar pergunta)</option></select>
-<div id="quizAiControls"><button id="quizGenerate" type="button" class="secondary">✨ Gerar pergunta com IA</button><p id="quizAiStatus" class="muted" role="status">Selecione um assunto com material salvo e gere uma pergunta. A resposta só deve ser conferida depois de tentar.</p></div>
+<div id="quizAiControls"><button id="quizGenerate" type="button" class="secondary">✨ Gerar pergunta com IA</button><p id="quizAiStatus" class="muted" role="status">Selecione um assunto com material salvo e gere uma pergunta. A resposta só deve ser conferida depois de tentar.</p><div id="quizExhaustedNotice" hidden role="status" aria-live="polite" style="margin:14px 0;padding:20px;border:1px solid #b9afe6;border-radius:16px;background:linear-gradient(135deg,#f5f1ff,#eef7ff);color:#28233e"><h3 style="margin:0 0 10px;font-size:1.1rem">🎉 Você concluiu as perguntas deste material!</h3><p style="margin:0 0 12px;line-height:1.55">Não encontramos novas perguntas nas últimas tentativas. Você pode revisar as anteriores ou adicionar mais conteúdo ao estudo.</p><div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button id="quizReviewQuestions" type="button" class="secondary">↻ Revisar perguntas</button><button id="quizAddContent" type="button">📚 Adicionar conteúdo</button></div></div></div>
 <label for="quizTopic">Assunto</label><select id="quizTopic"></select>
 <label for="question">Pergunta <small id="quizQuestionLockHint" class="muted">(gerada pela IA — não editável no modo IA)</small></label><input id="question" placeholder="Ex: Qual é a função do sistema respiratório?">
 <label for="answer">Minha resposta (sem consultar)</label><textarea id="answer" placeholder="Explique com suas próprias palavras..."></textarea>
@@ -315,8 +315,8 @@ html,body{max-width:100%;overflow-x:clip}
 <section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas, responda aos usuários e acompanhe relatos enviados.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Seus estudos são guardados neste navegador. Quando você entra em uma conta e a sincronização é concluída, eles também podem ser salvos na nuvem para acesso em outros dispositivos com a mesma conta. A sincronização depende da conexão e não substitui um backup próprio. Use “Exportar meus dados (JSON)” para guardar uma cópia e “Importar backup” para restaurar um arquivo. Antes de trocar ou limpar o dispositivo, confirme a sincronização e mantenha um backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
 <script src="app.js?v=50"></script>
-<script src="quiz-ai.js?v=24"></script>
-<script src="updates.js?v=70"></script>
+<script src="quiz-ai.js?v=25"></script>
+<script src="updates.js?v=71"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
