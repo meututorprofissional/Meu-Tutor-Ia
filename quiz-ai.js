@@ -236,17 +236,30 @@
       const questions = [...new Map(pairs.map(item =>
         [normalizeEvidence(item.question), {question:item.question.trim(), answer:item.answer.trim()}])).values()];
       if (!questions.length) throw new Error('A IA não retornou uma pergunta válida. Tente novamente.');
-      const recentKey = 'meuTutorIA.quizRecent.v2.' + topicId;
-      let recent = [];
-      try { recent = JSON.parse(sessionStorage.getItem(recentKey) || '[]'); } catch {}
-      if (!Array.isArray(recent)) recent = [];
-      // Comparar também a resposta: "onde nasceu?" e "em qual cidade nasceu?"
-      // cobram o mesmo fato mesmo quando as perguntas têm palavras diferentes.
-      const fingerprint = item => normalizeEvidence(item.answer);
-      const unseen = questions.filter(item => !recent.includes(fingerprint(item)));
-      const pool = unseen.length ? unseen : questions.filter(item =>
-        normalizeEvidence(item.question) !== normalizeEvidence(generatedQuestion));
-      const first = (pool.length ? pool : questions)[Math.floor(Math.random() * (pool.length || questions.length))];
+      // Guardar o progresso das perguntas por assunto e por versão do texto.
+      // Se o material mudar, o estudante pode explorar as novas informações.
+      const sourceKey = normalizeEvidence(source);
+      const recentKey = 'meuTutorIA.quizExplored.v3.' + topicId;
+      let progress = {};
+      try { progress = JSON.parse(localStorage.getItem(recentKey) || '{}'); } catch {}
+      if (!progress || progress.source !== sourceKey) progress = {source:sourceKey, seen:[], misses:0};
+      if (!Array.isArray(progress.seen)) progress.seen = [];
+      // Respostas iguais ou com os mesmos fatos, mesmo em outra ordem,
+      // identificam perguntas que exploram essencialmente o mesmo conteúdo.
+      const fingerprint = item => normalizeEvidence(item.answer)
+        .split(/\\s+(?:e|and)\\s+|[,;/]+/).map(part => part.trim()).filter(Boolean).sort().join(' | ');
+      const unseen = questions.filter(item => !progress.seen.includes(fingerprint(item)));
+      if (!unseen.length) {
+        progress.misses = (Number(progress.misses) || 0) + 1;
+        try { localStorage.setItem(recentKey, JSON.stringify(progress)); } catch {}
+        if (progress.misses >= 2) {
+          status.textContent = 'Você concluiu as perguntas deste material! 🎉 Já exploramos as informações disponíveis no seu conteúdo. Para continuar aprendendo, você pode revisar as perguntas anteriores ou adicionar mais conteúdo ao estudo.';
+        } else {
+          status.textContent = 'Não encontrei uma pergunta nova nesta tentativa. Toque em Gerar mais uma vez para conferir se ainda há informações diferentes no material.';
+        }
+        return;
+      }
+      const first = unseen[Math.floor(Math.random() * unseen.length)];
       // Não substituir a pergunta se o usuário mudou de modo ou assunto durante a espera.
       if (mode.value !== 'ai' || topicSelect.value !== topicId) {
         status.textContent = 'O modo ou assunto mudou. Gere uma nova pergunta se desejar.';
@@ -256,7 +269,9 @@
       question.value = first.question;
       generatedQuestion = question.value; generatedTopic = topicId;
       try {
-        sessionStorage.setItem(recentKey, JSON.stringify([...recent.filter(q => q !== fingerprint(first)), fingerprint(first)].slice(-24)));
+        progress.seen = [...new Set([...progress.seen, fingerprint(first)])];
+        progress.misses = 0;
+        localStorage.setItem(recentKey, JSON.stringify(progress));
       } catch { /* armazenamento de sessão indisponível */ }
       answer.value = ''; reflection.value = ''; rating.value = 'good';
       clearEvaluation();
