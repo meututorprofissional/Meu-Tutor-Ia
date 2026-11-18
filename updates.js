@@ -13,7 +13,7 @@
   if (closeHistory && historyPanel) closeHistory.addEventListener('click', () => {
     historyPanel.hidden = true;
   });
-  const CURRENT_APP_VERSION = 'meu-tutor-ia-v75.12-manual-updates';
+  const CURRENT_APP_VERSION = 'meu-tutor-ia-v75.13-manual-updates';
   let registration = null;
   const setCheckStatus = message => { if (checkStatus) checkStatus.textContent = message; };
   const apply = document.getElementById('applyUpdate');
@@ -68,7 +68,7 @@
         setCheckStatus('Nova versão disponível! Toque em Atualizar agora no aviso acima.');
         if (!reg.waiting && notice) notice.style.display = 'block';
       } else {
-        setCheckStatus('Você está na versão mais recente (v75.12).');
+        setCheckStatus('Você está na versão mais recente (v75.13).');
       }
     } catch (error) {
       setCheckStatus(error.message || 'Não foi possível verificar agora.');
