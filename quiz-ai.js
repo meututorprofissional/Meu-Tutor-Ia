@@ -187,7 +187,7 @@
       try {
         response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({task:'activities', topic:topic.name, source:source + '\n\nINSTRUÇÃO PARA O TESTE: gere perguntas abertas apenas sobre fatos explicitamente presentes no material original. Inclua perguntas compostas que peçam duas informações presentes no texto (ex.: cidade e país, dia e mês). Para cada pergunta, preencha answer com a resposta exata sustentada pelo texto; não pergunte sobre familiares ou outros dados não mencionados. Não mostre as respostas ao estudante. Cada pergunta deve ser respondível diretamente pelo material e não deve transformar nacionalidade ou local de nascimento em país onde a pessoa é reconhecida. Prefira perguntas claras e específicas. Nunca pergunte em que mês de junho nasceu alguém nem misture meses ou datas ausentes do texto. Gere pelo menos duas perguntas compostas com fatos explícitos na fonte.', notes:topic.notes || ''}),
+          body: JSON.stringify({task:'activities', topic:topic.name, source, notes:'INSTRUÇÃO PARA O TESTE: gere perguntas abertas apenas sobre fatos explicitamente presentes no material original. Inclua perguntas compostas que peçam duas informações presentes no texto (ex.: cidade e país, dia e mês). Para cada pergunta, preencha answer com a resposta exata sustentada pelo texto; não pergunte sobre familiares ou outros dados não mencionados. Não mostre as respostas ao estudante. Cada pergunta deve ser respondível diretamente pelo material e não deve transformar nacionalidade ou local de nascimento em país onde a pessoa é reconhecida. Prefira perguntas claras e específicas. Nunca pergunte em que mês de junho nasceu alguém nem misture meses ou datas ausentes do texto. Gere pelo menos duas perguntas compostas com fatos explícitos na fonte.\n\nAnotações do estudante (não são fonte de fatos): ' + (topic.notes || '')}),
           signal: controller.signal
         });
       } finally { clearTimeout(timer); }
@@ -234,15 +234,18 @@
           && typeof item.answer === 'string' && isSupported(item.answer)
           && isWellFormedQuestion(item.question));
       const questions = [...new Map(pairs.map(item =>
-        [normalizeEvidence(item.question), item.question.trim()])).values()];
+        [normalizeEvidence(item.question), {question:item.question.trim(), answer:item.answer.trim()}])).values()];
       if (!questions.length) throw new Error('A IA não retornou uma pergunta válida. Tente novamente.');
-      const recentKey = 'meuTutorIA.quizRecent.' + topicId;
+      const recentKey = 'meuTutorIA.quizRecent.v2.' + topicId;
       let recent = [];
       try { recent = JSON.parse(sessionStorage.getItem(recentKey) || '[]'); } catch {}
       if (!Array.isArray(recent)) recent = [];
-      const normalizeQuestion = q => normalizeEvidence(q);
-      const unseen = questions.filter(q => !recent.includes(normalizeQuestion(q)));
-      const pool = unseen.length ? unseen : questions.filter(q => normalizeQuestion(q) !== normalizeQuestion(generatedQuestion));
+      // Comparar também a resposta: "onde nasceu?" e "em qual cidade nasceu?"
+      // cobram o mesmo fato mesmo quando as perguntas têm palavras diferentes.
+      const fingerprint = item => normalizeEvidence(item.answer);
+      const unseen = questions.filter(item => !recent.includes(fingerprint(item)));
+      const pool = unseen.length ? unseen : questions.filter(item =>
+        normalizeEvidence(item.question) !== normalizeEvidence(generatedQuestion));
       const first = (pool.length ? pool : questions)[Math.floor(Math.random() * (pool.length || questions.length))];
       // Não substituir a pergunta se o usuário mudou de modo ou assunto durante a espera.
       if (mode.value !== 'ai' || topicSelect.value !== topicId) {
@@ -250,10 +253,10 @@
         return;
       }
       // Não exibir respostas geradas antes da tentativa.
-      question.value = first.trim();
+      question.value = first.question;
       generatedQuestion = question.value; generatedTopic = topicId;
       try {
-        sessionStorage.setItem(recentKey, JSON.stringify([...recent.filter(q => q !== normalizeQuestion(first)), normalizeQuestion(first)].slice(-12)));
+        sessionStorage.setItem(recentKey, JSON.stringify([...recent.filter(q => q !== fingerprint(first)), fingerprint(first)].slice(-24)));
       } catch { /* armazenamento de sessão indisponível */ }
       answer.value = ''; reflection.value = ''; rating.value = 'good';
       clearEvaluation();
