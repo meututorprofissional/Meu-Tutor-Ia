@@ -64,6 +64,29 @@ function renderProfileAchievements(){
  if(featured)featured.textContent=selected?.icon||'🏆';
  if(featuredTitle)featuredTitle.textContent=selected?.name||'Sua primeira conquista';
  if(featuredHint)featuredHint.textContent=selected?'Medalha em destaque':'Estude para desbloquear medalhas';
+ const xpPanel=$('profileXpPanel');
+ if(xpPanel){
+   let saved={topics:[],cards:[],attempts:[]};try{saved={...saved,...JSON.parse(localStorage.getItem('meuTutorIA.v2')||'{}')}}catch{}
+   const topics=Array.isArray(saved.topics)?saved.topics.length:0;
+   const cards=Array.isArray(saved.cards)?saved.cards.length:0;
+   const attempts=Array.isArray(saved.attempts)?saved.attempts.length:0;
+   const xp=topics*20+cards*5+attempts*10;
+   const level=Math.floor(xp/1000)+1;
+   const inLevel=xp%1000;
+   const percent=inLevel/10;
+   $('profileLevelNumber').textContent='Nível '+level;
+   $('profileXpValue').textContent=inLevel.toLocaleString('pt-BR')+' / 1.000 XP';
+   $('profileXpBar').style.width=percent+'%';
+   $('profileXpMeter').setAttribute('aria-valuenow',String(inLevel));
+ }
+ const preview=$('profileBetaPreview');
+ if(preview){
+   let enabled=false;try{enabled=localStorage.getItem('meuTutorIA.betaPreview.v1')==='true'}catch{}
+   preview.checked=enabled;
+   const badge=$('profileBetaDemo');
+   if(badge)badge.hidden=!enabled;
+   preview.onchange=()=>{try{localStorage.setItem('meuTutorIA.betaPreview.v1',String(preview.checked))}catch{}if(badge)badge.hidden=!preview.checked;};
+ }
  const heroStats=$('profileHeroStats');if(heroStats){let data={};try{data=JSON.parse(localStorage.getItem('meuTutorIA.v2')||'{}');}catch{}const entries=[['📚',Array.isArray(data.topics)?data.topics.length:0,'Assuntos'],['🗂️',Array.isArray(data.cards)?data.cards.length:0,'Cartões'],['🎯',Array.isArray(data.attempts)?data.attempts.length:0,'Tentativas'],['🏆',unlocked+'/'+badges.length,'Conquistas']];heroStats.replaceChildren();entries.forEach(([icon,value,label])=>{const item=document.createElement('span');item.textContent=icon+' '+value;const small=document.createElement('small');small.textContent=label;item.appendChild(small);heroStats.appendChild(item);});}
  badges.forEach(b=>{const earned=b.value>=b.target,card=document.createElement('div');card.className='profile-achievement-item'+(earned?'':' is-locked');const emoji=document.createElement('span');emoji.className='profile-achievement-emoji';emoji.textContent=earned?b.icon:'🔒';const title=document.createElement('strong');title.textContent=b.name;const info=document.createElement('small');info.textContent=earned?'🏅 Conquistada':Math.min(b.value,b.target)+' de '+b.target+' '+b.unit;card.append(emoji,title,info);if(earned){if(selected?.name===b.name)card.classList.add('is-selected');const button=document.createElement('button');button.type='button';button.className='secondary';button.textContent=selected?.name===b.name?'✓ Em destaque':'Destacar no perfil';button.disabled=selected?.name===b.name;button.setAttribute('aria-label','Destacar '+b.name+' no perfil');button.onclick=()=>{localStorage.setItem(savedEmblemKey,b.name);renderProfileAchievements();};card.appendChild(button);}grid.appendChild(card);});
  const upcoming=badges.filter(b=>b.value<b.target).sort((a,b)=>(b.value/b.target)-(a.value/a.target))[0];next.replaceChildren();if(!upcoming){next.textContent='🎉 Todas as conquistas disponíveis foram desbloqueadas!';return;}
