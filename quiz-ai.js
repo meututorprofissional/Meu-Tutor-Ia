@@ -187,22 +187,32 @@
       try {
         response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({task:'activities', topic:topic.name, source:source + '\n\nINSTRUÇÃO PARA O TESTE: crie perguntas de recordação abertas, somente sobre fatos presentes no texto; não mostre as respostas ao estudante.', notes:topic.notes || ''}),
+          body: JSON.stringify({task:'activities', topic:topic.name, source:source + '\n\nINSTRUÇÃO PARA O TESTE: gere perguntas abertas apenas sobre fatos explicitamente presentes no material original. Inclua perguntas compostas que peçam duas informações presentes no texto (ex.: cidade e país, dia e mês). Para cada pergunta, preencha answer com a resposta exata sustentada pelo texto; não pergunte sobre familiares ou outros dados não mencionados. Não mostre as respostas ao estudante.', notes:topic.notes || ''}),
           signal: controller.signal
         });
       } finally { clearTimeout(timer); }
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'Servidor indisponível (' + response.status + ').');
-      const candidates = [
-        ...(Array.isArray(result.questions) ? result.questions : []),
-        ...(Array.isArray(result.flashcards) ? result.flashcards : []),
-        ...(Array.isArray(result.cards) ? result.cards : []),
-        ...(Array.isArray(result.activities?.flashcards) ? result.activities.flashcards : [])
-      ];
-      const questions = [...new Map(candidates
-        .map(item => typeof item === 'string' ? item : item?.question || item?.front || item?.pergunta)
-        .filter(q => typeof q === 'string' && q.trim())
-        .map(q => [q.trim().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/\\s+/g, ' '), q.trim()])).values()];
+      // Only accept question/answer pairs grounded in the saved source.
+      // Do not use flashcard fronts as fallback: they can lack verifiable answers.
+      const normalizeEvidence = value => String(value || '').normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '').toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+      const normalizedSource = normalizeEvidence(source);
+      const isSupported = answerText => {
+        const normalized = normalizeEvidence(answerText);
+        if (!normalized || normalized.length < 2) return false;
+        if (normalizedSource.includes(normalized)) return true;
+        // For compound answers, each substantive part must occur in the source.
+        const parts = String(answerText).split(/\s*(?:,|;|\be\b|\band\b|\/)\s*/i)
+          .map(normalizeEvidence).filter(Boolean);
+        return parts.length >= 2 && parts.every(part => part.length >= 2 && normalizedSource.includes(part));
+      };
+      const pairs = (Array.isArray(result.questions) ? result.questions : [])
+        .filter(item => item && typeof item === 'object' && typeof item.question === 'string'
+          && typeof item.answer === 'string' && isSupported(item.answer));
+      const questions = [...new Map(pairs.map(item =>
+        [normalizeEvidence(item.question), item.question.trim()])).values()];
       if (!questions.length) throw new Error('A IA não retornou uma pergunta válida. Tente novamente.');
       const recentKey = 'meuTutorIA.quizRecent.' + topicId;
       let recent = [];
