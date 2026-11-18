@@ -337,6 +337,43 @@ function render(){
  document.getElementById('statWeekActivities').textContent=weekAttempts.length;
  document.getElementById('statWeekDays').textContent=activeDays;
  document.getElementById('statWeekQuizzes').textContent=weekAttempts.filter(a=>a.type==='quiz'||a.type==='flashcard-quiz').length;
+
+ const chart=document.getElementById('progressWeeklyChart');
+ if(chart){
+   const daily=weekDays.map(d=>weekAttempts.filter(a=>new Date(a.date).toDateString()===d.toDateString()).length);
+   const max=Math.max(1,...daily);
+   chart.innerHTML=weekDays.map((d,i)=>'<div class="progress-bar-col"><span class="progress-note">'+daily[i]+'</span><div class="progress-bar" style="height:'+Math.max(3,Math.round(daily[i]/max*110))+'px"></div><small>'+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</small></div>').join('');
+   chart.setAttribute('aria-label','Atividades registradas por dia: '+daily.map((n,i)=>weekDays[i].toLocaleDateString('pt-BR')+': '+n).join('; '));
+ }
+ const frequency=document.getElementById('progressFrequency');
+ if(frequency) frequency.textContent='Frequência de estudo: '+activeDays+' de 7 dias ('+Math.round(activeDays/7*100)+'%).';
+ const reviewSummary=document.getElementById('progressReviewSummary');
+ if(reviewSummary) reviewSummary.textContent=due+' cartão(ões) para revisar agora. As datas de revisão não medem seu domínio do assunto.';
+ const other=db.attempts.filter(a=>!['good','practice','partial','hard'].includes(a.rating)).length;
+ const distribution=document.getElementById('progressRatingDistribution');
+ if(distribution){
+   const total=db.attempts.length||1;
+   distribution.innerHTML='<span style="width:'+(good/total*100)+'%;background:#22c55e"></span><span style="width:'+(practice/total*100)+'%;background:#f59e0b"></span><span style="width:'+(other/total*100)+'%;background:#94a3b8"></span>';
+ }
+ const legend=document.getElementById('progressRatingLegend');
+ if(legend) legend.textContent='🟢 Consegui explicar: '+good+' · 🟠 Para praticar: '+practice+' · ⚪ Sem classificação: '+other;
+ const insights=document.getElementById('progressInsights');
+ if(insights) insights.textContent=(due?'⏰ Você tem '+due+' cartão(ões) com revisão pendente. ':'✅ Nenhum cartão vencido agora. ')+(practice?'🎯 Há '+practice+' tentativa(s) marcadas para praticar. ':'')+'📚 Continue revisando e registre suas tentativas para acompanhar a evolução.';
+ const goalText=document.getElementById('progressGoalText');
+ const goalButton=document.getElementById('progressGoalButton');
+ if(goalText){let goal=0;try{goal=Number(localStorage.getItem('meuTutorIA.weeklyGoal.v1'))||0}catch{}goalText.textContent=goal?activeDays+' de '+goal+' dia(s) de estudo nesta semana.':'Defina quantos dias deseja estudar por semana.';}
+ if(goalButton&&!goalButton.dataset.bound){
+   goalButton.dataset.bound='1';
+   goalButton.addEventListener('click',()=>{
+     const current=Number(localStorage.getItem('meuTutorIA.weeklyGoal.v1'))||3;
+     const entered=prompt('Em quantos dias por semana deseja estudar? (1 a 7)',String(current));
+     if(entered===null)return;
+     const n=Number(entered);
+     if(!Number.isInteger(n)||n<1||n>7){alert('Escolha um número inteiro de 1 a 7.');return;}
+     try{localStorage.setItem('meuTutorIA.weeklyGoal.v1',String(n));}catch{}
+     if(goalText)goalText.textContent=activeDays+' de '+n+' dia(s) de estudo nesta semana.';
+   });
+ }
  document.getElementById('weekActivityList').innerHTML=weekDays.map(d=>{const items=weekAttempts.filter(a=>new Date(a.date).toDateString()===d.toDateString());const label=d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});return '<div class="item"><strong>'+esc(label)+'</strong><p>'+items.length+' atividade(s) registrada(s)</p><span class="muted">'+items.filter(a=>a.type==='study').length+' estudo(s) · '+items.filter(a=>a.type==='quiz'||a.type==='flashcard-quiz').length+' teste(s) · '+items.filter(a=>a.type==='flashcard').length+' revisão(ões) de cartão</span></div>'}).join('');
 
  const reviews=db.cards.filter(c=>!c.nextReview||new Date(c.nextReview)<=new Date());
