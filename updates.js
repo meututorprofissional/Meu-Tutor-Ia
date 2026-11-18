@@ -3,7 +3,7 @@
   const notice = document.getElementById('updateNotice');
   const checkButton = document.getElementById('checkForUpdates');
   const checkStatus = document.getElementById('updateCheckStatus');
-  const CURRENT_APP_VERSION = 'meu-tutor-ia-v70-manual-updates';
+  const CURRENT_APP_VERSION = 'meu-tutor-ia-v71-manual-updates';
   let registration = null;
   const setCheckStatus = message => { if (checkStatus) checkStatus.textContent = message; };
   const apply = document.getElementById('applyUpdate');
@@ -58,7 +58,7 @@
         setCheckStatus('Nova versão disponível! Toque em Atualizar agora no aviso acima.');
         if (!reg.waiting && notice) notice.style.display = 'block';
       } else {
-        setCheckStatus('Você está na versão mais recente (v70).');
+        setCheckStatus('Você está na versão mais recente (v71).');
       }
     } catch (error) {
       setCheckStatus(error.message || 'Não foi possível verificar agora.');
