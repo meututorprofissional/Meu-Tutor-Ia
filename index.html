@@ -117,8 +117,9 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v73</span>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v73.1</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
 </div>
+<section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
 <div class="layout">
 <main>
 <section id="home" class="screen active">
@@ -316,7 +317,7 @@ html,body{max-width:100%;overflow-x:clip}
 </main></div>
 <script src="app.js?v=50"></script>
 <script src="quiz-ai.js?v=27"></script>
-<script src="updates.js?v=73"></script>
+<script src="updates.js?v=73.1"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
