@@ -15,9 +15,21 @@
     const topicId = document.getElementById('quizTopic')?.value;
     let progress = {};
     try { progress = JSON.parse(localStorage.getItem('meuTutorIA.quizExplored.v3.' + topicId) || '{}'); } catch {}
-    const history = Array.isArray(progress.history) ? progress.history : [];
+    // Recuperar também perguntas de tentativas que o estudante registrou
+    // antes da V71. Nunca inventar perguntas nem misturar assuntos.
+    let data = {};
+    try { data = JSON.parse(localStorage.getItem('meuTutorIA.v2') || '{}'); } catch {}
+    const topic = (Array.isArray(data.topics) ? data.topics : []).find(t => t.id === topicId);
+    const normalizeSource = value => String(value || '').normalize('NFD')
+      .replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    const sourceMatches = topic && progress.source === normalizeSource(topic.source);
+    const generatedHistory = sourceMatches && Array.isArray(progress.history) ? progress.history : [];
+    const recordedHistory = (Array.isArray(data.attempts) ? data.attempts : [])
+      .filter(item => item.topicId === topicId && item.type === 'quiz' && typeof item.question === 'string')
+      .map(item => item.question);
+    const history = [...new Set([...generatedHistory, ...recordedHistory].map(q => String(q).trim()).filter(Boolean))];
     if (!history.length) {
-      status.textContent = 'Ainda não há perguntas anteriores disponíveis para revisão neste assunto.';
+      status.textContent = 'Não encontrei perguntas antigas salvas neste assunto. Perguntas que não foram registradas antes da V71 não podem ser recuperadas automaticamente. Gere uma nova pergunta para começar a guardar o histórico.';
       return;
     }
     const selected = history[Math.floor(Math.random() * history.length)];
