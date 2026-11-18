@@ -137,6 +137,24 @@
     if (facebook) facebook.disabled = false;
     setText('authStatus', session ? 'Conta conectada. Seus estudos podem ser sincronizados com segurança.' : 'Entre com Google ou Facebook para acessar seus estudos em outros dispositivos.');
   }
+  // Confirma a data diretamente no Auth, inclusive quando a sessão em cache está incompleta.
+  let memberDateRequest = 0;
+  async function refreshMemberSince() {
+    const requestId = ++memberDateRequest;
+    if (!client || !session?.user?.id) return;
+    const userId = session.user.id;
+    try {
+      const { data, error } = await client.auth.getUser();
+      if (error || requestId !== memberDateRequest || session?.user?.id !== userId) return;
+      const dateValue = data?.user?.created_at;
+      const date = dateValue ? new Date(dateValue) : null;
+      if (date && !Number.isNaN(date.getTime())) {
+        setText('profileMemberSince', new Intl.DateTimeFormat('pt-BR', {
+          day:'numeric', month:'short', year:'numeric', timeZone:'America/Fortaleza'
+        }).format(date));
+      }
+    } catch (error) { console.warn('Data de cadastro indisponível no Auth', error); }
+  }
   async function saveCloudData(data) {
     if (!client || !session?.user?.id || !data) return false;
     if (syncing) { pendingData = data; return false; }
@@ -381,11 +399,12 @@
       session = data?.session || null;
       authReady = true;
       showAuthState();
-      if (session) initialSync();
+      if (session) { refreshMemberSince(); initialSync(); }
     });
     client.auth.onAuthStateChange((event, nextSession) => {
       session = nextSession;
       showAuthState();
+      if (nextSession && event === 'SIGNED_IN') refreshMemberSince();
       if (event === 'SIGNED_IN' && authReady) setTimeout(initialSync, 0);
     });
   } else {
