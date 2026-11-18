@@ -115,6 +115,10 @@ html,body{max-width:100%;overflow-x:clip}
   <button id="applyUpdate" style="margin-left:8px">Atualizar agora</button>
   <button id="dismissUpdate" class="secondary" style="margin-left:4px">Depois</button>
 </div>
+<div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+  <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v70</span>
+</div>
 <div class="layout">
 <main>
 <section id="home" class="screen active">
@@ -312,7 +316,7 @@ html,body{max-width:100%;overflow-x:clip}
 </main></div>
 <script src="app.js?v=50"></script>
 <script src="quiz-ai.js?v=22"></script>
-<script src="updates.js"></script>
+<script src="updates.js?v=70"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
