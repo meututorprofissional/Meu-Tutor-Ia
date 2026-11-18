@@ -3,6 +3,32 @@
   const controls = document.getElementById('quizAiControls');
   const button = document.getElementById('quizGenerate');
   const status = document.getElementById('quizAiStatus');
+  const exhaustedNotice = document.getElementById('quizExhaustedNotice');
+  const reviewQuestions = document.getElementById('quizReviewQuestions');
+  const addContent = document.getElementById('quizAddContent');
+  const hideExhausted = () => { if (exhaustedNotice) exhaustedNotice.hidden = true; };
+  if (addContent) addContent.addEventListener('click', () => {
+    const target = document.querySelector('nav [data-screen="study"]');
+    if (target) target.click();
+  });
+  if (reviewQuestions) reviewQuestions.addEventListener('click', () => {
+    const topicId = document.getElementById('quizTopic')?.value;
+    let progress = {};
+    try { progress = JSON.parse(localStorage.getItem('meuTutorIA.quizExplored.v3.' + topicId) || '{}'); } catch {}
+    const history = Array.isArray(progress.history) ? progress.history : [];
+    if (!history.length) {
+      status.textContent = 'Ainda não há perguntas anteriores disponíveis para revisão neste assunto.';
+      return;
+    }
+    const selected = history[Math.floor(Math.random() * history.length)];
+    question.value = selected;
+    generatedQuestion = selected; generatedTopic = topicId;
+    answer.value = ''; reflection.value = ''; rating.value = 'good';
+    clearEvaluation();
+    hideExhausted();
+    status.textContent = 'Pergunta anterior pronta para revisão. Responda sem consultar.';
+    answer.focus();
+  });
   const question = document.getElementById('question');
   const topicSelect = document.getElementById('quizTopic');
   const answer = document.getElementById('answer');
@@ -162,6 +188,7 @@
     question.placeholder = ai ? 'Toque em Gerar pergunta com IA.' : 'Escreva sua pergunta.';
     if (generatedQuestion && question.value === generatedQuestion) question.value = '';
     generatedQuestion = ''; generatedTopic = '';
+    hideExhausted();
     status.textContent = 'Selecione um assunto com material salvo e gere uma pergunta.';
   };
   mode.addEventListener('change', syncMode);
@@ -179,6 +206,7 @@
     const endpoint = String(window.MEU_TUTOR_AI_ENDPOINT || '').trim();
     if (!endpoint) { status.textContent = 'A IA não está configurada neste aplicativo.'; return; }
     button.disabled = true;
+    hideExhausted();
     status.textContent = 'Criando uma pergunta com base no material original…';
     try {
       const controller = new AbortController();
@@ -253,7 +281,8 @@
         progress.misses = (Number(progress.misses) || 0) + 1;
         try { localStorage.setItem(recentKey, JSON.stringify(progress)); } catch {}
         if (progress.misses >= 2) {
-          status.textContent = 'Você concluiu as perguntas deste material! 🎉 Já exploramos as informações disponíveis no seu conteúdo. Para continuar aprendendo, você pode revisar as perguntas anteriores ou adicionar mais conteúdo ao estudo.';
+          status.textContent = 'Nenhuma pergunta nova encontrada nas últimas tentativas.';
+          if (exhaustedNotice) exhaustedNotice.hidden = false;
         } else {
           status.textContent = 'Não encontrei uma pergunta nova nesta tentativa. Toque em Gerar mais uma vez para conferir se ainda há informações diferentes no material.';
         }
@@ -270,6 +299,7 @@
       generatedQuestion = question.value; generatedTopic = topicId;
       try {
         progress.seen = [...new Set([...progress.seen, fingerprint(first)])];
+        progress.history = [...new Set([...(Array.isArray(progress.history) ? progress.history : []), first.question])].slice(-100);
         progress.misses = 0;
         localStorage.setItem(recentKey, JSON.stringify(progress));
       } catch { /* armazenamento de sessão indisponível */ }
@@ -408,6 +438,7 @@
     clearEvaluation();
     if (mode.value === 'ai' && generatedTopic && generatedTopic !== topicSelect.value) {
       question.value = ''; generatedQuestion = ''; generatedTopic = '';
+      hideExhausted();
       status.textContent = 'Assunto alterado. Gere uma nova pergunta para este estudo.';
     }
   });
