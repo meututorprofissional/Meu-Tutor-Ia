@@ -357,6 +357,19 @@
           }
         }
       }
+      // Equivalent World Cup title wording must not be marked incorrect.
+      // Only override when the original source explicitly supports the title and year.
+      const canonicalTitle = value => fold(value)
+        .replace(/\\b(?:da|de|do)\\s+copa\\s+do\\s+mundo\\b/g, ' do mundo')
+        .replace(/[^a-z0-9 ]/g, ' ').replace(/\\s+/g, ' ').trim();
+      const askedTitle2022 = /\\b(titulo|conquista|campeao)\\b/.test(qFold) && /\\b2022\\b/.test(qFold);
+      const sourceConfirmsTitle = /campeao\\s+(?:da\\s+copa\\s+)?do\\s+mundo\\s+(?:em|de|no\\s+ano\\s+de)\\s+2022/.test(sourceFold);
+      if (askedTitle2022 && sourceConfirmsTitle &&
+          /\\bcampeao do mundo\\b/.test(canonicalTitle(userAnswer)) &&
+          /\\bcampeao do mundo\\b/.test(canonicalTitle(structured.expected_answer))) {
+        structured.classification = 'correct';
+        structured.explanation = 'Sua resposta está correta: campeão da Copa do Mundo e campeão do mundo expressam o mesmo título de 2022.';
+      }
       const feedback = structured;
       if (!structured && !feedback.trim()) throw new Error('O servidor não retornou uma análise utilizável.');
       if (mode.value !== 'ai' || topicSelect.value !== topicId || question.value !== promptQuestion || answer.value.trim() !== userAnswer) {
