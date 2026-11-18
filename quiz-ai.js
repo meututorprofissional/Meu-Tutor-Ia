@@ -310,7 +310,7 @@
       try {
         response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({task:'evaluate', topic:topic.name, source, question:promptQuestion, answer:userAnswer}), signal:controller.signal
+          body:JSON.stringify({task:'evaluate', topic:topic.name, source, question:promptQuestion, answer:userAnswer, notes}), signal:controller.signal
         });
       } finally { clearTimeout(timer); }
       let result = await response.json().catch(() => ({}));
@@ -321,7 +321,7 @@
         try {
           response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
             method:'POST', headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({task:'evaluate',topic:topic.name,source,question:promptQuestion,answer:userAnswer}),
+            body:JSON.stringify({task:'evaluate',topic:topic.name,source,question:promptQuestion,answer:userAnswer,notes}),
             signal:retryController.signal
           });
           result = await response.json().catch(() => ({}));
@@ -333,7 +333,7 @@
       // Guardrail for questions requesting both the World Cup year and birth year.
       // Do not allow a model to mark one correct year as wholly incorrect.
       // Only apply when both facts are explicitly supported by the saved source.
-      const fold = value => String(value || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();
+      const fold = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
       const qFold = fold(promptQuestion);
       const sourceFold = fold(source);
       const years = text => [...new Set((String(text).match(/\\b(?:18|19|20)\\d{2}\\b/g) || []))];
