@@ -35,6 +35,34 @@ const rules=[
  [/ajuda|suporte|problema|erro/i,'Use Ajuda e feedback para relatar problemas ou Central de atendimento para buscar suporte.']
 ];
 $('guideAsk').onclick=()=>{const q=$('guideQuestion').value.trim();if(!q){$('guideReply').textContent='Escreva sua dúvida primeiro.';return;} const match=rules.find(([re])=>re.test(q));$('guideReply').textContent=match?match[1]:'Ainda não tenho uma resposta preparada para essa pergunta. Experimente perguntar sobre Meu estudo, Flashcards, Teste, Progresso ou perfil. Você também pode usar Ajuda e feedback.';};
+
+function achievementData(){
+ let data={topics:[],cards:[],attempts:[]};try{data={...data,...JSON.parse(localStorage.getItem('meuTutorIA.v2')||'{}')};}catch{}
+ let done=false;try{done=!!JSON.parse(localStorage.getItem(key)||'{}').done;}catch{}
+ const topics=Array.isArray(data.topics)?data.topics:[],cards=Array.isArray(data.cards)?data.cards:[],attempts=Array.isArray(data.attempts)?data.attempts:[];
+ const days=new Set(attempts.filter(a=>a&&a.date&&!Number.isNaN(new Date(a.date).getTime())).map(a=>new Date(a.date).toLocaleDateString('en-CA'))).size;
+ const reviews=attempts.filter(a=>a&&a.type==='flashcard').length;
+ return [
+ {icon:'🌱',name:'Primeiro estudo',value:topics.length,target:1,unit:'assunto'},
+ {icon:'📚',name:'Primeiro flashcard',value:cards.length,target:1,unit:'cartão'},
+ {icon:'✍️',name:'Primeira tentativa',value:attempts.length,target:1,unit:'tentativa'},
+ {icon:'🎓',name:'Primeiros passos',value:done?1:0,target:1,unit:'tutorial concluído'},
+ {icon:'🔥',name:'7 dias ativos',value:days,target:7,unit:'dias com registros'},
+ {icon:'🏅',name:'10 revisões',value:reviews,target:10,unit:'revisões registradas'},
+ {icon:'💎',name:'100 cartões',value:cards.length,target:100,unit:'cartões salvos'}
+ ];
+}
+function renderProfileAchievements(){
+ const grid=$('profileAchievementGrid'),summary=$('profileAchievementSummary'),next=$('profileAchievementNext');if(!grid||!summary||!next)return;
+ const badges=achievementData(),unlocked=badges.filter(b=>b.value>=b.target).length;
+ summary.textContent=unlocked+' de '+badges.length+' conquistas desbloqueadas neste navegador.';
+ grid.replaceChildren();
+ badges.forEach(b=>{const earned=b.value>=b.target,card=document.createElement('div');card.className='profile-achievement-item'+(earned?'':' is-locked');const emoji=document.createElement('span');emoji.className='profile-achievement-emoji';emoji.textContent=earned?b.icon:'🔒';const title=document.createElement('strong');title.textContent=b.name;const info=document.createElement('small');info.textContent=earned?'🏅 Conquistada':Math.min(b.value,b.target)+' de '+b.target+' '+b.unit;card.append(emoji,title,info);grid.appendChild(card);});
+ const upcoming=badges.filter(b=>b.value<b.target).sort((a,b)=>(b.value/b.target)-(a.value/a.target))[0];next.replaceChildren();if(!upcoming){next.textContent='🎉 Todas as conquistas disponíveis foram desbloqueadas!';return;}
+ const heading=document.createElement('strong');heading.textContent='🎯 Próxima conquista: '+upcoming.name;const info=document.createElement('p');info.textContent=upcoming.value+' de '+upcoming.target+' '+upcoming.unit;const meter=document.createElement('div');meter.className='profile-achievement-meter';meter.setAttribute('role','progressbar');meter.setAttribute('aria-label',upcoming.name);meter.setAttribute('aria-valuemin','0');meter.setAttribute('aria-valuemax',String(upcoming.target));meter.setAttribute('aria-valuenow',String(Math.min(upcoming.value,upcoming.target)));const bar=document.createElement('span');bar.style.width=Math.max(0,Math.min(100,upcoming.value/upcoming.target*100))+'%';meter.appendChild(bar);next.append(heading,meter,info);
+}
+document.addEventListener('click',event=>{if(event.target.closest('[data-go="profile"],[data-account-action="profile"]'))setTimeout(renderProfileAchievements,0);});
+window.addEventListener('storage',renderProfileAchievements);
 function renderAchievements(){
  let data={topics:[],cards:[],attempts:[]};try{data={...data,...JSON.parse(localStorage.getItem('meuTutorIA.v2')||'{}')};}catch{}
  let done=false;try{done=!!JSON.parse(localStorage.getItem(key)||'{}').done;}catch{}
@@ -43,5 +71,5 @@ function renderAchievements(){
  badges.forEach(([name,unlocked])=>{const el=document.createElement('p');el.textContent=(unlocked?'🏅 ':'🔒 ')+name+(unlocked?' — conquistado':' — bloqueado');$('guideAchievements').appendChild(el);});
 }
 document.querySelector('nav [data-screen="guide"]')?.addEventListener('click',renderAchievements);
-show();renderAchievements();
+show();renderAchievements();renderProfileAchievements();
 })();
