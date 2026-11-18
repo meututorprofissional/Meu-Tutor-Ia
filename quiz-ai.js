@@ -187,7 +187,7 @@
       try {
         response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({task:'activities', topic:topic.name, source:source + '\n\nINSTRUÇÃO PARA O TESTE: gere perguntas abertas apenas sobre fatos explicitamente presentes no material original. Inclua perguntas compostas que peçam duas informações presentes no texto (ex.: cidade e país, dia e mês). Para cada pergunta, preencha answer com a resposta exata sustentada pelo texto; não pergunte sobre familiares ou outros dados não mencionados. Não mostre as respostas ao estudante.', notes:topic.notes || ''}),
+          body: JSON.stringify({task:'activities', topic:topic.name, source:source + '\n\nINSTRUÇÃO PARA O TESTE: gere perguntas abertas apenas sobre fatos explicitamente presentes no material original. Inclua perguntas compostas que peçam duas informações presentes no texto (ex.: cidade e país, dia e mês). Para cada pergunta, preencha answer com a resposta exata sustentada pelo texto; não pergunte sobre familiares ou outros dados não mencionados. Não mostre as respostas ao estudante. Cada pergunta deve ser respondível diretamente pelo material e não deve transformar nacionalidade ou local de nascimento em país onde a pessoa é reconhecida. Prefira perguntas claras e específicas. Gere pelo menos duas perguntas compostas com fatos explícitos na fonte.', notes:topic.notes || ''}),
           signal: controller.signal
         });
       } finally { clearTimeout(timer); }
@@ -208,9 +208,21 @@
           .map(normalizeEvidence).filter(Boolean);
         return parts.length >= 2 && parts.every(part => part.length >= 2 && normalizedSource.includes(part));
       };
+      // Reject questions whose wording introduces a location or relationship
+      // not supported by the source. Answer presence alone is insufficient.
+      const isWellFormedQuestion = raw => {
+        const q = normalizeEvidence(raw);
+        if (!q || q.length < 12 || !/[?？]\s*$/.test(raw.trim())) return false;
+        // "Em que país é considerado..." incorrectly turns a general
+        // reputation statement into a country-specific claim.
+        if (/^(em )?que pais .*\b(considerad|reconhecid|conhecid|famos|melhor)/.test(q)) return false;
+        if (/\bem que pais\b.*\b(considerad|reconhecid|conhecid|famos|melhor)/.test(q)) return false;
+        return true;
+      };
       const pairs = (Array.isArray(result.questions) ? result.questions : [])
         .filter(item => item && typeof item === 'object' && typeof item.question === 'string'
-          && typeof item.answer === 'string' && isSupported(item.answer));
+          && typeof item.answer === 'string' && isSupported(item.answer)
+          && isWellFormedQuestion(item.question));
       const questions = [...new Map(pairs.map(item =>
         [normalizeEvidence(item.question), item.question.trim()])).values()];
       if (!questions.length) throw new Error('A IA não retornou uma pergunta válida. Tente novamente.');
