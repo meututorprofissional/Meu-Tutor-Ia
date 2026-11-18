@@ -336,12 +336,12 @@
       const fold = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
       const qFold = fold(promptQuestion);
       const sourceFold = fold(source);
-      const years = text => [...new Set((String(text).match(/\\b(?:18|19|20)\\d{2}\\b/g) || []))];
+      const years = text => [...new Set((String(text).match(/\b(?:18|19|20)\d{2}\b/g) || []))];
       const worldCupQuestion = /(?:campe[aã]o|copa do mundo|mundial)/.test(qFold);
       const birthQuestion = /(?:nasceu|nascimento|nascido)/.test(qFold);
-      if (worldCupQuestion && birthQuestion && /\\be\\b/.test(qFold)) {
-        const worldCupMatch = sourceFold.match(/(?:campe[aã]o(?:\\s+do\\s+mundo)?|copa do mundo|mundial)[^.!?\\n]{0,65}?\\b((?:19|20)\\d{2})\\b/);
-        const birthMatch = sourceFold.match(/(?:nascid[oa]|nasceu|nacimiento|nacido|nacida)[^.!?\\n]{0,90}?\\b((?:19|20)\\d{2})\\b/);
+      if (worldCupQuestion && birthQuestion && /\be\b/.test(qFold)) {
+        const worldCupMatch = sourceFold.match(/(?:campe[aã]o(?:\s+do\s+mundo)?|copa do mundo|mundial)[^.!?\n]{0,65}?\b((?:19|20)\d{2})\b/);
+        const birthMatch = sourceFold.match(/(?:nascid[oa]|nasceu|nacimiento|nacido|nacida)[^.!?\n]{0,90}?\b((?:19|20)\d{2})\b/);
         if (worldCupMatch && birthMatch && worldCupMatch[1] !== birthMatch[1]) {
           const expectedYears = [worldCupMatch[1], birthMatch[1]];
           const suppliedYears = years(userAnswer);
@@ -360,13 +360,13 @@
       // Equivalent World Cup title wording must not be marked incorrect.
       // Only override when the original source explicitly supports the title and year.
       const canonicalTitle = value => fold(value)
-        .replace(/\\b(?:da|de|do)\\s+copa\\s+do\\s+mundo\\b/g, ' do mundo')
-        .replace(/[^a-z0-9 ]/g, ' ').replace(/\\s+/g, ' ').trim();
-      const askedTitle2022 = /\\b(titulo|conquista|campeao)\\b/.test(qFold) && /\\b2022\\b/.test(qFold);
-      const sourceConfirmsTitle = /campeao\\s+(?:da\\s+copa\\s+)?do\\s+mundo\\s+(?:em|de|no\\s+ano\\s+de)\\s+2022/.test(sourceFold);
+        .replace(/\b(?:da|de|do)\s+copa\s+do\s+mundo\b/g, ' do mundo')
+        .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+      const askedTitle2022 = /\b(titulo|conquista|campeao)\b/.test(qFold) && /\b2022\b/.test(qFold);
+      const sourceConfirmsTitle = /campeao\s+(?:da\s+copa\s+)?do\s+mundo\s+(?:em|de|no\s+ano\s+de)\s+2022/.test(sourceFold);
       if (askedTitle2022 && sourceConfirmsTitle &&
-          /\\bcampeao do mundo\\b/.test(canonicalTitle(userAnswer)) &&
-          /\\bcampeao do mundo\\b/.test(canonicalTitle(structured.expected_answer))) {
+          /\bcampeao do mundo\b/.test(canonicalTitle(userAnswer)) &&
+          /\bcampeao do mundo\b/.test(canonicalTitle(structured.expected_answer))) {
         structured.classification = 'correct';
         structured.explanation = 'Sua resposta está correta: campeão da Copa do Mundo e campeão do mundo expressam o mesmo título de 2022.';
       }
