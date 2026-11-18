@@ -1,11 +1,12 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v69-correct-answers';
+const CACHE_VERSION = 'meu-tutor-ia-v70-manual-updates';
 
 const APP_FILES = [
   './',
   './index.html',
   './app.js',
+  './quiz-ai.js',
   './updates.js',
   './manifest.json',
   './icon.svg',
