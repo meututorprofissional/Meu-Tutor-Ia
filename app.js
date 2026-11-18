@@ -344,11 +344,12 @@ function render(){
    const max=Math.max(1,...daily);
    const w=680,h=200,left=28,right=15,top=22,bottom=35;
    const x=i=>left+i*(w-left-right)/6;
-   const y=n=>top+(max-n)*(h-top-bottom)/max;
+   // Escala de raiz quadrada: preserva valores reais e torna dias de baixa atividade mais visíveis.
+   const y=n=>top+(1-Math.sqrt(n/max))*(h-top-bottom);
    const points=daily.map((n,i)=>[x(i),y(n)]);
    const path=points.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
    const area=path+' L'+x(6)+' '+(h-bottom)+' L'+x(0)+' '+(h-bottom)+' Z';
-   const grid=[0,.25,.5,.75,1].map(t=>'<line x1="'+left+'" y1="'+y(max*t)+'" x2="'+(w-right)+'" y2="'+y(max*t)+'" stroke="#e9e5f6"/>').join('');
+   const grid=[0,.25,.5,.75,1].map(t=>'<line x1="'+left+'" y1="'+(top+(1-t)*(h-top-bottom))+'" x2="'+(w-right)+'" y2="'+(top+(1-t)*(h-top-bottom))+'" stroke="#e9e5f6"/>').join('');
    const dots=points.map((p,i)=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5" fill="#fff" stroke="#6046df" stroke-width="3"/><text x="'+p[0]+'" y="'+(p[1]-12)+'" text-anchor="middle" font-size="12" fill="#4c3bb0">'+daily[i]+'</text><text x="'+p[0]+'" y="'+(h-10)+'" text-anchor="middle" font-size="12" fill="#667085">'+weekDays[i].toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</text>').join('');
    chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-hidden="true"><defs><linearGradient id="progressAreaGradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8065f5" stop-opacity=".32"/><stop offset="1" stop-color="#8065f5" stop-opacity=".025"/></linearGradient></defs>'+grid+'<path d="'+area+'" fill="url(#progressAreaGradient)"/><path d="'+path+'" fill="none" stroke="#6046df" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>'+dots+'</svg>';
    chart.setAttribute('aria-label','Tentativas registradas por dia: '+daily.map((n,i)=>weekDays[i].toLocaleDateString('pt-BR')+': '+n).join('; '));
