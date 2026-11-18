@@ -49,6 +49,23 @@
     // Não interpreta menções genéricas a "parcialmente correto" como veredito.
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida|o resultado|a classificação|o veredito)\s+(?:foi|é|está|deve ser|seria)\s+(?:considerad[ao]\s+)?parcialmente corret[ao]\b/i.test(feedback)) key = 'PARCIALMENTE CORRETO';
     if (!key && /(?:o resultado|a classificação|o veredito)\s+(?:foi|é|está|deve ser|seria)\s+(?:considerad[ao]\s+)?(?:não foi possível verificar|nao foi possivel verificar)\b/i.test(feedback)) key = 'NAO FOI POSSIVEL VERIFICAR';
+    // O modelo às vezes responde "a resposta é CORRETO" ou "o resultado é INCORRETO".
+    // Só reconhecer quando há sujeito explícito; nunca procurar palavras soltas.
+    if (!key) {
+      const direct = feedback.match(/(?:a resposta(?: do estudante| do aluno| fornecida)?|o resultado|a classificação|o veredito)\s+(?:foi|é|está|seria|deve ser)\s+(?:considerad[ao]\s+)?(parcialmente corret[ao]|incorret[ao]|corret[ao])\b/i);
+      if (direct) {
+        const word = normalize(direct[1]);
+        key = word.startsWith('PARCIALMENTE') ? 'PARCIALMENTE CORRETO' : word.startsWith('INCORRET') ? 'INCORRETO' : 'CORRETO';
+      }
+    }
+    // Ex.: "O motivo da resposta do estudante ser INCORRETO..."
+    if (!key) {
+      const reason = feedback.match(/(?:resposta do estudante|resposta do aluno|sua resposta)\s+ser\s+(parcialmente corret[ao]|incorret[ao]|corret[ao])\b/i);
+      if (reason) {
+        const word = normalize(reason[1]);
+        key = word.startsWith('PARCIALMENTE') ? 'PARCIALMENTE CORRETO' : word.startsWith('INCORRET') ? 'INCORRETO' : 'CORRETO';
+      }
+    }
     // Ex.: 'A resposta do estudante foi Ceará, que é incorreta.'
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+[^.!?\n]{1,100}?,\s*que\s+é\s+incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
     // Ex.: "O estudante respondeu corretamente que Messi nasceu em Rosário."
