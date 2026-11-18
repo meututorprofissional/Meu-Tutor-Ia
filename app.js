@@ -14,6 +14,15 @@ document.addEventListener('click', event => {
   if (!button) return;
   const screen = button.dataset.screen || button.dataset.go || '';
   if (!screen || !document.getElementById(screen)) return;
+  // Os botões de revisão precisam navegar mesmo se outro módulo interceptar o clique.
+  if (button.id === 'progressReviewNow' || (button.dataset.go === 'cards' && button.closest('#progress'))) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    document.querySelectorAll('.screen').forEach(el => el.classList.toggle('active', el.id === 'cards'));
+    document.querySelectorAll('nav [data-screen]').forEach(el => el.classList.toggle('active', el.dataset.screen === 'cards'));
+    window.scrollTo({top:0,behavior:'instant'});
+    return;
+  }
   try {
     go(screen);
   } catch (error) {
