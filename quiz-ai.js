@@ -66,6 +66,16 @@
         key = word.startsWith('PARCIALMENTE') ? 'PARCIALMENTE CORRETO' : word.startsWith('INCORRET') ? 'INCORRETO' : 'CORRETO';
       }
     }
+    // A IA pode citar a resposta do aluno antes do veredito:
+    // "A resposta do estudante, 'rosario', é CORRETO".
+    // Exigir verbo e julgamento explícitos evita confundir a resposta esperada com o veredito.
+    if (!key) {
+      const quotedVerdict = feedback.match(/(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s*(?:[,:\-]\s*)?(?:(?:"[^"\n]{1,160}"|'[^'\n]{1,160}'|“[^”\n]{1,160}”|‘[^’\n]{1,160}’)\s*,?\s*)?(?:foi|é|está|seria|deve ser)\s+(?:considerad[ao]\s+)?(parcialmente\s+corret[ao]|incorret[ao]|corret[ao])\b/i);
+      if (quotedVerdict) {
+        const word = normalize(quotedVerdict[1]);
+        key = word.startsWith('PARCIALMENTE') ? 'PARCIALMENTE CORRETO' : word.startsWith('INCORRET') ? 'INCORRETO' : 'CORRETO';
+      }
+    }
     // Ex.: 'A resposta do estudante foi Ceará, que é incorreta.'
     if (!key && /(?:a sua resposta|sua resposta|a resposta do estudante|a resposta do aluno|a resposta fornecida)\s+(?:foi|é|está)\s+[^.!?\n]{1,100}?,\s*que\s+é\s+incorret[ao]\b/i.test(feedback)) key = 'INCORRETO';
     // Ex.: "O estudante respondeu corretamente que Messi nasceu em Rosário."
