@@ -330,6 +330,33 @@
       if (!response.ok) throw new Error(result.error || 'Servidor indisponível (' + response.status + ').');
       const structured = extractStructuredVerdict(result);
       if (!structured) throw new Error('A IA não retornou uma classificação estruturada válida. Tente novamente.');
+      // Guardrail for questions requesting both the World Cup year and birth year.
+      // Do not allow a model to mark one correct year as wholly incorrect.
+      // Only apply when both facts are explicitly supported by the saved source.
+      const fold = value => String(value || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();
+      const qFold = fold(promptQuestion);
+      const sourceFold = fold(source);
+      const years = text => [...new Set((String(text).match(/\\b(?:18|19|20)\\d{2}\\b/g) || []))];
+      const worldCupQuestion = /(?:campe[aã]o|copa do mundo|mundial)/.test(qFold);
+      const birthQuestion = /(?:nasceu|nascimento|nascido)/.test(qFold);
+      if (worldCupQuestion && birthQuestion && /\\be\\b/.test(qFold)) {
+        const worldCupMatch = sourceFold.match(/(?:campe[aã]o(?:\\s+do\\s+mundo)?|copa do mundo|mundial)[^.!?\\n]{0,65}?\\b((?:19|20)\\d{2})\\b/);
+        const birthMatch = sourceFold.match(/(?:nascid[oa]|nasceu|nacimiento|nacido|nacida)[^.!?\\n]{0,90}?\\b((?:19|20)\\d{2})\\b/);
+        if (worldCupMatch && birthMatch && worldCupMatch[1] !== birthMatch[1]) {
+          const expectedYears = [worldCupMatch[1], birthMatch[1]];
+          const suppliedYears = years(userAnswer);
+          const correctYears = expectedYears.filter(year => suppliedYears.includes(year));
+          if (correctYears.length === 1 && suppliedYears.every(year => expectedYears.includes(year))) {
+            structured.classification = 'partial';
+            structured.expected_answer = expectedYears.join(' e ');
+            structured.explanation = 'Você acertou ' + correctYears[0] + ', mas faltou informar ' + expectedYears.find(year => year !== correctYears[0]) + '. A pergunta exige os dois anos.';
+          } else if (correctYears.length === 2 && suppliedYears.every(year => expectedYears.includes(year))) {
+            structured.classification = 'correct';
+            structured.expected_answer = expectedYears.join(' e ');
+            structured.explanation = 'Você informou corretamente os dois anos pedidos no material original.';
+          }
+        }
+      }
       const feedback = structured;
       if (!structured && !feedback.trim()) throw new Error('O servidor não retornou uma análise utilizável.');
       if (mode.value !== 'ai' || topicSelect.value !== topicId || question.value !== promptQuestion || answer.value.trim() !== userAnswer) {
