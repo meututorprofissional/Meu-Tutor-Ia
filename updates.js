@@ -13,7 +13,7 @@
   if (closeHistory && historyPanel) closeHistory.addEventListener('click', () => {
     historyPanel.hidden = true;
   });
-  const CURRENT_APP_VERSION = 'meu-tutor-ia-v75.4-manual-updates';
+  const CURRENT_APP_VERSION = 'meu-tutor-ia-v75.5-manual-updates';
   let registration = null;
   const setCheckStatus = message => { if (checkStatus) checkStatus.textContent = message; };
   const apply = document.getElementById('applyUpdate');
