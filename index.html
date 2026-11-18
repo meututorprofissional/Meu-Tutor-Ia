@@ -117,9 +117,9 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v74.0</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v74.1</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
 </div>
-<section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
+<section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V74.1 — Acabamento visual do Progresso</strong></p><p>Gráfico de linha com dados reais, cartões mais legíveis, revisões por data, gráfico circular de autoavaliações e próximos passos destacados.</p><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
 <div class="layout">
 <main>
 <section id="home" class="screen active">
@@ -204,37 +204,48 @@ html,body{max-width:100%;overflow-x:clip}
 </section>
 <section id="progress" class="screen">
 <style>
-#progress .progress-hero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
-#progress .progress-hero h1{margin:0;font-size:clamp(1.5rem,3vw,2rem);color:#21184d}
+#progress{--p:#5744d9;--ink:#201849}
+#progress .progress-hero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:6px 0 18px}
+#progress .progress-hero h1{margin:0;font-size:clamp(1.5rem,3vw,2rem);color:var(--ink)}
 #progress .progress-hero p{margin:5px 0 0;color:#64748b}
-#progress .progress-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:16px}
-#progress .progress-metric{background:white;border:1px solid #e4e2f2;border-radius:16px;padding:18px;box-shadow:0 4px 14px #21184d0a}
-#progress .progress-metric strong{display:block;font-size:1.9rem;color:#28205f}
-#progress .progress-metric span{color:#5545a0;font-size:.9rem}
+#progress .progress-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin:18px 0}
+#progress .progress-metric{background:#fff;border:1px solid #e5e2f5;border-radius:18px;padding:17px;box-shadow:0 5px 17px #21184d0b;display:grid;grid-template-columns:48px 1fr;column-gap:10px;align-items:center}
+#progress .metric-icon{width:46px;height:46px;border-radius:16px;background:#f0edff;display:grid;place-items:center;font-size:1.55rem;grid-row:span 2}
+#progress .progress-metric strong{font-size:1.9rem;color:#28205f;line-height:1.2}
+#progress .progress-metric span:last-child{color:#5545a0;font-size:.9rem}
 #progress .progress-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-#progress .progress-layout>.panel{margin:0;min-width:0}
+#progress .progress-layout>.panel{margin:0;min-width:0;border-radius:18px}
 #progress .progress-full{grid-column:1/-1}
-#progress .progress-chart{display:flex;align-items:end;gap:8px;height:160px;border-bottom:1px solid #d9d6eb;padding:10px 4px 0}
-#progress .progress-bar-col{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:end;align-items:center;height:100%;gap:5px}
-#progress .progress-bar{width:min(100%,38px);min-height:3px;background:linear-gradient(#8b5cf6,#4f46e5);border-radius:7px 7px 0 0}
-#progress .progress-bar-col small{font-size:.68rem;color:#64748b;white-space:nowrap}
+#progress .progress-chart{width:100%;height:210px;margin-top:10px}
+#progress .progress-chart svg{width:100%;height:100%;overflow:visible}
 #progress .progress-note{color:#64748b;font-size:.85rem}
-#progress .progress-action{background:linear-gradient(110deg,#5b4ac7,#3c318e);color:white;border-radius:14px;padding:14px 18px}
-#progress .progress-action p{color:#ede9fe;margin:4px 0 10px}
+#progress .progress-action{background:linear-gradient(115deg,#6957d7,#37308a);color:white;border-radius:16px;padding:17px 22px;box-shadow:0 6px 18px #4437a02c}
+#progress .progress-action p{color:#ede9fe;margin:5px 0 10px}
 #progress .progress-action button{background:white;color:#42339a}
-#progress .progress-distribution{display:flex;height:15px;border-radius:99px;overflow:hidden;background:#e7e5f4;margin:12px 0}
-#progress .progress-distribution span{height:100%}
-@media(max-width:700px){#progress .progress-layout{grid-template-columns:1fr}#progress .progress-full{grid-column:auto}#progress .progress-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#progress .progress-review-cards{display:grid;gap:9px;margin:12px 0}
+#progress .progress-review-card{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#faf9ff;border:1px solid #e8e5f7;border-radius:12px;padding:12px}
+#progress .progress-review-card strong{display:block;color:#241d53}
+#progress .progress-review-card small{color:#667085}
+#progress .progress-count{border-radius:99px;background:#ede9fe;color:#4f36bb;padding:5px 10px;font-weight:700;white-space:nowrap}
+#progress .progress-donut-layout{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin:14px 0}
+#progress .progress-donut{width:160px;height:160px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+#progress .progress-donut-center{width:110px;height:110px;border-radius:50%;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#28205f}
+#progress .progress-donut-center strong{font-size:1.7rem}
+#progress .progress-legend{display:grid;gap:9px;font-size:.9rem;color:#51486f}
+#progress .progress-insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+#progress .progress-insight{background:#f5f2ff;border:1px solid #e6defe;border-radius:13px;padding:15px;line-height:1.5}
+#progress .progress-insight strong{display:block;color:#4630b6;margin-bottom:5px}
+@media(max-width:700px){#progress .progress-layout{grid-template-columns:1fr}#progress .progress-full{grid-column:auto}#progress .progress-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#progress .progress-metric{grid-template-columns:36px 1fr;padding:12px;gap:7px}#progress .metric-icon{width:35px;height:35px;font-size:1.15rem}#progress .progress-metric strong{font-size:1.45rem}#progress .progress-donut{width:135px;height:135px}#progress .progress-donut-center{width:92px;height:92px}}
 </style>
 <div class="progress-hero"><div><h1>📊 Meu progresso</h1><p>Acompanhe seus registros, revise no tempo certo e veja sua evolução.</p></div><div class="progress-action"><strong>🎯 Meta de estudo (opcional)</strong><p id="progressGoalText">Defina quantos dias deseja estudar por semana.</p><button id="progressGoalButton" type="button">Definir meta</button></div></div>
 <p class="progress-note">Estatísticas calculadas com os registros disponíveis neste navegador. Autoavaliações não equivalem a acertos verificados pela IA.</p>
-<div class="progress-metrics"><div class="progress-metric">📚 <strong id="statTopics">0</strong><span>assuntos</span></div><div class="progress-metric">🗂️ <strong id="statCards">0</strong><span>cartões</span></div><div class="progress-metric">📝 <strong id="statAttempts">0</strong><span>tentativas</span></div><div class="progress-metric">🎯 <strong id="statPractice">0</strong><span>para praticar</span></div><div class="progress-metric">⏰ <strong id="statReviews">0</strong><span>revisões vencidas</span></div><div class="progress-metric">✅ <strong id="statGood">0</strong><span>marcadas “Consegui”</span></div></div>
+<div class="progress-metrics"><div class="progress-metric"><span class="metric-icon" aria-hidden="true">📚</span><strong id="statTopics">0</strong><span>assuntos</span></div><div class="progress-metric"><span class="metric-icon" aria-hidden="true">🗂️</span><strong id="statCards">0</strong><span>cartões</span></div><div class="progress-metric"><span class="metric-icon" aria-hidden="true">📝</span><strong id="statAttempts">0</strong><span>tentativas</span></div><div class="progress-metric"><span class="metric-icon" aria-hidden="true">🎯</span><strong id="statPractice">0</strong><span>para praticar</span></div><div class="progress-metric"><span class="metric-icon" aria-hidden="true">⏰</span><strong id="statReviews">0</strong><span>revisões vencidas</span></div><div class="progress-metric"><span class="metric-icon" aria-hidden="true">✅</span><strong id="statGood">0</strong><span>marcadas “Consegui”</span></div></div>
 <div class="progress-layout">
 <div class="panel"><h2>📈 Sua evolução</h2><p class="progress-note">Tentativas registradas nos últimos sete dias.</p><div id="progressWeeklyChart" class="progress-chart" role="img" aria-label="Gráfico de atividades registradas por dia"></div></div>
 <div class="panel"><h2>🗓️ Atividade dos últimos 7 dias</h2><div class="grid"><div class="stat"><strong id="statWeekActivities">0</strong>atividades</div><div class="stat"><strong id="statWeekDays">0</strong>dias ativos</div><div class="stat"><strong id="statWeekQuizzes">0</strong>testes registrados</div></div><p id="progressFrequency" class="progress-note"></p><details><summary>Ver atividades por dia</summary><div id="weekActivityList"></div></details></div>
-<div class="panel"><h2>⏰ Próximas revisões</h2><p id="progressReviewSummary" class="progress-note"></p><button type="button" class="secondary" data-go="flashcards">Praticar flashcards</button><details><summary>Ver cartões vencidos</summary><div id="reviewList"></div></details></div>
-<div class="panel"><h2>📊 Seu desempenho registrado</h2><p class="progress-note">Autoavaliações feitas ao registrar tentativas; não são notas calculadas pela IA.</p><div id="progressRatingDistribution" class="progress-distribution"></div><p id="progressRatingLegend" class="progress-note"></p></div>
-<div class="panel progress-full"><h2>💡 Próximos passos</h2><div id="progressInsights" class="progress-note"></div></div>
+<div class="panel"><h2>⏰ Próximas revisões</h2><p id="progressReviewSummary" class="progress-note"></p><div id="progressReviewCards" class="progress-review-cards"></div><button type="button" class="secondary" data-go="flashcards">Praticar flashcards</button><details><summary>Ver cartões vencidos</summary><div id="reviewList"></div></details></div>
+<div class="panel"><h2>📊 Seu desempenho registrado</h2><p class="progress-note">Autoavaliações feitas ao registrar tentativas; não são notas calculadas pela IA.</p><div class="progress-donut-layout"><div id="progressRatingDistribution" class="progress-donut"><div class="progress-donut-center"><strong id="progressDonutNumber">—</strong><small>autoavaliações</small></div></div><div id="progressRatingLegend" class="progress-legend"></div></div></div>
+<div class="panel progress-full"><h2>💡 Próximos passos</h2><div id="progressInsights" class="progress-insights"></div></div>
 <div class="panel progress-full"><h2>📚 Histórico por assunto</h2><div id="topicProgress"></div></div>
 <div class="panel progress-full"><h2>💾 Dados e backup</h2><p class="progress-note">Guarde uma cópia dos estudos ou transfira seus registros para outro dispositivo.</p><button class="secondary" data-go="backup">Abrir dados e backup</button></div>
 </div></section>
@@ -346,9 +357,9 @@ html,body{max-width:100%;overflow-x:clip}
 </style>
 <section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas, responda aos usuários e acompanhe relatos enviados.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Seus estudos são guardados neste navegador. Quando você entra em uma conta e a sincronização é concluída, eles também podem ser salvos na nuvem para acesso em outros dispositivos com a mesma conta. A sincronização depende da conexão e não substitui um backup próprio. Use “Exportar meus dados (JSON)” para guardar uma cópia e “Importar backup” para restaurar um arquivo. Antes de trocar ou limpar o dispositivo, confirme a sincronização e mantenha um backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
-<script src="app.js?v=v74.0"></script>
+<script src="app.js?v=v74.1"></script>
 <script src="quiz-ai.js?v=28"></script>
-<script src="updates.js?v=74.0"></script>
+<script src="updates.js?v=74.1"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
