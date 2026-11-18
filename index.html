@@ -117,9 +117,9 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v74.2</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v74.3</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
 </div>
-<section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V74.2 — Ajustes de legibilidade e revisões</strong></p><p>Cartões em grade de três no celular, revisão imediata mais evidente e escala visual do gráfico semanal aprimorada.</p><p><strong>V74.1 — Acabamento visual do Progresso</strong></p><p>Gráfico de linha com dados reais, cartões mais legíveis, revisões por data, gráfico circular de autoavaliações e próximos passos destacados.</p><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
+<section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V74.3 — Acabamento final do painel</strong></p><p>Grade de estatísticas mais equilibrada em telas grandes, melhor espaçamento e contraste dos painéis, com respeito à preferência de movimento reduzido.</p><p><strong>V74.2 — Ajustes de legibilidade e revisões</strong></p><p>Cartões em grade de três no celular, revisão imediata mais evidente e escala visual do gráfico semanal aprimorada.</p><p><strong>V74.1 — Acabamento visual do Progresso</strong></p><p>Gráfico de linha com dados reais, cartões mais legíveis, revisões por data, gráfico circular de autoavaliações e próximos passos destacados.</p><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
 <div class="layout">
 <main>
 <section id="home" class="screen active">
@@ -208,11 +208,18 @@ html,body{max-width:100%;overflow-x:clip}
 #progress .progress-hero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:6px 0 18px}
 #progress .progress-hero h1{margin:0;font-size:clamp(1.5rem,3vw,2rem);color:var(--ink)}
 #progress .progress-hero p{margin:5px 0 0;color:#64748b}
-#progress .progress-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin:18px 0}
+#progress .progress-metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin:18px 0}
 #progress .progress-metric{background:#fff;border:1px solid #e5e2f5;border-radius:18px;padding:17px;box-shadow:0 5px 17px #21184d0b;display:grid;grid-template-columns:48px 1fr;column-gap:10px;align-items:center}
 #progress .metric-icon{width:46px;height:46px;border-radius:16px;background:#f0edff;display:grid;place-items:center;font-size:1.55rem;grid-row:span 2}
 #progress .progress-metric strong{font-size:1.9rem;color:#28205f;line-height:1.2}
 #progress .progress-metric span:last-child{color:#5545a0;font-size:.9rem}
+#progress .progress-metric{min-width:0;transition:box-shadow .18s ease,transform .18s ease}
+#progress .progress-metric:hover{box-shadow:0 8px 22px #21184d18;transform:translateY(-2px)}
+#progress .progress-metric span:last-child{overflow-wrap:anywhere}
+#progress .progress-layout>.panel{box-shadow:0 5px 20px #21184d0b;border:1px solid #eae7f5}
+#progress .progress-layout>.panel h2{color:#27204f}
+@media(min-width:701px) and (max-width:1120px){#progress .progress-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){#progress .progress-metric{transition:none}#progress .progress-metric:hover{transform:none}}
 #progress .progress-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 #progress .progress-layout>.panel{margin:0;min-width:0;border-radius:18px}
 #progress .progress-full{grid-column:1/-1}
@@ -359,7 +366,7 @@ html,body{max-width:100%;overflow-x:clip}
 </main></div>
 <script src="app.js?v=v74.2"></script>
 <script src="quiz-ai.js?v=28"></script>
-<script src="updates.js?v=74.2"></script>
+<script src="updates.js?v=74.3"></script>
 <script src="ai-config.js"></script>
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
