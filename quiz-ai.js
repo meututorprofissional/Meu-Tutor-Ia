@@ -264,31 +264,27 @@
       try {
         response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({task:'teach', topic:topic.name, source, notes}), signal:controller.signal
+          body:JSON.stringify({task:'evaluate', topic:topic.name, source, question:promptQuestion, answer:userAnswer}), signal:controller.signal
         });
       } finally { clearTimeout(timer); }
       let result = await response.json().catch(() => ({}));
-      if (!response.ok && response.status === 502 && /formato inesperado/i.test(String(result.error || ''))) {
-        evaluationStatus.textContent = 'A IA respondeu em formato inválido. Fazendo uma segunda tentativa…';
-        // O Worker pode receber JSON malformado do modelo gratuito; tente somente mais uma vez.
-        // Mantenha o mesmo material original, a pergunta e a resposta sem alterações.
+      if (!response.ok && response.status === 502) {
+        evaluationStatus.textContent = 'A IA retornou um formato inválido. Tentando novamente…';
         const retryController = new AbortController();
         const retryTimer = setTimeout(() => retryController.abort(), 60000);
         try {
           response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              task: 'teach', topic: topic.name, source,
-              notes: 'Avalie usando SOMENTE o material original. Comece a explicação com RESULTADO: CORRETO, RESULTADO: PARCIALMENTE CORRETO, RESULTADO: INCORRETO ou RESULTADO: NÃO FOI POSSÍVEL VERIFICAR. Pergunta: ' + promptQuestion + '\nResposta: ' + userAnswer + '\nAvalie apenas o que a pergunta pede; não exija detalhes adicionais (como data se perguntou cidade). Aceite variações de acento. Explique o motivo em até 5 frases. Não invente fatos.'
-            }),
-            signal: retryController.signal
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({task:'evaluate',topic:topic.name,source,question:promptQuestion,answer:userAnswer}),
+            signal:retryController.signal
           });
           result = await response.json().catch(() => ({}));
         } finally { clearTimeout(retryTimer); }
       }
       if (!response.ok) throw new Error(result.error || 'Servidor indisponível (' + response.status + ').');
       const structured = extractStructuredVerdict(result);
-      const feedback = structured || readText(result.explanation || result.understanding || result.summary || result.result);
+      if (!structured) throw new Error('A IA não retornou uma classificação estruturada válida. Tente novamente.');
+      const feedback = structured;
       if (!structured && !feedback.trim()) throw new Error('O servidor não retornou uma análise utilizável.');
       if (mode.value !== 'ai' || topicSelect.value !== topicId || question.value !== promptQuestion || answer.value.trim() !== userAnswer) {
         evaluationStatus.textContent = 'A resposta mudou durante a análise. Solicite uma nova avaliação.';
