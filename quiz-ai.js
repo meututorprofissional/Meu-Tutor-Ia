@@ -187,7 +187,7 @@
       try {
         response = await fetch(endpoint.replace(/\/$/, '') + '/api/tutor', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({task:'activities', topic:topic.name, source:source + '\n\nINSTRUÇÃO PARA O TESTE: gere perguntas abertas apenas sobre fatos explicitamente presentes no material original. Inclua perguntas compostas que peçam duas informações presentes no texto (ex.: cidade e país, dia e mês). Para cada pergunta, preencha answer com a resposta exata sustentada pelo texto; não pergunte sobre familiares ou outros dados não mencionados. Não mostre as respostas ao estudante. Cada pergunta deve ser respondível diretamente pelo material e não deve transformar nacionalidade ou local de nascimento em país onde a pessoa é reconhecida. Prefira perguntas claras e específicas. Gere pelo menos duas perguntas compostas com fatos explícitos na fonte.', notes:topic.notes || ''}),
+          body: JSON.stringify({task:'activities', topic:topic.name, source:source + '\n\nINSTRUÇÃO PARA O TESTE: gere perguntas abertas apenas sobre fatos explicitamente presentes no material original. Inclua perguntas compostas que peçam duas informações presentes no texto (ex.: cidade e país, dia e mês). Para cada pergunta, preencha answer com a resposta exata sustentada pelo texto; não pergunte sobre familiares ou outros dados não mencionados. Não mostre as respostas ao estudante. Cada pergunta deve ser respondível diretamente pelo material e não deve transformar nacionalidade ou local de nascimento em país onde a pessoa é reconhecida. Prefira perguntas claras e específicas. Nunca pergunte em que mês de junho nasceu alguém nem misture meses ou datas ausentes do texto. Gere pelo menos duas perguntas compostas com fatos explícitos na fonte.', notes:topic.notes || ''}),
           signal: controller.signal
         });
       } finally { clearTimeout(timer); }
@@ -217,6 +217,11 @@
         // reputation statement into a country-specific claim.
         if (/^(em )?que pais .*\b(considerad|reconhecid|conhecid|famos|melhor)/.test(q)) return false;
         if (/\bem que pais\b.*\b(considerad|reconhecid|conhecid|famos|melhor)/.test(q)) return false;
+        const months = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+        const mentionedMonths = months.filter(month => new RegExp('\\b' + month + '\\b').test(q));
+        if (/\b(que|qual) mes\b/.test(q) && mentionedMonths.length) return false;
+        if (mentionedMonths.length > 1) return false;
+        if (mentionedMonths.some(month => !new RegExp('\\b' + month + '\\b').test(normalizedSource))) return false;
         return true;
       };
       const pairs = (Array.isArray(result.questions) ? result.questions : [])
