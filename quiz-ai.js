@@ -220,6 +220,11 @@
         const months = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
         const mentionedMonths = months.filter(month => new RegExp('\\b' + month + '\\b').test(q));
         if (/\b(que|qual) mes\b/.test(q) && mentionedMonths.length) return false;
+        // Uma equipe não é uma cidade: "Inter Miami" na fonte não prova
+        // em qual cidade a pessoa joga. Pergunte pelo clube, não pela cidade.
+        if (/\\b(que|qual) cidade\\b/.test(q) && /\\b(joga|atu(a|almente)|time|clube|equipe)\\b/.test(q)) return false;
+        // "Em que mês de julho..." já informa o mês e não é uma pergunta válida.
+        if (/\\b(que|qual) (?:dia|mes) de (?:janeiro|fevereiro|marco|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro)\\b/.test(q)) return false;
         if (mentionedMonths.length > 1) return false;
         if (mentionedMonths.some(month => !new RegExp('\\b' + month + '\\b').test(normalizedSource))) return false;
         return true;
@@ -235,7 +240,7 @@
       let recent = [];
       try { recent = JSON.parse(sessionStorage.getItem(recentKey) || '[]'); } catch {}
       if (!Array.isArray(recent)) recent = [];
-      const normalizeQuestion = q => String(q).normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/\\s+/g, ' ').trim();
+      const normalizeQuestion = q => normalizeEvidence(q);
       const unseen = questions.filter(q => !recent.includes(normalizeQuestion(q)));
       const pool = unseen.length ? unseen : questions.filter(q => normalizeQuestion(q) !== normalizeQuestion(generatedQuestion));
       const first = (pool.length ? pool : questions)[Math.floor(Math.random() * (pool.length || questions.length))];
