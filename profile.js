@@ -132,9 +132,23 @@
         emblem.setAttribute('aria-hidden', 'true');
         node.appendChild(emblem);
       }
-      emblem.textContent = active === 'fundador' ? '✦' : active === 'vip' ? '✦' : active === 'beta' ? '♛' : '⬡';
+      emblem.textContent = active === 'fundador' ? '◆' : active === 'vip' ? '✦' : active === 'beta' ? '♛' : '⬡';
       emblem.hidden = !(active || admin);
       emblem.title = active === 'fundador' ? 'Fundador do Meu Tutor IA' : active === 'beta' ? 'Pioneiro Beta' : active === 'vip' ? 'VIP' : admin ? 'Administrador' : '';
+    }
+    // Selo ADM é independente e fica ao lado do nome, sem adicionar outro anel.
+    const nameLine = el('profileDisplayName')?.closest('.profile-name-line');
+    if (nameLine) {
+      let admTag = el('profileAdminAuthorityTag');
+      if (!admTag) {
+        admTag = document.createElement('span');
+        admTag.id = 'profileAdminAuthorityTag';
+        admTag.className = 'profile-admin-authority-tag';
+        admTag.setAttribute('aria-label', 'Administrador verificado');
+        admTag.innerHTML = '<span aria-hidden="true">⬡</span> ADM';
+        nameLine.appendChild(admTag);
+      }
+      admTag.hidden = !admin;
     }
     for (const [type, enabled] of [['founder',founder],['admin',admin],['beta',beta],['vip',vip]]) {
       const node = el('profileSpecialSeal' + (type === 'founder' ? 'Founder' : type === 'admin' ? 'Admin' : type === 'beta' ? 'Beta' : 'Vip'));
