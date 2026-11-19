@@ -146,20 +146,22 @@
     const requestId = ++memberDateRequest;
     if (!client) return;
     const expectedUserId = session?.user?.id || null;
+    if (!expectedUserId) return;
+    const cached = verifiedMemberDate(session.user);
+    if (cached) setText('profileMemberSince', formatMemberDate(cached));
     try {
       const { data, error } = await client.auth.getUser();
-      if (requestId !== memberDateRequest || error || !data?.user?.id) return;
-      // Não exibir dados de outra conta nem de uma sessão que já foi encerrada.
-      if (!expectedUserId || data.user.id !== expectedUserId || session?.user?.id !== expectedUserId) return;
-      const date = verifiedMemberDate(data.user) || verifiedMemberDate(session.user);
-      if (!date) {
-        setText('profileMemberSince', 'data não disponível');
+      if (requestId !== memberDateRequest || session?.user?.id !== expectedUserId) return;
+      if (error || data?.user?.id !== expectedUserId) {
+        if (error) console.warn('Meu Tutor IA: não foi possível confirmar a data no Auth', error.message);
         return;
       }
-      session.user.created_at = date.toISOString();
+      const date = verifiedMemberDate(data.user) || verifiedMemberDate(session.user);
+      if (!date) return;
+      session.user = { ...session.user, created_at: date.toISOString() };
       setText('profileMemberSince', formatMemberDate(date));
     } catch (error) {
-      console.warn('Data de cadastro indisponível no Auth', error);
+      console.warn('Meu Tutor IA: data de cadastro indisponível no Auth', error);
     }
   }
   async function saveCloudData(data) {
@@ -403,7 +405,8 @@
   if (configured() && window.supabase?.createClient) {
     client = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
     client.auth.getSession().then(({data}) => {
-      session = data?.session || null;
+      // Não sobrescrever uma sessão mais recente recebida pelo listener de Auth.
+      if (!authReady) session = data?.session || null;
       authReady = true;
       showAuthState();
       if (session) initialSync();
