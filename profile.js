@@ -108,37 +108,41 @@
 
   // Selos somente por metadados administrativos assinados do Supabase Auth.
   // user_metadata e localStorage NÃO concedem selos.
+  // Identidades oficiais vêm exclusivamente de app_metadata administrado no servidor.
   function renderOfficialSeals() {
     const badges = session?.user?.app_metadata?.special_badges;
     const granted = Array.isArray(badges) ? badges : [];
+    const founder = granted.includes('fundador') && session?.user?.app_metadata?.support_admin === true;
     const beta = granted.includes('pioneiro_beta');
     const vip = granted.includes('vip');
+    const active = founder ? 'fundador' : beta ? 'beta' : vip ? 'vip' : '';
     const avatarWrap = el('profileAvatar')?.closest('.profile-avatar-wrap');
     const homeButton = el('homeProfileButton');
-    for (const [node, isSmall] of [[avatarWrap, false], [homeButton, true]]) {
+    for (const node of [avatarWrap, homeButton]) {
       if (!node) continue;
-      node.classList.toggle('has-official-beta', beta);
-      node.classList.toggle('has-official-vip', vip && !beta);
-      let crown = node.querySelector('.official-seal-crown');
-      if (!crown) {
-        crown = document.createElement('span');
-        crown.className = 'official-seal-crown';
-        crown.setAttribute('aria-hidden', 'true');
-        crown.textContent = '♛';
-        node.appendChild(crown);
+      node.classList.toggle('has-official-founder', active === 'fundador');
+      node.classList.toggle('has-official-beta', active === 'beta');
+      node.classList.toggle('has-official-vip', active === 'vip');
+      let emblem = node.querySelector('.official-seal-crown');
+      if (!emblem) {
+        emblem = document.createElement('span');
+        emblem.className = 'official-seal-crown';
+        emblem.setAttribute('aria-hidden', 'true');
+        node.appendChild(emblem);
       }
-      crown.hidden = !(beta || vip);
-      crown.title = beta ? 'Pioneiro Beta' : vip ? 'VIP' : '';
+      emblem.textContent = active === 'fundador' ? '◆' : active === 'vip' ? '✦' : '♛';
+      emblem.hidden = !active;
+      emblem.title = active === 'fundador' ? 'Fundador · Administração' : active === 'beta' ? 'Pioneiro Beta' : active === 'vip' ? 'VIP' : '';
     }
-    for (const [type, active] of [['beta', beta], ['vip', vip]]) {
-      const node = el('profileSpecialSeal' + (type === 'beta' ? 'Beta' : 'Vip'));
+    for (const [type, enabled] of [['founder',founder],['beta',beta],['vip',vip]]) {
+      const node = el('profileSpecialSeal' + (type === 'founder' ? 'Founder' : type === 'beta' ? 'Beta' : 'Vip'));
       if (!node) continue;
-      node.classList.toggle('is-granted', active);
+      node.classList.toggle('is-granted', enabled);
       const status = node.querySelector('small');
       const lock = node.querySelector('.profile-seal-lock');
-      if (status) status.textContent = active ? 'Selo oficial concedido à sua conta' :
-        (type === 'beta' ? 'Não concedido · participação elegível a confirmar' : 'Não concedido · critérios ainda não definidos');
-      if (lock) { lock.textContent = active ? '✓' : '🔒'; lock.setAttribute('aria-label', active ? 'Concedido' : 'Bloqueado'); }
+      if (status) status.textContent = enabled ? 'Selo oficial concedido à sua conta' :
+        (type === 'founder' ? 'Exclusivo da conta oficial do fundador' : type === 'beta' ? 'Não concedido · participação elegível a confirmar' : 'Não concedido · critérios ainda não definidos');
+      if (lock) { lock.textContent = enabled ? '✓' : '🔒'; lock.setAttribute('aria-label', enabled ? 'Concedido' : 'Bloqueado'); }
     }
   }
 
@@ -211,6 +215,10 @@
       try {
         const { data, error } = await client.auth.getUser();
         if (session?.user?.id !== userId) return;
+        if (!error && data?.user?.id === userId) {
+          session.user = { ...session.user, app_metadata: data.user.app_metadata || session.user.app_metadata };
+          renderOfficialSeals();
+        }
         const authDate = !error && data?.user?.id === userId ? validMemberDate(data.user.created_at) : null;
         if (authDate) {
           const date = verifiedMemberDate({ id:userId, created_at:authDate.toISOString() });
