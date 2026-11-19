@@ -109,20 +109,47 @@
   // Selos somente por metadados administrativos assinados do Supabase Auth.
   // user_metadata e localStorage NÃO concedem selos.
   // Identidades oficiais vêm exclusivamente de app_metadata administrado no servidor.
+  // Preferências visuais locais, por conta. Nunca concedem nem revogam selos.
+  const SEAL_VISIBILITY_PREFIX = 'meuTutorIA.sealVisibility.v1.';
+  const sealVisibilityMemory = new Map();
+  function sealVisibility(userId) {
+    if (!userId) return {};
+    if (sealVisibilityMemory.has(userId)) return sealVisibilityMemory.get(userId);
+    let value = {};
+    try {
+      const parsed = JSON.parse(localStorage.getItem(SEAL_VISIBILITY_PREFIX + userId) || '{}');
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) value = parsed;
+    } catch {}
+    sealVisibilityMemory.set(userId, value);
+    return value;
+  }
+  function setSealVisibility(type, visible) {
+    const userId = session?.user?.id;
+    if (!userId || !['founder','admin','beta','vip'].includes(type)) return;
+    const preferences = { ...sealVisibility(userId), [type]: Boolean(visible) };
+    sealVisibilityMemory.set(userId, preferences);
+    try { localStorage.setItem(SEAL_VISIBILITY_PREFIX + userId, JSON.stringify(preferences)); } catch {}
+    renderOfficialSeals();
+  }
   function renderOfficialSeals() {
-    const badges = session?.user?.app_metadata?.special_badges;
+    const user = session?.user;
+    const badges = user?.app_metadata?.special_badges;
     const granted = Array.isArray(badges) ? badges : [];
-    const founder = granted.includes('fundador');
-    const admin = session?.user?.app_metadata?.support_admin === true;
-    const beta = granted.includes('pioneiro_beta');
-    const vip = granted.includes('vip');
-    const active = founder ? 'fundador' : beta ? 'beta' : vip ? 'vip' : '';
+    const owned = {
+      founder: granted.includes('fundador'),
+      admin: user?.app_metadata?.support_admin === true,
+      beta: granted.includes('pioneiro_beta'),
+      vip: granted.includes('vip')
+    };
+    const preferences = sealVisibility(user?.id);
+    const visible = Object.fromEntries(Object.entries(owned).map(([key, value]) => [key, value && preferences[key] !== false]));
+    const active = visible.founder ? 'fundador' : visible.beta ? 'beta' : visible.vip ? 'vip' : '';
     const avatarWrap = el('profileAvatar')?.closest('.profile-avatar-wrap');
     const homeButton = el('homeProfileButton');
     for (const node of [avatarWrap, homeButton]) {
       if (!node) continue;
       node.classList.toggle('has-official-founder', active === 'fundador');
-      node.classList.toggle('has-official-admin', admin && !founder && !beta && !vip);
+      node.classList.toggle('has-official-admin', visible.admin && !active);
       node.classList.toggle('has-official-beta', active === 'beta');
       node.classList.toggle('has-official-vip', active === 'vip');
       let emblem = node.querySelector('.official-seal-crown');
@@ -133,10 +160,9 @@
         node.appendChild(emblem);
       }
       emblem.textContent = active === 'fundador' ? '◆' : active === 'vip' ? '✦' : active === 'beta' ? '♛' : '⬡';
-      emblem.hidden = !(active || admin);
-      emblem.title = active === 'fundador' ? 'Fundador do Meu Tutor IA' : active === 'beta' ? 'Pioneiro Beta' : active === 'vip' ? 'VIP' : admin ? 'Administrador' : '';
+      emblem.hidden = !(active || visible.admin);
+      emblem.title = active === 'fundador' ? 'Fundador do Meu Tutor IA' : active === 'beta' ? 'Pioneiro Beta' : active === 'vip' ? 'VIP' : visible.admin ? 'Administrador' : '';
     }
-    // Selo ADM é independente e fica ao lado do nome, sem adicionar outro anel.
     const nameLine = el('profileDisplayName')?.closest('.profile-name-line');
     if (nameLine) {
       let admTag = el('profileAdminAuthorityTag');
@@ -148,19 +174,34 @@
         admTag.innerHTML = '<span aria-hidden="true">⬡</span> ADM';
         nameLine.appendChild(admTag);
       }
-      admTag.hidden = !admin;
+      admTag.hidden = !visible.admin;
     }
-    for (const [type, enabled] of [['founder',founder],['admin',admin],['beta',beta],['vip',vip]]) {
-      const node = el('profileSpecialSeal' + (type === 'founder' ? 'Founder' : type === 'admin' ? 'Admin' : type === 'beta' ? 'Beta' : 'Vip'));
+    for (const [type, enabled] of Object.entries(owned)) {
+      const suffix = type === 'founder' ? 'Founder' : type === 'admin' ? 'Admin' : type === 'beta' ? 'Beta' : 'Vip';
+      const node = el('profileSpecialSeal' + suffix);
       if (!node) continue;
       node.classList.toggle('is-granted', enabled);
+      node.classList.toggle('is-hidden-seal', enabled && !visible[type]);
       const status = node.querySelector('small');
       const lock = node.querySelector('.profile-seal-lock');
-      if (status) status.textContent = enabled ? 'Selo oficial concedido à sua conta' :
+      if (status) status.textContent = enabled ? (visible[type] ? 'Selo oficial concedido à sua conta' : 'Selo concedido · oculto no perfil') :
         (type === 'founder' ? 'Exclusivo de quem criou o Meu Tutor IA' : type === 'admin' ? 'Reservado às contas com acesso administrativo' : type === 'beta' ? 'Não concedido · participação elegível a confirmar' : 'Não concedido · critérios ainda não definidos');
       if (lock) { lock.textContent = enabled ? '✓' : '🔒'; lock.setAttribute('aria-label', enabled ? 'Concedido' : 'Bloqueado'); }
+      const checkbox = el('profileSealVisibility' + suffix);
+      if (checkbox) {
+        checkbox.disabled = !enabled;
+        checkbox.checked = Boolean(visible[type]);
+        checkbox.closest('label').hidden = !enabled;
+      }
     }
   }
+  function initializeSealVisibilityControls() {
+    for (const [type, suffix] of [['founder','Founder'],['admin','Admin'],['beta','Beta'],['vip','Vip']]) {
+      const checkbox = el('profileSealVisibility' + suffix);
+      if (checkbox) checkbox.addEventListener('change', () => setSealVisibility(type, checkbox.checked));
+    }
+  }
+  initializeSealVisibilityControls();
 
   function showAuthState() {
     const name = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || 'Estudante';
