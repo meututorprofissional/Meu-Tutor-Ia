@@ -85,17 +85,21 @@ function renderProfileAchievements(){
    if(secondaryLevel)secondaryLevel.textContent='Nível '+level;
    if(secondaryValue)secondaryValue.textContent=inLevel.toLocaleString('pt-BR')+' / 1.000 XP';
  }
- // A prévia Beta fica na área de configurações, nunca sobre a conquista do perfil.
+ // A prévia completa do Beta começa sempre recolhida; abrir é escolha explícita.
  const betaDemo=$('profileBetaDemo');
- const betaSettings=$('profileBetaPreview')?.closest('.profile-preview-settings');
+ const betaButton=$('profileBetaPreviewButton');
+ const betaSettings=betaButton?.closest('.profile-preview-settings');
  if(betaDemo && betaSettings && betaDemo.parentElement!==betaSettings) betaSettings.appendChild(betaDemo);
- const preview=$('profileBetaPreview');
- if(preview){
-   let enabled=false;try{enabled=localStorage.getItem('meuTutorIA.betaPreview.v1')==='true'}catch{}
-   preview.checked=enabled;
-   const badge=$('profileBetaDemo');
-   if(badge)badge.hidden=!enabled;
-   preview.onchange=()=>{try{localStorage.setItem('meuTutorIA.betaPreview.v1',String(preview.checked))}catch{}if(badge)badge.hidden=!preview.checked;};
+ if(betaDemo) betaDemo.hidden=true;
+ if(betaButton){
+   betaButton.setAttribute('aria-expanded','false');
+   betaButton.onclick=()=>{
+     if(!betaDemo)return;
+     betaDemo.hidden=!betaDemo.hidden;
+     const open=!betaDemo.hidden;
+     betaButton.textContent=open?'👑 Ocultar emblema completo':'👑 Ver emblema completo';
+     betaButton.setAttribute('aria-expanded',String(open));
+   };
  }
 
  // A data oficial pertence exclusivamente ao profile.js (Supabase Auth).
