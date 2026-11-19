@@ -140,6 +140,28 @@ html,body{max-width:100%;overflow-x:clip}
 #profile .profile-xp-summary #profileXpSecondary{font-size:.95rem;color:#312b45;white-space:nowrap;font-weight:500}
 #profile .profile-bottom-panels .panel:first-child .profile-xp-track{height:15px!important;margin-top:14px!important}
 @media(max-width:540px){#profile .profile-xp-summary #profileLevelSecondary{font-size:.84rem;padding:4px 8px}#profile .profile-xp-summary #profileXpSecondary{font-size:.76rem}}
+</style><style id="achievement-progress-alignment-fix">
+/* Alinhamento pontual no notebook: mantém cores e demais elementos. */
+@media (min-width:1201px){
+ #profile .profile-achievement-showcase .profile-achievements-heading{min-width:0!important}
+ #profile .profile-achievement-showcase .profile-achievements-heading > div:first-child{min-width:0!important;flex:1 1 auto!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress{
+   box-sizing:border-box!important;flex:0 0 225px!important;width:225px!important;
+   max-width:225px!important;margin:0 12px 0 0!important;
+   padding:0!important;gap:6px!important;align-items:stretch!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{
+   box-sizing:border-box!important;width:100%!important;min-width:0!important;
+   text-align:right!important;margin:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-label::after{
+   box-sizing:border-box!important;left:0!important;right:0!important;
+   width:100%!important;text-align:right!important;padding-right:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-track{
+   box-sizing:border-box!important;width:100%!important;margin:0!important;
+ }
+}
 </style></head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
