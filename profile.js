@@ -150,29 +150,42 @@
   }
   // Fonte oficial: consulta restrita ao usuário autenticado no Supabase.
   // A função SQL lê auth.users.created_at sem expor outros usuários.
-  let memberDateRequest = 0;
+  // Uma consulta por conta de cada vez: eventos de Auth e cliques não cancelam respostas válidas.
+  const memberDatePending = new Map();
   async function refreshMemberSince() {
-    const requestId = ++memberDateRequest;
-    const expectedUserId = session?.user?.id || null;
-    if (!client || !expectedUserId) return;
+    const userId = session?.user?.id;
+    if (!client || !userId) return;
     const cached = verifiedMemberDate(session.user);
     if (cached) setText('profileMemberSince', formatMemberDate(cached));
     else setText('profileMemberSince', 'consultando cadastro…');
-    try {
-      const { data, error } = await client.rpc('my_registration_date');
-      if (requestId !== memberDateRequest || session?.user?.id !== expectedUserId) return;
-      if (error) throw error;
-      const official = validMemberDate(data);
-      if (!official) throw new Error('A consulta não retornou uma data válida.');
-      const date = verifiedMemberDate({id:expectedUserId, created_at:official.toISOString()});
-      session.user = {...session.user, created_at:date.toISOString()};
-      setText('profileMemberSince', formatMemberDate(date));
-    } catch (error) {
-      if (requestId !== memberDateRequest || session?.user?.id !== expectedUserId) return;
-      console.warn('Meu Tutor IA: falha ao consultar a data oficial de cadastro', error);
-      // Não apagar a última data verificada; nunca inventar uma data.
-      const fallback = verifiedMemberDate(session.user);
-      setText('profileMemberSince', fallback ? formatMemberDate(fallback) : 'data não disponível');
+    if (memberDatePending.has(userId)) return memberDatePending.get(userId);
+    const task = (async () => {
+      try {
+        // getUser consulta o Auth diretamente; o RPC é uma segunda fonte oficial.
+        const { data: authData, error: authError } = await client.auth.getUser();
+        if (session?.user?.id !== userId) return;
+        let official = !authError && authData?.user?.id === userId
+          ? validMemberDate(authData.user.created_at) : null;
+        if (!official) {
+          const { data, error } = await client.rpc('my_registration_date');
+          if (error) throw error;
+          official = validMemberDate(data);
+        }
+        if (!official) throw new Error('O Supabase não retornou uma data válida.');
+        if (session?.user?.id !== userId) return;
+        const date = verifiedMemberDate({ id: userId, created_at: official.toISOString() });
+        session.user = { ...session.user, created_at: date.toISOString() };
+        setText('profileMemberSince', formatMemberDate(date));
+      } catch (error) {
+        if (session?.user?.id !== userId) return;
+        console.warn('Meu Tutor IA: falha ao consultar a data oficial de cadastro', error);
+        const fallback = verifiedMemberDate(session.user);
+        setText('profileMemberSince', fallback ? formatMemberDate(fallback) : 'data não disponível');
+      }
+    })();
+    memberDatePending.set(userId, task);
+    try { await task; } finally {
+      if (memberDatePending.get(userId) === task) memberDatePending.delete(userId);
     }
   }
   async function saveCloudData(data) {
