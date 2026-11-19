@@ -994,6 +994,29 @@ html,body{max-width:100%;overflow-x:clip}
 #profile #profileAchievementNext *{color:inherit}
 @media(max-width:1050px){#profile .profile-hero{grid-template-columns:minmax(0,1fr) minmax(175px,.8fr)}#profile .profile-hero-main{grid-column:1}#profile .profile-hero-seals{grid-column:2}#profile .profile-level-card{grid-column:1/-1!important;grid-row:2}#profile .profile-hero-stats{grid-row:3}#profile .profile-hero-badge{grid-row:4}#profile #profileAchievementGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:680px){#profile .profile-hero{grid-template-columns:minmax(0,1fr);padding:20px 14px;gap:15px}#profile .profile-hero-main,#profile .profile-hero-seals,#profile .profile-level-card,#profile .profile-hero-stats,#profile .profile-hero-badge{grid-column:1!important;grid-row:auto!important}#profile .profile-hero-seals{border-left:0;border-right:0;border-top:1px solid #9654d955;border-bottom:1px solid #9654d955}#profile .profile-hero #profileAvatar{width:90px!important;height:90px!important;flex:0 0 90px!important}#profile .profile-hero-main>.row{gap:12px!important}#profile .profile-premium-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#profile #profileAchievementGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#profile .profile-hero-badge{flex-wrap:wrap}}
+
+/* v75.47: refinamento apenas do topo do perfil, inspirado na referência; mantém identidade e regras atuais */
+#profile .profile-hero{grid-template-columns:minmax(0,1.5fr) minmax(195px,.82fr) minmax(220px,.95fr);column-gap:20px;align-items:center}
+#profile .profile-hero-main>.row{flex-wrap:nowrap}
+#profile .profile-hero-main>.row>div:last-child{min-width:0}
+#profile .profile-hero #profileAvatar{width:116px!important;height:116px!important;flex:0 0 116px!important;border-width:4px;box-shadow:0 0 0 4px #ffffff22}
+#profile .profile-hero .profile-avatar-wrap{filter:drop-shadow(0 3px 8px #160d3577)}
+#profile .profile-name-line{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+#profile .profile-hero #profileDisplayName{font-size:clamp(1.35rem,2.25vw,2rem);line-height:1.2;overflow-wrap:anywhere}
+#profile .profile-hero #profileEmail{overflow-wrap:anywhere;font-size:.82rem}
+#profile .profile-hero-seals{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:148px;border-left:1px solid #c6a0ed55;border-right:1px solid #c6a0ed55}
+#profile .profile-hero-seals h3{order:2;margin:9px 0 0;font-size:.86rem;color:#eee2ff}
+#profile .profile-hero-seals small{order:3;margin-top:3px}
+#profile .profile-hero-seal-icons{order:1;gap:7px}
+#profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:49px;height:53px;flex-basis:49px;border-radius:14px}
+#profile .hero-seal-shortcut:focus-visible{outline:3px solid #ffe29a;outline-offset:4px}
+#profile .profile-level-card{padding:17px!important}
+#profile .profile-level-head{justify-content:space-between!important}
+#profile .profile-level-title{font-size:.91rem}
+#profile .profile-xp-track{height:13px!important;background:#ffffff4a}
+#profile .profile-hero-badge{margin-top:0}
+@media(max-width:1050px){#profile .profile-hero{grid-template-columns:minmax(0,1fr) minmax(170px,.7fr)}#profile .profile-level-card{grid-column:1/-1!important}}
+@media(max-width:680px){#profile .profile-hero{grid-template-columns:minmax(0,1fr);gap:14px}#profile .profile-hero-main,#profile .profile-hero-seals,#profile .profile-level-card,#profile .profile-hero-stats,#profile .profile-hero-badge{grid-column:1!important;grid-row:auto!important}#profile .profile-hero-seals{min-height:0;border-left:0;border-right:0;border-top:1px solid #9654d955;border-bottom:1px solid #9654d955;padding:14px 8px}#profile .profile-hero #profileAvatar{width:88px!important;height:88px!important;flex:0 0 88px!important}#profile .profile-hero #profileDisplayName{font-size:clamp(1.25rem,5vw,1.75rem)}}
 </style>
 <section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas, responda aos usuários e acompanhe relatos enviados.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Seus estudos são guardados neste navegador. Quando você entra em uma conta e a sincronização é concluída, eles também podem ser salvos na nuvem para acesso em outros dispositivos com a mesma conta. A sincronização depende da conexão e não substitui um backup próprio. Use “Exportar meus dados (JSON)” para guardar uma cópia e “Importar backup” para restaurar um arquivo. Antes de trocar ou limpar o dispositivo, confirme a sincronização e mantenha um backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
