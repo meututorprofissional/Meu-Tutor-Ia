@@ -149,14 +149,14 @@
     try {
       const { data, error } = await client.auth.getUser();
       if (requestId !== memberDateRequest || error || !data?.user?.id) return;
-      if (expectedUserId && data.user.id !== expectedUserId) return;
-      if (session?.user?.id && session.user.id !== data.user.id) return;
-      const date = verifiedMemberDate(data.user);
+      // Não exibir dados de outra conta nem de uma sessão que já foi encerrada.
+      if (!expectedUserId || data.user.id !== expectedUserId || session?.user?.id !== expectedUserId) return;
+      const date = verifiedMemberDate(data.user) || verifiedMemberDate(session.user);
       if (!date) {
         setText('profileMemberSince', 'data não disponível');
         return;
       }
-      if (session?.user?.id === data.user.id) session.user.created_at = data.user.created_at || date.toISOString();
+      session.user.created_at = date.toISOString();
       setText('profileMemberSince', formatMemberDate(date));
     } catch (error) {
       console.warn('Data de cadastro indisponível no Auth', error);
