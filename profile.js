@@ -452,6 +452,30 @@
 
   if (configured() && window.supabase?.createClient) {
     client = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+    // O perfil deve reagir à abertura da tela, não apenas ao retorno do usuário de outro app.
+    async function ensureProfileMemberDate() {
+      if (!session?.user?.id) {
+        try {
+          const { data } = await client.auth.getSession();
+          if (!session && data?.session) {
+            session = data.session;
+            showAuthState();
+          }
+        } catch (error) { console.warn('Meu Tutor IA: sessão indisponível', error); }
+      }
+      if (session?.user?.id) {
+        const cached = verifiedMemberDate(session.user);
+        if (cached) setText('profileMemberSince', formatMemberDate(cached));
+        refreshMemberSince();
+      }
+    }
+    const profileScreen = el('profile');
+    if (profileScreen && window.MutationObserver) {
+      const profileObserver = new MutationObserver(() => {
+        if (profileScreen.classList.contains('active')) ensureProfileMemberDate();
+      });
+      profileObserver.observe(profileScreen, { attributes:true, attributeFilter:['class'] });
+    }
     client.auth.getSession().then(({data}) => {
       // Não sobrescrever uma sessão mais recente recebida pelo listener de Auth.
       if (!authReady && !session) session = data?.session || null;
@@ -468,10 +492,10 @@
     });
     // Reconsultar o Auth ao abrir o perfil, inclusive quando o navegador restaurou uma sessão antiga.
     document.addEventListener('click', event => {
-      if (event.target?.closest?.('[data-screen="profile"], #profileMenuButton, #homeProfileAvatar')) setTimeout(refreshMemberSince, 0);
+      if (event.target?.closest?.('[data-screen="profile"], #profileMenuButton, #homeProfileAvatar')) setTimeout(ensureProfileMemberDate, 0);
     });
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && el('profile')?.classList.contains('active')) refreshMemberSince();
+      if (!document.hidden && el('profile')?.classList.contains('active')) ensureProfileMemberDate();
     });
   } else {
     showAuthState();
