@@ -141,25 +141,30 @@ html,body{max-width:100%;overflow-x:clip}
 #profile .profile-bottom-panels .panel:first-child .profile-xp-track{height:15px!important;margin-top:14px!important}
 @media(max-width:540px){#profile .profile-xp-summary #profileLevelSecondary{font-size:.84rem;padding:4px 8px}#profile .profile-xp-summary #profileXpSecondary{font-size:.76rem}}
 </style><style id="achievement-progress-alignment-fix">
-/* Alinhamento pontual no notebook: mantém cores e demais elementos. */
-@media (min-width:1201px){
- #profile .profile-achievement-showcase .profile-achievements-heading{min-width:0!important}
- #profile .profile-achievement-showcase .profile-achievements-heading > div:first-child{min-width:0!important;flex:1 1 auto!important}
- #profile .profile-achievement-showcase .profile-achievement-progress{
-   box-sizing:border-box!important;flex:0 0 225px!important;width:225px!important;
-   max-width:225px!important;margin:0 12px 0 0!important;
-   padding:0!important;gap:6px!important;align-items:stretch!important;
+/* Mantém o indicador de conquistas dentro do cartão, sem alterar a paleta. */
+@media (min-width: 901px) {
+ #profile .profile-achievement-showcase .profile-achievements-heading {min-width:0!important}
+ #profile .profile-achievement-showcase .profile-achievements-heading > div:first-child {min-width:0!important;flex:1 1 auto!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress {
+  box-sizing:border-box!important;position:relative!important;flex:0 1 225px!important;
+  width:225px!important;max-width:calc(100% - 24px)!important;min-width:0!important;
+  margin:0 12px!important;padding:0!important;display:flex!important;
+  flex-direction:column!important;align-items:stretch!important;gap:8px!important;
  }
- #profile .profile-achievement-showcase .profile-achievement-progress-label{
-   box-sizing:border-box!important;width:100%!important;min-width:0!important;
-   text-align:right!important;margin:0!important;
+ #profile .profile-achievement-showcase .profile-achievement-progress-label {
+  box-sizing:border-box!important;position:relative!important;display:block!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  margin:0!important;padding:0!important;text-align:center!important;
+  white-space:nowrap!important;line-height:1.35!important;
  }
- #profile .profile-achievement-showcase .profile-achievement-progress-label::after{
-   box-sizing:border-box!important;left:0!important;right:0!important;
-   width:100%!important;text-align:right!important;padding-right:0!important;
+ #profile .profile-achievement-showcase .profile-achievement-progress-label::after {
+  box-sizing:border-box!important;position:static!important;display:block!important;
+  width:100%!important;max-width:100%!important;text-align:center!important;
+  margin:0!important;padding:0!important;transform:none!important;
  }
- #profile .profile-achievement-showcase .profile-achievement-progress-track{
-   box-sizing:border-box!important;width:100%!important;margin:0!important;
+ #profile .profile-achievement-showcase .profile-achievement-progress-track {
+  box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+  margin:0!important;align-self:stretch!important;
  }
 }
 </style></head>
