@@ -174,7 +174,7 @@
     for (const node of [avatarWrap, homeButton]) {
       if (!node) continue;
       node.classList.toggle('has-official-founder', active === 'fundador');
-      node.classList.toggle('has-official-admin', visible.admin && !active);
+      node.classList.toggle('has-official-admin', false);
       node.classList.toggle('has-official-beta', active === 'beta');
       node.classList.toggle('has-official-vip', active === 'vip');
       let emblem = node.querySelector('.official-seal-crown');
