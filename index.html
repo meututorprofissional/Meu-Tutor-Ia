@@ -168,21 +168,30 @@ html,body{max-width:100%;overflow-x:clip}
  }
 }
 </style><style id="featured-card-reference-layout">
-/* Apenas organização da conquista em destaque; cores herdadas do tema atual. */
-#profile .profile-featured-standalone .profile-hero-badge{display:block!important;min-height:0!important;width:100%!important;max-width:none!important;padding:20px!important;text-align:left!important}
+/* Vitrine de destaque: proporções da referência com paleta clara atual. */
+#profile .profile-featured-standalone{min-width:0}
+#profile .profile-featured-standalone .profile-hero-badge{display:block!important;box-sizing:border-box!important;min-height:0!important;width:100%!important;max-width:none!important;padding:20px 18px!important;text-align:left!important;overflow:hidden}
 #profile .profile-featured-standalone .profile-hero-badge::before{display:none!important}
-#profile .featured-section-heading{margin:0 0 18px;font-size:1.16rem;font-weight:800;color:#35215e}
-#profile .featured-content{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center;width:100%}
-#profile .featured-medal{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;gap:8px}
-#profile .featured-medal .emblem{display:flex!important;align-items:center;justify-content:center;width:125px;height:130px;max-width:100%;font-size:4.5rem!important;line-height:1!important;border:3px solid #b99be4;border-radius:26px;background:linear-gradient(145deg,#f6efff,#e8d9fa);box-shadow:0 5px 16px #6940a02b}
-#profile .featured-medal strong{display:block!important;max-width:100%;font-size:1rem!important;text-align:center!important;overflow-wrap:anywhere}
-#profile .featured-information{min-width:0;border-left:2px solid #c6b2e2;padding-left:16px;display:flex;flex-direction:column;align-items:stretch;gap:12px}
-#profile .featured-information .featured-description{margin:0;color:#51466c;font-size:.92rem;line-height:1.5}
-#profile .featured-information #profileFeaturedHint{font-size:.72rem!important;margin:0!important}
-#profile .featured-change-button{width:100%;max-width:100%;border:1px solid #b89bdd;border-radius:999px;background:linear-gradient(110deg,#6744b1,#4c318e);color:#fff;padding:10px 12px;font-weight:750;cursor:pointer}
+#profile .featured-section-heading{margin:0 0 22px!important;font-size:clamp(1rem,1.55vw,1.32rem);font-weight:850;color:#35215e;line-height:1.3}
+#profile .featured-content{display:grid!important;grid-template-columns:minmax(0,1.04fr) minmax(0,1fr);gap:18px;align-items:center;width:100%;min-width:0}
+#profile .featured-medal{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;gap:0;position:relative;padding:8px 0 10px}
+#profile .featured-medal .emblem{display:flex!important;align-items:center;justify-content:center;position:relative;width:clamp(100px,12vw,170px)!important;height:clamp(115px,13vw,185px)!important;max-width:100%;font-size:clamp(3.5rem,5vw,5.4rem)!important;line-height:1!important;border:4px solid #d5a342!important;border-radius:0!important;clip-path:polygon(50% 0,94% 24%,94% 74%,50% 100%,6% 74%,6% 24%);background:linear-gradient(145deg,#513c94,#30225c)!important;box-shadow:none!important;filter:drop-shadow(0 4px 8px #6b4d9940)}
+#profile .featured-medal strong{display:block!important;position:relative;z-index:1;box-sizing:border-box;max-width:100%;width:max-content;min-width:70%;padding:8px 10px;margin-top:-14px!important;border:1px solid #d7aa48;border-radius:11px;background:linear-gradient(110deg,#ffe49b,#eec468)!important;color:#39265a!important;box-shadow:0 3px 12px #a5772e40;font-size:clamp(.85rem,1.2vw,1.05rem)!important;line-height:1.3;text-align:center!important;overflow-wrap:break-word}
+#profile .featured-information{min-width:0;border-left:2px solid #c6b2e2;padding-left:16px;display:flex;flex-direction:column;align-items:stretch;gap:14px}
+#profile .featured-information .featured-description{margin:0;color:#51466c;font-size:clamp(.82rem,1.05vw,1rem);line-height:1.55;text-align:left}
+#profile .featured-information #profileFeaturedHint{font-size:.73rem!important;line-height:1.4;margin:0!important}
+#profile .featured-change-button{box-sizing:border-box;width:100%;max-width:100%;border:1px solid #b89bdd;border-radius:999px;background:linear-gradient(110deg,#6744b1,#4c318e);color:#fff;padding:11px 9px;font-size:clamp(.78rem,1vw,.95rem);line-height:1.35;font-weight:750;cursor:pointer;overflow-wrap:normal}
 #profile .featured-change-button:hover{filter:brightness(1.09)}
-@media(max-width:650px){#profile .featured-content{grid-template-columns:1fr}#profile .featured-information{border-left:0;border-top:2px solid #c6b2e2;padding:12px 0 0}#profile .featured-medal .emblem{width:110px;height:110px}}
-@media(min-width:1201px){#profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{display:block!important;min-height:0!important;padding:20px 15px!important}#profile .featured-content{gap:10px}#profile .featured-medal .emblem{width:100px;height:110px;font-size:3.6rem!important}#profile .featured-information{padding-left:10px}#profile .featured-information .featured-description{font-size:.83rem}}
+#profile .featured-change-button:focus-visible{outline:3px solid #c3a6ed;outline-offset:3px}
+@media(min-width:1201px){
+ #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{display:block!important;min-height:0!important;padding:22px 18px!important}
+ #profile .featured-content{gap:13px}
+ #profile .featured-medal .emblem{width:clamp(95px,9vw,150px)!important;height:clamp(110px,10vw,160px)!important;font-size:clamp(3.3rem,4vw,4.8rem)!important}
+ #profile .featured-information{padding-left:13px}
+ #profile .featured-information .featured-description{font-size:clamp(.8rem,.9vw,.98rem)}
+}
+@media(max-width:800px){#profile .featured-content{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media(max-width:520px){#profile .featured-content{grid-template-columns:1fr;gap:16px}#profile .featured-information{border-left:0;border-top:2px solid #c6b2e2;padding:14px 0 0}#profile .featured-medal .emblem{width:135px!important;height:145px!important}#profile .featured-medal strong{max-width:90%}}
 </style></head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
