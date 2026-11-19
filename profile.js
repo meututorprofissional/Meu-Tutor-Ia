@@ -118,7 +118,7 @@
     const memberDate = verifiedMemberDate(session?.user);
     // Evitar apagar uma data já confirmada enquanto o Auth renova a sessão.
     if (memberDate) setText('profileMemberSince', formatMemberDate(memberDate));
-    else if (!session?.user?.id) setText('profileMemberSince', 'data não disponível');
+    else if (!session?.user?.id) setText('profileMemberSince', authReady ? 'sessão desconectada — entre novamente' : 'verificando sessão…');
     else if (!el('profileMemberSince')?.textContent?.match(/\d{4}/)) setText('profileMemberSince', 'verificando cadastro…');
     const initial = name.trim().charAt(0).toUpperCase() || '👤';
     const savedProfile = profile();
@@ -148,45 +148,69 @@
     if (facebook) facebook.disabled = false;
     setText('authStatus', session ? 'Conta conectada. Seus estudos podem ser sincronizados com segurança.' : 'Entre com Google ou Facebook para acessar seus estudos em outros dispositivos.');
   }
-  // Fonte oficial: consulta restrita ao usuário autenticado no Supabase.
-  // A função SQL lê auth.users.created_at sem expor outros usuários.
-  // Uma consulta por conta de cada vez: eventos de Auth e cliques não cancelam respostas válidas.
+  // Diagnóstico legível no próprio perfil, sem Console ou acesso a dados de estudo.
   const memberDatePending = new Map();
+  function memberDateStatus(message) {
+    const node = el('profileMemberSince');
+    if (node) { node.title = message; node.setAttribute('aria-label', message); }
+  }
   async function refreshMemberSince() {
     const userId = session?.user?.id;
-    if (!client || !userId) return;
+    if (!client || !userId) {
+      memberDateStatus(!client ? 'Supabase não inicializado' : 'Nenhuma sessão autenticada');
+      return;
+    }
     const cached = verifiedMemberDate(session.user);
-    if (cached) setText('profileMemberSince', formatMemberDate(cached));
-    else setText('profileMemberSince', 'consultando cadastro…');
+    if (cached) {
+      setText('profileMemberSince', formatMemberDate(cached));
+      memberDateStatus('Data confirmada pelo Supabase e preservada neste dispositivo');
+    } else {
+      setText('profileMemberSince', 'consultando cadastro…');
+      memberDateStatus('Consultando data de criação da conta no Supabase');
+    }
     if (memberDatePending.has(userId)) return memberDatePending.get(userId);
     const task = (async () => {
+      let failure = '';
       try {
-        // getUser consulta o Auth diretamente; o RPC é uma segunda fonte oficial.
-        const { data: authData, error: authError } = await client.auth.getUser();
+        const { data, error } = await client.auth.getUser();
         if (session?.user?.id !== userId) return;
-        let official = !authError && authData?.user?.id === userId
-          ? validMemberDate(authData.user.created_at) : null;
-        if (!official) {
-          const { data, error } = await client.rpc('my_registration_date');
-          if (error) throw error;
-          official = validMemberDate(data);
+        const authDate = !error && data?.user?.id === userId ? validMemberDate(data.user.created_at) : null;
+        if (authDate) {
+          const date = verifiedMemberDate({ id:userId, created_at:authDate.toISOString() });
+          if (session?.user?.id === userId) {
+            setText('profileMemberSince', formatMemberDate(date));
+            memberDateStatus('Data oficial confirmada pelo Supabase Auth');
+          }
+          return;
         }
-        if (!official) throw new Error('O Supabase não retornou uma data válida.');
+        failure = error ? 'Auth: ' + (error.message || error.status || 'erro') : 'Auth não retornou created_at';
+      } catch (error) { failure = 'Auth: ' + (error?.message || 'falha de rede'); }
+      try {
+        const { data, error } = await client.rpc('my_registration_date');
         if (session?.user?.id !== userId) return;
-        const date = verifiedMemberDate({ id: userId, created_at: official.toISOString() });
-        session.user = { ...session.user, created_at: date.toISOString() };
+        if (error) throw error;
+        const official = validMemberDate(data);
+        if (!official) throw new Error('RPC retornou data vazia');
+        const date = verifiedMemberDate({ id:userId, created_at:official.toISOString() });
         setText('profileMemberSince', formatMemberDate(date));
+        memberDateStatus('Data oficial confirmada pela função do Supabase');
       } catch (error) {
         if (session?.user?.id !== userId) return;
-        console.warn('Meu Tutor IA: falha ao consultar a data oficial de cadastro', error);
         const fallback = verifiedMemberDate(session.user);
-        setText('profileMemberSince', fallback ? formatMemberDate(fallback) : 'data não disponível');
+        if (fallback) setText('profileMemberSince', formatMemberDate(fallback));
+        else setText('profileMemberSince', 'consulta falhou — toque para tentar novamente');
+        memberDateStatus(failure + ' | RPC: ' + (error?.message || 'falha desconhecida'));
+        console.warn('Meu Tutor IA: falha ao consultar cadastro', { auth:failure, rpc:error });
       }
     })();
     memberDatePending.set(userId, task);
     try { await task; } finally {
       if (memberDatePending.get(userId) === task) memberDatePending.delete(userId);
     }
+  }
+  if (el('profileMemberSince')) {
+    el('profileMemberSince').style.cursor = 'pointer';
+    el('profileMemberSince').addEventListener('click', () => refreshMemberSince());
   }
   async function saveCloudData(data) {
     if (!client || !session?.user?.id || !data) return false;
@@ -430,7 +454,7 @@
     client = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
     client.auth.getSession().then(({data}) => {
       // Não sobrescrever uma sessão mais recente recebida pelo listener de Auth.
-      if (!authReady) session = data?.session || null;
+      if (!authReady && !session) session = data?.session || null;
       authReady = true;
       showAuthState();
       if (session) initialSync();
