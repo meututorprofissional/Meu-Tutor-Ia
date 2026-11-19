@@ -148,30 +148,31 @@
     if (facebook) facebook.disabled = false;
     setText('authStatus', session ? 'Conta conectada. Seus estudos podem ser sincronizados com segurança.' : 'Entre com Google ou Facebook para acessar seus estudos em outros dispositivos.');
   }
-  // Consulta o cadastro autenticado no servidor, sem inventar datas.
+  // Fonte oficial: consulta restrita ao usuário autenticado no Supabase.
+  // A função SQL lê auth.users.created_at sem expor outros usuários.
   let memberDateRequest = 0;
   async function refreshMemberSince() {
     const requestId = ++memberDateRequest;
-    if (!client) return;
     const expectedUserId = session?.user?.id || null;
-    if (!expectedUserId) return;
+    if (!client || !expectedUserId) return;
     const cached = verifiedMemberDate(session.user);
     if (cached) setText('profileMemberSince', formatMemberDate(cached));
+    else setText('profileMemberSince', 'consultando cadastro…');
     try {
-      const { data, error } = await client.auth.getUser();
+      const { data, error } = await client.rpc('my_registration_date');
       if (requestId !== memberDateRequest || session?.user?.id !== expectedUserId) return;
-      if (error || data?.user?.id !== expectedUserId) {
-        if (error) console.warn('Meu Tutor IA: não foi possível confirmar a data no Auth', error.message);
-        if (requestId === memberDateRequest && session?.user?.id === expectedUserId && !verifiedMemberDate(session.user)) setText('profileMemberSince', 'data não disponível');
-        return;
-      }
-      const date = verifiedMemberDate(data.user) || verifiedMemberDate(session.user);
-      if (!date) { setText('profileMemberSince', 'data não disponível'); return; }
-      session.user = { ...session.user, created_at: date.toISOString() };
+      if (error) throw error;
+      const official = validMemberDate(data);
+      if (!official) throw new Error('A consulta não retornou uma data válida.');
+      const date = verifiedMemberDate({id:expectedUserId, created_at:official.toISOString()});
+      session.user = {...session.user, created_at:date.toISOString()};
       setText('profileMemberSince', formatMemberDate(date));
     } catch (error) {
-      console.warn('Meu Tutor IA: data de cadastro indisponível no Auth', error);
-      if (requestId === memberDateRequest && session?.user?.id === expectedUserId && !verifiedMemberDate(session.user)) setText('profileMemberSince', 'data não disponível');
+      if (requestId !== memberDateRequest || session?.user?.id !== expectedUserId) return;
+      console.warn('Meu Tutor IA: falha ao consultar a data oficial de cadastro', error);
+      // Não apagar a última data verificada; nunca inventar uma data.
+      const fallback = verifiedMemberDate(session.user);
+      setText('profileMemberSince', fallback ? formatMemberDate(fallback) : 'data não disponível');
     }
   }
   async function saveCloudData(data) {
