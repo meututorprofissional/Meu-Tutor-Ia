@@ -112,7 +112,8 @@
   function renderOfficialSeals() {
     const badges = session?.user?.app_metadata?.special_badges;
     const granted = Array.isArray(badges) ? badges : [];
-    const founder = granted.includes('fundador') && session?.user?.app_metadata?.support_admin === true;
+    const founder = granted.includes('fundador');
+    const admin = session?.user?.app_metadata?.support_admin === true;
     const beta = granted.includes('pioneiro_beta');
     const vip = granted.includes('vip');
     const active = founder ? 'fundador' : beta ? 'beta' : vip ? 'vip' : '';
@@ -121,6 +122,7 @@
     for (const node of [avatarWrap, homeButton]) {
       if (!node) continue;
       node.classList.toggle('has-official-founder', active === 'fundador');
+      node.classList.toggle('has-official-admin', admin && !founder && !beta && !vip);
       node.classList.toggle('has-official-beta', active === 'beta');
       node.classList.toggle('has-official-vip', active === 'vip');
       let emblem = node.querySelector('.official-seal-crown');
@@ -130,18 +132,18 @@
         emblem.setAttribute('aria-hidden', 'true');
         node.appendChild(emblem);
       }
-      emblem.textContent = active === 'fundador' ? '◆' : active === 'vip' ? '✦' : '♛';
-      emblem.hidden = !active;
-      emblem.title = active === 'fundador' ? 'Fundador · Administração' : active === 'beta' ? 'Pioneiro Beta' : active === 'vip' ? 'VIP' : '';
+      emblem.textContent = active === 'fundador' ? '✦' : active === 'vip' ? '✦' : active === 'beta' ? '♛' : '⬡';
+      emblem.hidden = !(active || admin);
+      emblem.title = active === 'fundador' ? 'Fundador do Meu Tutor IA' : active === 'beta' ? 'Pioneiro Beta' : active === 'vip' ? 'VIP' : admin ? 'Administrador' : '';
     }
-    for (const [type, enabled] of [['founder',founder],['beta',beta],['vip',vip]]) {
-      const node = el('profileSpecialSeal' + (type === 'founder' ? 'Founder' : type === 'beta' ? 'Beta' : 'Vip'));
+    for (const [type, enabled] of [['founder',founder],['admin',admin],['beta',beta],['vip',vip]]) {
+      const node = el('profileSpecialSeal' + (type === 'founder' ? 'Founder' : type === 'admin' ? 'Admin' : type === 'beta' ? 'Beta' : 'Vip'));
       if (!node) continue;
       node.classList.toggle('is-granted', enabled);
       const status = node.querySelector('small');
       const lock = node.querySelector('.profile-seal-lock');
       if (status) status.textContent = enabled ? 'Selo oficial concedido à sua conta' :
-        (type === 'founder' ? 'Exclusivo da conta oficial do fundador' : type === 'beta' ? 'Não concedido · participação elegível a confirmar' : 'Não concedido · critérios ainda não definidos');
+        (type === 'founder' ? 'Exclusivo de quem criou o Meu Tutor IA' : type === 'admin' ? 'Reservado às contas com acesso administrativo' : type === 'beta' ? 'Não concedido · participação elegível a confirmar' : 'Não concedido · critérios ainda não definidos');
       if (lock) { lock.textContent = enabled ? '✓' : '🔒'; lock.setAttribute('aria-label', enabled ? 'Concedido' : 'Bloqueado'); }
     }
   }
