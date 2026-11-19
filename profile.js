@@ -140,23 +140,27 @@
     if (facebook) facebook.disabled = false;
     setText('authStatus', session ? 'Conta conectada. Seus estudos podem ser sincronizados com segurança.' : 'Entre com Google ou Facebook para acessar seus estudos em outros dispositivos.');
   }
-  // Confirma a data diretamente no Auth, inclusive quando a sessão em cache está incompleta.
+  // Consulta o cadastro autenticado no servidor, sem inventar datas.
   let memberDateRequest = 0;
   async function refreshMemberSince() {
     const requestId = ++memberDateRequest;
     if (!client) return;
-    const userId = session?.user?.id || null;
+    const expectedUserId = session?.user?.id || null;
     try {
       const { data, error } = await client.auth.getUser();
-      if (error || requestId !== memberDateRequest || !data?.user?.id) return;
-      if (userId && data.user.id !== userId) return;
+      if (requestId !== memberDateRequest || error || !data?.user?.id) return;
+      if (expectedUserId && data.user.id !== expectedUserId) return;
       if (session?.user?.id && session.user.id !== data.user.id) return;
       const date = verifiedMemberDate(data.user);
-      if (date) {
-        if (session?.user?.id === data.user.id) session.user.created_at = data.user.created_at || date.toISOString();
-        setText('profileMemberSince', formatMemberDate(date));
+      if (!date) {
+        setText('profileMemberSince', 'data não disponível');
+        return;
       }
-    } catch (error) { console.warn('Data de cadastro indisponível no Auth', error); }
+      if (session?.user?.id === data.user.id) session.user.created_at = data.user.created_at || date.toISOString();
+      setText('profileMemberSince', formatMemberDate(date));
+    } catch (error) {
+      console.warn('Data de cadastro indisponível no Auth', error);
+    }
   }
   async function saveCloudData(data) {
     if (!client || !session?.user?.id || !data) return false;
