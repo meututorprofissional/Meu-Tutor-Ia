@@ -1,6 +1,6 @@
 
 /* Atualização versionada: mude CACHE_VERSION ao publicar uma versão. */
-const CACHE_VERSION = 'meu-tutor-ia-v75.27-manual-updates';
+const CACHE_VERSION = 'meu-tutor-ia-v75.28-manual-updates';
 
 const APP_FILES = [
   './',
