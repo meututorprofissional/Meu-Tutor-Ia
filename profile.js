@@ -3,15 +3,20 @@
   const PROFILE_KEY = 'meuTutorIA.profile.v1';
   const DATA_KEY = 'meuTutorIA.v2';
   const MEMBER_DATE_KEY = 'meuTutorIA.verifiedMemberSince.v1.';
+  const memberDateMemory = new Map();
   const validMemberDate = value => { const d = value ? new Date(value) : null; return d && !Number.isNaN(d.getTime()) ? d : null; };
   function verifiedMemberDate(user) {
     if (!user?.id) return null;
     const fresh = validMemberDate(user.created_at);
     if (fresh) {
+      memberDateMemory.set(user.id, fresh.toISOString());
       try { localStorage.setItem(MEMBER_DATE_KEY + user.id, fresh.toISOString()); } catch {}
+      try { sessionStorage.setItem(MEMBER_DATE_KEY + user.id, fresh.toISOString()); } catch {}
       return fresh;
     }
-    try { return validMemberDate(localStorage.getItem(MEMBER_DATE_KEY + user.id)); } catch { return null; }
+    const memoryDate = validMemberDate(memberDateMemory.get(user.id));
+    if (memoryDate) return memoryDate;
+    try { const saved = validMemberDate(localStorage.getItem(MEMBER_DATE_KEY + user.id)) || validMemberDate(sessionStorage.getItem(MEMBER_DATE_KEY + user.id)); if (saved) memberDateMemory.set(user.id, saved.toISOString()); return saved; } catch { return null; }
   }
   const formatMemberDate = date => new Intl.DateTimeFormat('pt-BR', {day:'numeric',month:'short',year:'numeric',timeZone:'America/Fortaleza'}).format(date);
   let client = null;
@@ -111,7 +116,10 @@
     // A data de criação vem do usuário autenticado no Supabase Auth.
     // Não estimar a data pelo primeiro estudo ou pelo armazenamento local.
     const memberDate = verifiedMemberDate(session?.user);
-    setText('profileMemberSince', memberDate ? formatMemberDate(memberDate) : 'data não disponível');
+    // Evitar apagar uma data já confirmada enquanto o Auth renova a sessão.
+    if (memberDate) setText('profileMemberSince', formatMemberDate(memberDate));
+    else if (!session?.user?.id) setText('profileMemberSince', 'data não disponível');
+    else if (!el('profileMemberSince')?.textContent?.match(/\d{4}/)) setText('profileMemberSince', 'verificando cadastro…');
     const initial = name.trim().charAt(0).toUpperCase() || '👤';
     const savedProfile = profile();
     const ownedAvatarPath = session && savedProfile.avatarUserId === session.user.id ? savedProfile.avatarPath : null;
@@ -154,14 +162,16 @@
       if (requestId !== memberDateRequest || session?.user?.id !== expectedUserId) return;
       if (error || data?.user?.id !== expectedUserId) {
         if (error) console.warn('Meu Tutor IA: não foi possível confirmar a data no Auth', error.message);
+        if (requestId === memberDateRequest && session?.user?.id === expectedUserId && !verifiedMemberDate(session.user)) setText('profileMemberSince', 'data não disponível');
         return;
       }
       const date = verifiedMemberDate(data.user) || verifiedMemberDate(session.user);
-      if (!date) return;
+      if (!date) { setText('profileMemberSince', 'data não disponível'); return; }
       session.user = { ...session.user, created_at: date.toISOString() };
       setText('profileMemberSince', formatMemberDate(date));
     } catch (error) {
       console.warn('Meu Tutor IA: data de cadastro indisponível no Auth', error);
+      if (requestId === memberDateRequest && session?.user?.id === expectedUserId && !verifiedMemberDate(session.user)) setText('profileMemberSince', 'data não disponível');
     }
   }
   async function saveCloudData(data) {
