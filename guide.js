@@ -85,6 +85,10 @@ function renderProfileAchievements(){
    if(secondaryLevel)secondaryLevel.textContent='Nível '+level;
    if(secondaryValue)secondaryValue.textContent=inLevel.toLocaleString('pt-BR')+' / 1.000 XP';
  }
+ // A prévia Beta fica na área de configurações, nunca sobre a conquista do perfil.
+ const betaDemo=$('profileBetaDemo');
+ const betaSettings=$('profileBetaPreview')?.closest('.profile-preview-settings');
+ if(betaDemo && betaSettings && betaDemo.parentElement!==betaSettings) betaSettings.appendChild(betaDemo);
  const preview=$('profileBetaPreview');
  if(preview){
    let enabled=false;try{enabled=localStorage.getItem('meuTutorIA.betaPreview.v1')==='true'}catch{}
