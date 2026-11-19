@@ -106,9 +106,46 @@
     });
   }
 
+  // Selos somente por metadados administrativos assinados do Supabase Auth.
+  // user_metadata e localStorage NÃO concedem selos.
+  function renderOfficialSeals() {
+    const badges = session?.user?.app_metadata?.special_badges;
+    const granted = Array.isArray(badges) ? badges : [];
+    const beta = granted.includes('pioneiro_beta');
+    const vip = granted.includes('vip');
+    const avatarWrap = el('profileAvatar')?.closest('.profile-avatar-wrap');
+    const homeButton = el('homeProfileButton');
+    for (const [node, isSmall] of [[avatarWrap, false], [homeButton, true]]) {
+      if (!node) continue;
+      node.classList.toggle('has-official-beta', beta);
+      node.classList.toggle('has-official-vip', vip && !beta);
+      let crown = node.querySelector('.official-seal-crown');
+      if (!crown) {
+        crown = document.createElement('span');
+        crown.className = 'official-seal-crown';
+        crown.setAttribute('aria-hidden', 'true');
+        crown.textContent = '♛';
+        node.appendChild(crown);
+      }
+      crown.hidden = !(beta || vip);
+      crown.title = beta ? 'Pioneiro Beta' : vip ? 'VIP' : '';
+    }
+    for (const [type, active] of [['beta', beta], ['vip', vip]]) {
+      const node = el('profileSpecialSeal' + (type === 'beta' ? 'Beta' : 'Vip'));
+      if (!node) continue;
+      node.classList.toggle('is-granted', active);
+      const status = node.querySelector('small');
+      const lock = node.querySelector('.profile-seal-lock');
+      if (status) status.textContent = active ? 'Selo oficial concedido à sua conta' :
+        (type === 'beta' ? 'Não concedido · participação elegível a confirmar' : 'Não concedido · critérios ainda não definidos');
+      if (lock) { lock.textContent = active ? '✓' : '🔒'; lock.setAttribute('aria-label', active ? 'Concedido' : 'Bloqueado'); }
+    }
+  }
+
   function showAuthState() {
     const name = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || 'Estudante';
     setText('profileDisplayName', name);
+    renderOfficialSeals();
     setText('profileName', '');
     const nameInput = el('profileName');
     if (nameInput) nameInput.value = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || '';
