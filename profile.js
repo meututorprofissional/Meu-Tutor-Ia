@@ -2,6 +2,18 @@
   const CONFIG = window.MEU_TUTOR_AUTH_CONFIG || {};
   const PROFILE_KEY = 'meuTutorIA.profile.v1';
   const DATA_KEY = 'meuTutorIA.v2';
+  const MEMBER_DATE_KEY = 'meuTutorIA.verifiedMemberSince.v1.';
+  const validMemberDate = value => { const d = value ? new Date(value) : null; return d && !Number.isNaN(d.getTime()) ? d : null; };
+  function verifiedMemberDate(user) {
+    if (!user?.id) return null;
+    const fresh = validMemberDate(user.created_at);
+    if (fresh) {
+      try { localStorage.setItem(MEMBER_DATE_KEY + user.id, fresh.toISOString()); } catch {}
+      return fresh;
+    }
+    try { return validMemberDate(localStorage.getItem(MEMBER_DATE_KEY + user.id)); } catch { return null; }
+  }
+  const formatMemberDate = date => new Intl.DateTimeFormat('pt-BR', {day:'numeric',month:'short',year:'numeric',timeZone:'America/Fortaleza'}).format(date);
   let client = null;
   let session = null;
   let syncing = false;
@@ -98,17 +110,8 @@
     setText('profileEmail', session?.user?.email || 'Perfil local neste dispositivo');
     // A data de criação vem do usuário autenticado no Supabase Auth.
     // Não estimar a data pelo primeiro estudo ou pelo armazenamento local.
-    const createdAt = session?.user?.created_at;
-    let memberSince = 'data não disponível';
-    if (createdAt) {
-      const date = new Date(createdAt);
-      if (!Number.isNaN(date.getTime())) {
-        memberSince = new Intl.DateTimeFormat('pt-BR', {
-          day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Fortaleza'
-        }).format(date);
-      }
-    }
-    setText('profileMemberSince', memberSince);
+    const memberDate = verifiedMemberDate(session?.user);
+    setText('profileMemberSince', memberDate ? formatMemberDate(memberDate) : 'data não disponível');
     const initial = name.trim().charAt(0).toUpperCase() || '👤';
     const savedProfile = profile();
     const ownedAvatarPath = session && savedProfile.avatarUserId === session.user.id ? savedProfile.avatarPath : null;
@@ -146,12 +149,11 @@
     try {
       const { data, error } = await client.auth.getUser();
       if (error || requestId !== memberDateRequest || session?.user?.id !== userId) return;
-      const dateValue = data?.user?.created_at;
-      const date = dateValue ? new Date(dateValue) : null;
-      if (date && !Number.isNaN(date.getTime())) {
-        setText('profileMemberSince', new Intl.DateTimeFormat('pt-BR', {
-          day:'numeric', month:'short', year:'numeric', timeZone:'America/Fortaleza'
-        }).format(date));
+      if (data?.user?.id !== userId) return;
+      const date = verifiedMemberDate(data.user);
+      if (date) {
+        session.user.created_at = data.user.created_at || date.toISOString();
+        setText('profileMemberSince', formatMemberDate(date));
       }
     } catch (error) { console.warn('Data de cadastro indisponível no Auth', error); }
   }
@@ -404,7 +406,7 @@
     client.auth.onAuthStateChange((event, nextSession) => {
       session = nextSession;
       showAuthState();
-      if (nextSession && event === 'SIGNED_IN') refreshMemberSince();
+      if (nextSession && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED')) setTimeout(refreshMemberSince, 0);
       if (event === 'SIGNED_IN' && authReady) setTimeout(initialSync, 0);
     });
   } else {
