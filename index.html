@@ -1224,6 +1224,18 @@ html,body{max-width:100%;overflow-x:clip}
  }
 }
 
+/* Ajuste fino: respiro na borda e texto próximo à barra (desktop). */
+@media(min-width:1201px){
+ #profile .profile-achievement-showcase .profile-achievement-progress{
+  margin-right:14px!important;gap:3px!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{
+  min-height:20px!important;line-height:20px!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-track{
+  margin-top:0!important;
+ }
+}
 /* v75.58 — exibir somente a contagem resumida, sem texto longo */
 @media(min-width:1201px){
  #profile .profile-achievement-showcase .profile-achievement-progress-label{
