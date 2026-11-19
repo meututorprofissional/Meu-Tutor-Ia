@@ -1211,6 +1211,19 @@ html,body{max-width:100%;overflow-x:clip}
 }
 @media(max-width:600px){#profile .profile-achievement-progress{flex-basis:105px;gap:6px}#profile .profile-achievement-progress-label{font-size:.76rem}}
 
+/* Ajuste pontual notebook: texto e barra juntos, alinhados à direita; cores preservadas. */
+@media (min-width:1201px){
+ #profile .profile-achievement-showcase .profile-achievement-progress{
+  gap:5px!important;padding:0!important;align-self:flex-start!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{
+  min-height:20px!important;margin:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-track{
+  margin:0!important;flex-shrink:0!important;
+ }
+}
+
 /* v75.58 — exibir somente a contagem resumida, sem texto longo */
 @media(min-width:1201px){
  #profile .profile-achievement-showcase .profile-achievement-progress-label{
