@@ -169,6 +169,18 @@
         radio.checked = radio.value === choice;
       }
     }
+    for (const [type, suffix] of [['founder','Founder'],['admin','Admin'],['beta','Beta'],['vip','Vip']]) {
+      const heroSeal = el('profileHero' + suffix + 'Seal');
+      if (heroSeal) {
+        heroSeal.hidden = !visible[type] && type !== 'beta' && type !== 'vip';
+        heroSeal.classList.toggle('is-granted', Boolean(visible[type]));
+        if (type === 'beta' || type === 'vip') {
+          heroSeal.hidden = false;
+          heroSeal.classList.toggle('is-locked', !visible[type]);
+          heroSeal.title = visible[type] ? (type === 'beta' ? 'Pioneiro Beta' : 'VIP') : 'Ainda não concedido';
+        }
+      }
+    }
     const avatarWrap = el('profileAvatar')?.closest('.profile-avatar-wrap');
     const homeButton = el('homeProfileButton');
     for (const node of [avatarWrap, homeButton]) {
@@ -237,6 +249,17 @@
     }
   }
   initializeSealVisibilityControls();
+  document.querySelectorAll('[data-profile-jump]').forEach(button => {
+    button.addEventListener('click', () => {
+      const target = el(button.getAttribute('data-profile-jump'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  const sealShortcut = el('profileHeroSealShortcut');
+  if (sealShortcut) sealShortcut.addEventListener('click', () => {
+    el('profileSpecialSealFounder')?.closest('.profile-preview-settings')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   const borderSelector = el('profileBorderSelector');
   if (borderSelector) borderSelector.addEventListener('change', event => {
     if (event.target?.matches('input[name="profileBorderChoice"]')) setPreferredBorder(event.target.value);
