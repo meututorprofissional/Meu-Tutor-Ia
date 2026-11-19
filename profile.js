@@ -185,7 +185,7 @@
         node.appendChild(emblem);
       }
       emblem.textContent = active === 'fundador' ? '◆' : active === 'vip' ? '✦' : active === 'beta' ? '♛' : '⬡';
-      emblem.hidden = !(active || visible.admin);
+      emblem.hidden = !active;
       emblem.title = active === 'fundador' ? 'Fundador do Meu Tutor IA' : active === 'beta' ? 'Pioneiro Beta' : active === 'vip' ? 'VIP' : visible.admin ? 'Administrador' : '';
     }
     const nameLine = el('profileDisplayName')?.closest('.profile-name-line');
@@ -200,6 +200,16 @@
         nameLine.appendChild(admTag);
       }
       admTag.hidden = !visible.admin;
+      let founderTag = el('profileFounderIdentityTag');
+      if (!founderTag) {
+        founderTag = document.createElement('span');
+        founderTag.id = 'profileFounderIdentityTag';
+        founderTag.className = 'profile-founder-identity-tag';
+        founderTag.setAttribute('aria-label', 'Fundador verificado');
+        founderTag.innerHTML = '<span aria-hidden="true">♛</span> Fundador';
+        nameLine.appendChild(founderTag);
+      }
+      founderTag.hidden = !visible.founder;
     }
     for (const [type, enabled] of Object.entries(owned)) {
       const suffix = type === 'founder' ? 'Founder' : type === 'admin' ? 'Admin' : type === 'beta' ? 'Beta' : 'Vip';
