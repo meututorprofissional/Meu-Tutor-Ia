@@ -144,15 +144,16 @@
   let memberDateRequest = 0;
   async function refreshMemberSince() {
     const requestId = ++memberDateRequest;
-    if (!client || !session?.user?.id) return;
-    const userId = session.user.id;
+    if (!client) return;
+    const userId = session?.user?.id || null;
     try {
       const { data, error } = await client.auth.getUser();
-      if (error || requestId !== memberDateRequest || session?.user?.id !== userId) return;
-      if (data?.user?.id !== userId) return;
+      if (error || requestId !== memberDateRequest || !data?.user?.id) return;
+      if (userId && data.user.id !== userId) return;
+      if (session?.user?.id && session.user.id !== data.user.id) return;
       const date = verifiedMemberDate(data.user);
       if (date) {
-        session.user.created_at = data.user.created_at || date.toISOString();
+        if (session?.user?.id === data.user.id) session.user.created_at = data.user.created_at || date.toISOString();
         setText('profileMemberSince', formatMemberDate(date));
       }
     } catch (error) { console.warn('Data de cadastro indisponível no Auth', error); }
@@ -401,13 +402,21 @@
       session = data?.session || null;
       authReady = true;
       showAuthState();
-      if (session) { refreshMemberSince(); initialSync(); }
+      if (session) initialSync();
+      refreshMemberSince();
     });
     client.auth.onAuthStateChange((event, nextSession) => {
       session = nextSession;
       showAuthState();
       if (nextSession && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED')) setTimeout(refreshMemberSince, 0);
       if (event === 'SIGNED_IN' && authReady) setTimeout(initialSync, 0);
+    });
+    // Reconsultar o Auth ao abrir o perfil, inclusive quando o navegador restaurou uma sessão antiga.
+    document.addEventListener('click', event => {
+      if (event.target?.closest?.('[data-screen="profile"], #profileMenuButton, #homeProfileAvatar')) setTimeout(refreshMemberSince, 0);
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && el('profile')?.classList.contains('active')) refreshMemberSince();
     });
   } else {
     showAuthState();
