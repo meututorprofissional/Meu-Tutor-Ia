@@ -131,6 +131,17 @@
     try { localStorage.setItem(SEAL_VISIBILITY_PREFIX + userId, JSON.stringify(preferences)); } catch {}
     renderOfficialSeals();
   }
+  const BORDER_CHOICE_PREFIX = 'meuTutorIA.profileBorder.v1.';
+  function preferredBorder(userId) {
+    if (!userId) return null;
+    try { return localStorage.getItem(BORDER_CHOICE_PREFIX + userId); } catch { return null; }
+  }
+  function setPreferredBorder(choice) {
+    const userId = session?.user?.id;
+    if (!userId || !['default','founder','beta','vip'].includes(choice)) return;
+    try { localStorage.setItem(BORDER_CHOICE_PREFIX + userId, choice); } catch {}
+    renderOfficialSeals();
+  }
   function renderOfficialSeals() {
     const user = session?.user;
     const badges = user?.app_metadata?.special_badges;
@@ -143,7 +154,21 @@
     };
     const preferences = sealVisibility(user?.id);
     const visible = Object.fromEntries(Object.entries(owned).map(([key, value]) => [key, value && preferences[key] !== false]));
-    const active = visible.founder ? 'fundador' : visible.beta ? 'beta' : visible.vip ? 'vip' : '';
+    // Uma borda por vez. A escolha manual é validada contra concessão e visibilidade.
+    const available = { founder: visible.founder, beta: visible.beta, vip: visible.vip };
+    const stored = preferredBorder(user?.id);
+    const defaultChoice = visible.founder ? 'founder' : visible.beta ? 'beta' : visible.vip ? 'vip' : 'default';
+    const choice = stored === 'default' || (stored && available[stored]) ? stored : defaultChoice;
+    const active = choice === 'founder' ? 'fundador' : choice === 'beta' ? 'beta' : choice === 'vip' ? 'vip' : '';
+    const borderSelector = el('profileBorderSelector');
+    if (borderSelector) {
+      borderSelector.hidden = !user?.id;
+      for (const radio of borderSelector.querySelectorAll('input[name="profileBorderChoice"]')) {
+        radio.disabled = radio.value !== 'default' && !available[radio.value];
+        radio.closest('label').hidden = radio.disabled;
+        radio.checked = radio.value === choice;
+      }
+    }
     const avatarWrap = el('profileAvatar')?.closest('.profile-avatar-wrap');
     const homeButton = el('homeProfileButton');
     for (const node of [avatarWrap, homeButton]) {
@@ -202,6 +227,11 @@
     }
   }
   initializeSealVisibilityControls();
+  const borderSelector = el('profileBorderSelector');
+  if (borderSelector) borderSelector.addEventListener('change', event => {
+    if (event.target?.matches('input[name="profileBorderChoice"]')) setPreferredBorder(event.target.value);
+  });
+
 
   function showAuthState() {
     const name = profile().name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || 'Estudante';
