@@ -470,6 +470,34 @@ html,body{max-width:100%;overflow-x:clip}
  #profile .profile-achievement-showcase .profile-achievement-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 }
 </style>
+<style id="profile-showcase-alignment-v7572">
+/* v75.72: alinhar vitrine de conquistas no Android à referência, sem alterar lógica ou dados. */
+@media screen and (min-width:390px) and (max-width:700px){
+ #profile .profile-achievement-showcase{display:grid!important;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;gap:6px!important;align-items:stretch!important}
+ #profile .profile-achievement-showcase #profileAchievementsPanel{min-width:0!important;width:auto!important;padding:9px 6px!important;margin:0!important;overflow:hidden!important}
+ #profile .profile-achievement-showcase .profile-featured-standalone{min-width:0!important;width:auto!important;margin:0!important;align-self:stretch!important}
+ #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{height:100%!important;min-height:0!important;padding:9px 5px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:5px!important}
+ #profile .profile-achievements-heading{display:block!important;margin:0 0 5px!important}
+ #profile .profile-achievements-heading h2{font-size:clamp(.69rem,2.5vw,.91rem)!important;margin:0 0 3px!important}
+ #profile .profile-achievements-heading p{font-size:clamp(.49rem,1.65vw,.61rem)!important;line-height:1.25!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress{width:100%!important;min-width:0!important;margin-top:5px!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{font-size:.59rem!important}
+ #profile #profileAchievementGrid{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:2px!important;margin:7px 0 0!important;overflow:visible!important}
+ #profile #profileAchievementGrid .profile-achievement-item{width:auto!important;min-width:0!important;padding:3px 0!important;gap:3px!important;background:transparent!important;border:0!important;box-shadow:none!important}
+ #profile #profileAchievementGrid .profile-achievement-emoji{width:clamp(23px,5.1vw,35px)!important;height:clamp(27px,6vw,40px)!important;font-size:clamp(.9rem,3vw,1.3rem)!important;margin:0 auto 3px!important}
+ #profile #profileAchievementGrid .profile-achievement-item strong{font-size:clamp(.36rem,1.1vw,.49rem)!important;line-height:1.15!important;min-height:27px!important;overflow-wrap:anywhere!important}
+ #profile #profileAchievementGrid .profile-achievement-item small{font-size:clamp(.34rem,1vw,.43rem)!important;line-height:1.15!important;min-height:24px!important;overflow-wrap:anywhere!important}
+ #profile #profileAchievementGrid .profile-achievement-item button{font-size:clamp(.34rem,1vw,.43rem)!important;line-height:1.1!important;padding:3px 1px!important;min-height:26px!important;max-width:100%!important;overflow-wrap:anywhere!important}
+ #profile .profile-featured-standalone .featured-section-heading{font-size:clamp(.62rem,2vw,.78rem)!important;margin:0 0 4px!important}
+ #profile .profile-featured-standalone .featured-content{display:flex!important;flex-direction:column!important;gap:6px!important;min-width:0!important}
+ #profile .profile-featured-standalone .featured-medal .emblem{width:clamp(48px,12vw,72px)!important;height:clamp(54px,13vw,80px)!important;font-size:1.8rem!important}
+ #profile .profile-featured-standalone .featured-medal strong{font-size:.59rem!important;line-height:1.15!important}
+ #profile .profile-featured-standalone .featured-information{border:0!important;padding:0!important;min-width:0!important}
+ #profile .profile-featured-standalone .featured-description,#profile .profile-featured-standalone #profileFeaturedHint{font-size:.56rem!important;line-height:1.25!important}
+ #profile .profile-featured-standalone .featured-change-button{font-size:.56rem!important;line-height:1.2!important;padding:7px 3px!important;width:100%!important}
+ #profile > .profile-achievement-stats-strip{margin-top:8px!important}
+}
+</style>
 </head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
