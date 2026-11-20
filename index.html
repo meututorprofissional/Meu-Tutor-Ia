@@ -388,6 +388,29 @@ html,body{max-width:100%;overflow-x:clip}
  }
 }
 </style>
+<style id="profile-android-installed-layout-v7565">
+/* v75.65: acabamento responsivo no aplicativo instalado, sem alterar desktop e sem trocar cores. */
+@media screen and (max-width:700px){
+ #profile .profile-page-heading{display:flex!important;align-items:flex-start!important;gap:10px!important;flex-wrap:wrap!important;margin:8px 0 14px!important}
+ #profile .profile-page-heading>div{flex:1 1 190px;min-width:0}
+ #profile .profile-page-heading h2{font-size:1.25rem!important;line-height:1.3!important}
+ #profile .profile-page-heading button{flex:0 0 auto;max-width:100%;font-size:.75rem!important}
+ #profile .profile-hero{box-sizing:border-box!important;max-width:100%!important;overflow:hidden!important}
+ #profile .profile-hero-main{min-width:0!important;max-width:100%!important}
+ #profile .profile-name-line{max-width:100%!important}
+ #profile .profile-achievement-showcase #profileAchievementsPanel{padding:15px 12px!important}
+ #profile .profile-achievement-showcase .profile-achievement-grid{gap:12px 6px!important}
+ #profile .profile-achievement-showcase .profile-achievement-item{box-sizing:border-box!important}
+ #profile .profile-achievement-showcase .profile-achievement-item strong{hyphens:auto!important}
+ #profile .profile-featured-standalone{box-sizing:border-box!important}
+ #profile .profile-featured-standalone .featured-content{align-items:center!important}
+ #profile > .profile-achievement-stats-strip{box-sizing:border-box!important;width:100%!important}
+}
+@media screen and (max-width:390px){
+ #profile .profile-page-heading button{font-size:.72rem!important}
+ #profile .profile-achievement-showcase .profile-achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+</style>
 <style id="profile-mobile-name-fix-v7563">
 /* v75.63: lápis de edição compacto no Chrome Android normal; desktop intacto. */
 @media screen and (max-width:700px){
@@ -420,7 +443,7 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v75.64</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v75.65</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
 </div>
 <section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V75.15 — Layout do perfil inspirado na referência</strong></p><p>Nova estrutura do banner, medalhas roláveis no celular, seção de conquistas e painéis reorganizados, sem alterar os registros.</p><p><strong>V75.14 — Perfil e conquistas responsivos</strong></p><p>Hierarquia visual do cabeçalho, medalhas, próxima conquista e painéis ajustada para celular, sem alterar dados.</p><p><strong>V75.13 — Perfil premium</strong></p><p>Brilho e acabamento das medalhas, painel de nível, emblema Beta, próxima conquista e adaptação ao celular; XP e registros preservados.</p><p><strong>V75.12 — Conquistas em destaque</strong></p><p>Conquistas acima das configurações, avatar ampliado e medalhas hexagonais; registros e XP preservados.</p><p><strong>V75.11 — Perfil premium responsivo</strong></p><p>Refinamento do brilho Beta, medalhas, nível, cartões e espaçamentos, sem mudar registros nem conceder conquistas.</p><p><strong>V75.10 — Acabamento visual do perfil</strong></p><p>Realce do emblema, painel de nível, medalhas e distribuição responsiva, sem alterar o XP ou os registros.</p><p><strong>V75.9 — Refinamento do perfil</strong></p><p>Emblema Beta maior, medalhas aprimoradas e ajustes responsivos no cabeçalho.</p><p><strong>V75.8 — Cabeçalho e emblema Beta</strong></p><p>Emblema dourado de demonstração, status do estudante, data de entrada quando disponível e melhor acabamento responsivo.</p><p><strong>V75.7 — Perfil inspirado no protótipo</strong></p><p>Cabeçalho em três áreas, medalhas e painéis de evolução com layout adaptável ao celular.</p><p><strong>V75.6 — Níveis e prévia Beta</strong></p><p>XP baseado em registros locais e prévia opcional do emblema Pioneiro Beta, sem conceder conquistas reais.</p><p><strong>V75.2 — Conquistas no perfil</strong></p><p>Medalhas e metas reais de desbloqueio disponíveis no perfil, sem apagar estudos.</p><p><strong>V75.1 — Acesso ao tutor pela tela Início</strong></p><p>O Tutor de ajuda saiu do menu superior e ganhou atalhos na tela inicial, mantendo o tutorial, dúvidas e conquistas.</p><p><strong>V75.0 — Tutor de ajuda e conquistas</strong></p><p>Primeira versão do tutorial guiado, respostas preparadas para dúvidas e conquistas locais. O chat generativo de IA será desenvolvido em outra etapa.</p><p><strong>V74.5 — Navegação reforçada para Flashcards</strong></p><p>Os botões de revisão do Progresso agora usam uma navegação direta, independente de outros módulos.</p><p><strong>V74.4 — Correção dos botões de revisão</strong></p><p>Revisar agora e Praticar flashcards passam a abrir corretamente a tela de cartões, sem alterar os registros de estudo.</p><p><strong>V74.3 — Acabamento final do painel</strong></p><p>Grade de estatísticas mais equilibrada em telas grandes, melhor espaçamento e contraste dos painéis, com respeito à preferência de movimento reduzido.</p><p><strong>V74.2 — Ajustes de legibilidade e revisões</strong></p><p>Cartões em grade de três no celular, revisão imediata mais evidente e escala visual do gráfico semanal aprimorada.</p><p><strong>V74.1 — Acabamento visual do Progresso</strong></p><p>Gráfico de linha com dados reais, cartões mais legíveis, revisões por data, gráfico circular de autoavaliações e próximos passos destacados.</p><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
 <div class="layout">
