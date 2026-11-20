@@ -3514,9 +3514,16 @@ html.profile-desktop-on-phone #profile .profile-achievement-stats-strip{margin-t
  function update(){
    // A viewport do Chrome Android em modo desktop pode reportar screen.width=980;
    // por isso não depender de screen.width para reconhecer o aparelho.
-   var isAndroid=/Android/i.test(navigator.userAgent);
+   var ua=navigator.userAgent||'';
+   var isAndroid=/Android/i.test(ua);
+   // Chrome Android em "Site para computador" pode ocultar Android do userAgent.
+   // Detectar também viewport desktop em aparelho touch compacto.
+   var isTouch=(navigator.maxTouchPoints||0)>0;
+   var compactScreen=Math.min(screen.width,screen.height)<=700;
+   var androidDesktopFallback=isTouch&&compactScreen&&/Chrome|CriOS/i.test(ua);
    var desktopViewport=document.documentElement.clientWidth>=701;
-   document.documentElement.classList.toggle('profile-desktop-on-phone',isAndroid&&desktopViewport);
+   document.documentElement.classList.toggle('profile-desktop-on-phone',
+     desktopViewport&&(isAndroid||androidDesktopFallback));
  }
  update();
  window.addEventListener('resize',update,{passive:true});
