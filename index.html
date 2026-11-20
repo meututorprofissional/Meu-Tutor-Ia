@@ -1800,7 +1800,7 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
     max-width: 100% !important;
     min-width: 0 !important;
     padding: 0 !important;
-    overflow-x: clip !important;
+    overflow-x: visible !important;
   }
 
   #profile .profile-page-heading {
@@ -2040,7 +2040,9 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
     border-radius: 10px !important;
   }
   #profile .profile-hero-seals small {
-    display: none !important;
+    display: block !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
   }
 
   /* 3. Quatro botões de navegação organizados em duas linhas (2x2) */
@@ -2128,7 +2130,8 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
     overflow: hidden !important;
   }
   #profile #profileAchievementsPanel > p.muted {
-    display: none !important;
+    display: block !important;
+    overflow-wrap: anywhere !important;
   }
 
   /* Grade de medalhas em 3 colunas */
@@ -2341,8 +2344,14 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
   #profile .profile-bottom-panels {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas: none !important;
     gap: 12px !important;
     margin-top: 14px !important;
+  }
+  #profile .profile-bottom-panels > * {
+    grid-area: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
   #profile .profile-bottom-panels .panel {
     padding: 14px !important;
