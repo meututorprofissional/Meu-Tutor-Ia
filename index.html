@@ -480,7 +480,7 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v75.73 Teste</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v75.74 Teste</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
 </div>
 <section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V75.15 — Layout do perfil inspirado na referência</strong></p><p>Nova estrutura do banner, medalhas roláveis no celular, seção de conquistas e painéis reorganizados, sem alterar os registros.</p><p><strong>V75.14 — Perfil e conquistas responsivos</strong></p><p>Hierarquia visual do cabeçalho, medalhas, próxima conquista e painéis ajustada para celular, sem alterar dados.</p><p><strong>V75.13 — Perfil premium</strong></p><p>Brilho e acabamento das medalhas, painel de nível, emblema Beta, próxima conquista e adaptação ao celular; XP e registros preservados.</p><p><strong>V75.12 — Conquistas em destaque</strong></p><p>Conquistas acima das configurações, avatar ampliado e medalhas hexagonais; registros e XP preservados.</p><p><strong>V75.11 — Perfil premium responsivo</strong></p><p>Refinamento do brilho Beta, medalhas, nível, cartões e espaçamentos, sem mudar registros nem conceder conquistas.</p><p><strong>V75.10 — Acabamento visual do perfil</strong></p><p>Realce do emblema, painel de nível, medalhas e distribuição responsiva, sem alterar o XP ou os registros.</p><p><strong>V75.9 — Refinamento do perfil</strong></p><p>Emblema Beta maior, medalhas aprimoradas e ajustes responsivos no cabeçalho.</p><p><strong>V75.8 — Cabeçalho e emblema Beta</strong></p><p>Emblema dourado de demonstração, status do estudante, data de entrada quando disponível e melhor acabamento responsivo.</p><p><strong>V75.7 — Perfil inspirado no protótipo</strong></p><p>Cabeçalho em três áreas, medalhas e painéis de evolução com layout adaptável ao celular.</p><p><strong>V75.6 — Níveis e prévia Beta</strong></p><p>XP baseado em registros locais e prévia opcional do emblema Pioneiro Beta, sem conceder conquistas reais.</p><p><strong>V75.2 — Conquistas no perfil</strong></p><p>Medalhas e metas reais de desbloqueio disponíveis no perfil, sem apagar estudos.</p><p><strong>V75.1 — Acesso ao tutor pela tela Início</strong></p><p>O Tutor de ajuda saiu do menu superior e ganhou atalhos na tela inicial, mantendo o tutorial, dúvidas e conquistas.</p><p><strong>V75.0 — Tutor de ajuda e conquistas</strong></p><p>Primeira versão do tutorial guiado, respostas preparadas para dúvidas e conquistas locais. O chat generativo de IA será desenvolvido em outra etapa.</p><p><strong>V74.5 — Navegação reforçada para Flashcards</strong></p><p>Os botões de revisão do Progresso agora usam uma navegação direta, independente de outros módulos.</p><p><strong>V74.4 — Correção dos botões de revisão</strong></p><p>Revisar agora e Praticar flashcards passam a abrir corretamente a tela de cartões, sem alterar os registros de estudo.</p><p><strong>V74.3 — Acabamento final do painel</strong></p><p>Grade de estatísticas mais equilibrada em telas grandes, melhor espaçamento e contraste dos painéis, com respeito à preferência de movimento reduzido.</p><p><strong>V74.2 — Ajustes de legibilidade e revisões</strong></p><p>Cartões em grade de três no celular, revisão imediata mais evidente e escala visual do gráfico semanal aprimorada.</p><p><strong>V74.1 — Acabamento visual do Progresso</strong></p><p>Gráfico de linha com dados reais, cartões mais legíveis, revisões por data, gráfico circular de autoavaliações e próximos passos destacados.</p><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
 <div class="layout">
@@ -3002,68 +3002,79 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
 }
 </style>
 
-<style id="profile-hero-grid-lock-v75-73">
-/* v75.73 Teste — isolar as 3 colunas reais do cabecalho mobile;
-   neutralizar grid-column:1/-1 e grid-row:auto herdados de versoes antigas. */
+<style id="profile-hero-layout-v75-74">
+/* v75.74 Teste: apenas o cabeçalho Android; 3 colunas reais sem alterar dados ou desktop. */
 @media screen and (max-width:700px){
  #profile .profile-hero{
-   display:grid!important;
-   grid-template-areas:none!important;
-   grid-template-columns:minmax(0,1.68fr) minmax(0,.78fr) minmax(0,1.08fr)!important;
-   grid-template-rows:minmax(90px,auto)!important;
-   grid-auto-rows:auto!important;
-   column-gap:4px!important;row-gap:0!important;
-   padding:9px 7px!important;
-   min-height:0!important;
-   align-items:center!important;
+  display:grid!important;grid-template-areas:none!important;
+  grid-template-columns:minmax(0,1.85fr) minmax(0,.85fr) minmax(0,1.15fr)!important;
+  grid-template-rows:minmax(112px,auto)!important;grid-auto-rows:auto!important;
+  gap:5px!important;padding:12px 9px!important;min-height:0!important;
+  align-items:center!important;overflow:hidden!important;
  }
- #profile .profile-hero > .profile-hero-main{
-   grid-area:1 / 1 / 2 / 2!important;
-   grid-column:1 / 2!important;grid-row:1 / 2!important;
-   width:100%!important;min-width:0!important;max-width:100%!important;
-   align-self:center!important;
+ #profile .profile-hero>.profile-hero-main{
+  grid-area:1 / 1 / 2 / 2!important;grid-column:1/2!important;grid-row:1/2!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  align-self:center!important;justify-self:stretch!important;
  }
- #profile .profile-hero > .profile-hero-seals{
-   grid-area:1 / 2 / 2 / 3!important;
-   grid-column:2 / 3!important;grid-row:1 / 2!important;
-   width:100%!important;min-width:0!important;max-width:100%!important;
-   min-height:76px!important;
-   padding:2px 1px!important;
-   align-self:center!important;
+ #profile .profile-hero-main>.row{
+  display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+  gap:6px!important;min-width:0!important;width:100%!important;
  }
- #profile .profile-hero > #profileXpPanel{
-   grid-area:1 / 3 / 2 / 4!important;
-   grid-column:3 / 4!important;grid-row:1 / 2!important;
-   width:100%!important;min-width:0!important;max-width:100%!important;
-   min-height:76px!important;
-   padding:7px 4px!important;
-   align-self:center!important;
+ #profile .profile-hero-main>.row>div:last-child{flex:1 1 0!important;min-width:0!important}
+ #profile .profile-avatar-wrap{flex:0 0 51px!important;width:51px!important;min-width:51px!important}
+ #profile .profile-hero #profileAvatar{width:51px!important;height:51px!important;flex:0 0 51px!important}
+ #profile .profile-name-line{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:3px!important;min-width:0!important}
+ #profile .profile-hero #profileDisplayName{
+  font-size:clamp(.68rem,2.65vw,.94rem)!important;line-height:1.13!important;
+  overflow-wrap:normal!important;word-break:normal!important;
  }
- #profile .profile-hero > .profile-beta-demo:not([hidden]),
- #profile .profile-hero > .profile-hero-stats:not([hidden]){
-   grid-column:1 / -1!important;grid-row:auto!important;
+ #profile .profile-name-pencil{width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;font-size:11px!important}
+ #profile .profile-name-line .profile-founder-identity-tag{font-size:.52rem!important;padding:2px 5px!important;margin-left:0!important;gap:2px!important}
+ #profile .profile-name-line .profile-founder-identity-tag span{font-size:.66rem!important}
+ #profile .profile-hero-main #profileEmail{font-size:.53rem!important;line-height:1.15!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+ #profile .profile-student-status{gap:2px!important;margin-top:2px!important}
+ #profile .profile-active-pill{font-size:.55rem!important;padding:2px 5px!important}
+ #profile .profile-member-since{font-size:.49rem!important;line-height:1.16!important}
+ #profile .profile-hero>.profile-hero-seals{
+  grid-area:1 / 2 / 2 / 3!important;grid-column:2/3!important;grid-row:1/2!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  min-height:84px!important;padding:4px 1px!important;align-self:center!important;
+  border-top:0!important;border-bottom:0!important;
+  border-left:1px solid #a669d555!important;border-right:1px solid #a669d555!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  gap:4px!important;
  }
- #profile .profile-hero > [hidden]{display:none!important}
- #profile .profile-hero-seal-icons{flex-wrap:wrap!important}
- #profile .profile-hero-main .row{gap:3px!important}
- #profile .profile-hero-main #profileDisplayName{font-size:clamp(.64rem,2.25vw,.9rem)!important}
- #profile .profile-name-line .profile-founder-identity-tag{font-size:.46rem!important}
- #profile .profile-hero-main #profileEmail{font-size:.46rem!important;overflow-wrap:anywhere!important}
- #profile .profile-active-pill{font-size:.48rem!important}
- #profile .profile-member-since{font-size:.44rem!important}
- #profile .profile-level-head{flex-wrap:wrap!important;gap:2px!important}
- #profile #profileXpPanel .profile-level-head small{font-size:.46rem!important}
- #profile #profileXpPanel .profile-level-title{font-size:.49rem!important}
- #profile #profileXpPanel .profile-xp-track{height:7px!important}
+ #profile .profile-hero-seal-icons{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;align-items:center!important;gap:3px!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:22px!important;height:25px!important;flex:0 0 22px!important;font-size:.82rem!important}
+ #profile .profile-hero-seals h3{order:2!important;margin:0!important;font-size:.56rem!important;line-height:1.1!important;text-align:center!important}
+ #profile .profile-hero-seal-icons{order:1!important}
+ #profile .profile-hero-seals small{display:none!important}
+ #profile .profile-hero>#profileXpPanel{
+  grid-area:1 / 3 / 2 / 4!important;grid-column:3/4!important;grid-row:1/2!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  min-height:84px!important;padding:9px 6px!important;margin:0!important;
+  align-self:center!important;justify-self:stretch!important;position:relative!important;inset:auto!important;
+ }
+ #profile #profileXpPanel .profile-level-head{
+  display:flex!important;flex-wrap:wrap!important;justify-content:space-between!important;align-items:center!important;
+  gap:3px!important;
+ }
+ #profile #profileXpPanel .profile-level-head strong{font-size:.62rem!important;white-space:nowrap!important}
+ #profile #profileXpPanel .profile-level-head small{font-size:.52rem!important;white-space:nowrap!important;text-align:left!important}
+ #profile #profileXpPanel .profile-xp-track{height:9px!important;margin:6px 0!important}
+ #profile #profileXpPanel .profile-level-title{font-size:.57rem!important;line-height:1.15!important;max-width:100%!important}
+ #profile #profileXpPanel::after{width:67px!important;height:48px!important;right:0!important;bottom:-5px!important;opacity:.55!important}
+ #profile .profile-hero>.profile-beta-demo:not([hidden]),#profile .profile-hero>.profile-hero-stats:not([hidden]){grid-column:1/-1!important;grid-row:auto!important}
+ #profile .profile-hero>[hidden]{display:none!important}
 }
 @media screen and (max-width:380px){
- #profile .profile-hero{
-   grid-template-columns:minmax(0,1.55fr) minmax(0,.72fr) minmax(0,1.1fr)!important;
-   column-gap:2px!important;padding:8px 5px!important;
- }
- #profile .profile-hero #profileAvatar{width:42px!important;height:42px!important;flex-basis:42px!important}
- #profile .profile-avatar-wrap{flex-basis:42px!important}
- #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:18px!important;height:21px!important;flex-basis:18px!important}
+ #profile .profile-hero{grid-template-columns:minmax(0,1.8fr) minmax(0,.8fr) minmax(0,1.2fr)!important;gap:3px!important;padding:9px 6px!important}
+ #profile .profile-avatar-wrap{flex-basis:43px!important;width:43px!important;min-width:43px!important}
+ #profile .profile-hero #profileAvatar{width:43px!important;height:43px!important;flex-basis:43px!important}
+ #profile .profile-hero #profileDisplayName{font-size:.67rem!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:19px!important;height:22px!important;flex-basis:19px!important}
+ #profile #profileXpPanel .profile-level-head small{font-size:.46rem!important}
 }
 </style>
 </body>
