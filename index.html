@@ -3707,5 +3707,25 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchie
  observer.observe(document.documentElement,{attributes:true,attributeFilter:['class']});
 })();
 </script>
+<style id="profile-desktop-phone-gap-direct-v7590">
+/* Correção direta do espaço reservado indevidamente após a barra. */
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ height:auto!important;min-height:0!important;max-height:none!important;
+ padding-bottom:0!important;margin-bottom:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ height:auto!important;min-height:0!important;max-height:none!important;
+ flex:0 0 auto!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > p.muted{
+ margin-top:-125px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > p.muted{
+ margin-top:-125px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel{
+ overflow:visible!important;
+}
+</style>
 </body>
 </html>
