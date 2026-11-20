@@ -1631,7 +1631,8 @@ html,body{max-width:100%;overflow-x:clip}
 
 
 /* EXPERIMENTO ANDROID — leitura confortável dos painéis inferiores. */
-@media screen and (max-width:480px){
+/* Até 700px: acompanha o breakpoint da grade de medalhas no Android. */
+@media screen and (max-width:700px){
  #profile .profile-bottom-panels{
   grid-template-columns:minmax(0,1fr)!important;
   gap:12px!important;
