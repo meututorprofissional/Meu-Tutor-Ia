@@ -222,6 +222,16 @@
         nameLine.appendChild(founderTag);
       }
       founderTag.hidden = !visible.founder;
+      // Agrupar as identidades oficiais em uma linha compacta abaixo do nome.
+      let identityBadges = el('profileIdentityBadges');
+      if (!identityBadges) {
+        identityBadges = document.createElement('div');
+        identityBadges.id = 'profileIdentityBadges';
+        identityBadges.className = 'profile-identity-badges';
+        nameLine.insertAdjacentElement('afterend', identityBadges);
+      }
+      identityBadges.appendChild(founderTag);
+      identityBadges.appendChild(admTag);
     }
     for (const [type, enabled] of Object.entries(owned)) {
       const suffix = type === 'founder' ? 'Founder' : type === 'admin' ? 'Admin' : type === 'beta' ? 'Beta' : 'Vip';
