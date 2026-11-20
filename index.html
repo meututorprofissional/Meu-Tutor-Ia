@@ -3309,5 +3309,101 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
  }
 }
 </style>
+<style id="profile-achievements-final-mobile-v7578">
+/* v75.78 — regra FINAL depois de todos os estilos: vitrine lado a lado como protótipo.
+   A v75.77 ao final do body sobrescrevia os ajustes anteriores no head. */
+@media screen and (max-width:700px){
+ #profile .profile-achievement-showcase{
+  display:grid!important;flex-direction:unset!important;
+  grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;
+  align-items:stretch!important;gap:5px!important;width:100%!important;min-width:0!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+  width:auto!important;max-width:100%!important;min-width:0!important;
+  margin:0!important;padding:8px 5px!important;overflow:hidden!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone{
+  width:auto!important;max-width:100%!important;min-width:0!important;
+  margin:0!important;align-self:stretch!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{
+  height:100%!important;min-height:0!important;padding:8px 5px!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  gap:5px!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievements-heading{
+  display:block!important;margin:0 0 5px!important;padding:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievements-heading h2{
+  font-size:clamp(.68rem,2.35vw,.9rem)!important;line-height:1.15!important;margin:0 0 3px!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievements-heading p{
+  font-size:clamp(.47rem,1.55vw,.63rem)!important;line-height:1.2!important;margin:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress{
+  width:100%!important;max-width:100%!important;min-width:0!important;margin:5px 0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{
+  font-size:clamp(.47rem,1.5vw,.6rem)!important;line-height:1.2!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid{
+  display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  gap:1px!important;overflow:visible!important;width:100%!important;
+  margin:6px 0 0!important;padding:0!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  flex:initial!important;width:auto!important;min-width:0!important;max-width:none!important;
+  padding:2px 0!important;gap:2px!important;border:0!important;background:transparent!important;
+  box-shadow:none!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-emoji{
+  width:clamp(18px,5.1vw,35px)!important;height:clamp(23px,6vw,40px)!important;
+  min-width:0!important;font-size:clamp(.85rem,2.9vw,1.2rem)!important;margin:0 auto 2px!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item strong{
+  font-size:clamp(.34rem,1.06vw,.47rem)!important;line-height:1.12!important;
+  min-height:25px!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item small{
+  font-size:clamp(.32rem,.98vw,.43rem)!important;line-height:1.1!important;
+  min-height:22px!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item button{
+  width:100%!important;max-width:100%!important;min-height:25px!important;
+  font-size:clamp(.32rem,.98vw,.43rem)!important;line-height:1.1!important;
+  padding:2px 0!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-section-heading{
+  font-size:clamp(.61rem,2vw,.8rem)!important;line-height:1.15!important;margin:0 0 4px!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-content{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  gap:5px!important;min-width:0!important;width:100%!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-medal{
+  width:100%!important;padding:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-medal .emblem{
+  width:clamp(44px,11vw,70px)!important;height:clamp(50px,12vw,76px)!important;
+  font-size:1.8rem!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-medal strong{
+  font-size:.55rem!important;line-height:1.1!important;padding:3px 2px!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-information{
+  border:0!important;padding:0!important;gap:4px!important;min-width:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-description,
+ #profile .profile-achievement-showcase .profile-featured-standalone #profileFeaturedHint{
+  font-size:clamp(.48rem,1.6vw,.61rem)!important;line-height:1.2!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-change-button{
+  width:100%!important;min-height:28px!important;
+  font-size:clamp(.48rem,1.6vw,.6rem)!important;line-height:1.15!important;padding:6px 2px!important;
+ }
+ #profile > .profile-achievement-stats-strip{margin-top:7px!important}
+}
+</style>
 </body>
 </html>
