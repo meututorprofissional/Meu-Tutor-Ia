@@ -1787,5 +1787,23 @@ if(dates.size){set('days',dates.size);let streak=0;const now=new Date();now.setH
 }
 update();const summary=document.getElementById('profileAchievementSummary');if(summary)new MutationObserver(update).observe(summary,{childList:true,subtree:true,characterData:true});document.addEventListener('visibilitychange',()=>{if(!document.hidden)update()});document.querySelectorAll('[data-profile-jump]').forEach(b=>b.addEventListener('click',update));
 })();
-</script></body>
+</script>
+<style id="android-v75-67">
+/* Android v75.67 — teste isolado: empilhar os dois paineis inferiores. */
+@media screen and (max-width:600px){
+  #profile#profile .profile-bottom-panels{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-areas:none!important;
+  }
+  #profile#profile .profile-bottom-panels>*{
+    grid-area:auto!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    flex:none!important;
+  }
+}
+</style>
+</body>
 </html>
