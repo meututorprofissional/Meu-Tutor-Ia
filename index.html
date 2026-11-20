@@ -3671,42 +3671,52 @@ html.profile-desktop-on-phone #profile .profile-achievement-showcase > .profile-
  align-self:start!important;
 }
 </style>
-<style id="profile-desktop-phone-tight-stack-v7589">
-html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading{
+
+
+<style id="profile-phone-compact-structure-v7591">
+html.profile-desktop-on-phone #profile #profileAchievementsPanel{
  display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
- align-items:stretch!important;gap:7px!important;height:auto!important;min-height:0!important;
+ align-items:stretch!important;gap:0!important;height:auto!important;min-height:0!important;
 }
-html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > p.muted{
- margin:0!important;padding:0!important;flex:none!important;position:static!important;
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements{
+ display:flex!important;flex-direction:column!important;gap:7px!important;
+ width:100%!important;height:auto!important;min-height:0!important;
 }
-html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid{
- margin-top:0!important;align-self:stretch!important;
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > .profile-achievements-heading{
+ display:flex!important;flex-direction:column!important;gap:6px!important;
+ flex:0 0 auto!important;height:auto!important;min-height:0!important;margin:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > p.muted{
+ position:static!important;display:block!important;flex:0 0 auto!important;
+ margin:0!important;padding:0!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > #profileAchievementGrid{
+ position:static!important;display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:4px!important;flex:0 0 auto!important;margin:0!important;
+ height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote{
+ margin-top:7px!important;
 }
 </style>
 <script>
 (function(){
- function syncCompactAchievements(){
+ function arrange(){
   var panel=document.getElementById('profileAchievementsPanel');
   if(!panel)return;
   var heading=panel.querySelector('.profile-achievements-heading');
-  var progress=heading&&heading.querySelector('.profile-achievement-progress');
-  if(!heading||!progress)return;
-  var description=panel.querySelector(':scope > p.muted')||heading.querySelector(':scope > p.muted');
-  if(!description)return;
-  if(document.documentElement.classList.contains('profile-desktop-on-phone')){
-   // Colocar a descrição no mesmo fluxo da barra: elimina o vão criado pelo layout legado.
-   if(description.parentElement!==heading)heading.insertBefore(description,progress.nextSibling);
-  }else if(description.parentElement===heading){
-   panel.insertBefore(description,document.getElementById('profileAchievementGrid'));
-  }
+  var grid=panel.querySelector('#profileAchievementGrid');
+  var description=Array.from(panel.children).find(function(el){return el.matches('p.muted')});
+  if(!heading||!grid)return;
+  var compact=panel.querySelector('.profile-compact-achievements');
+  if(!compact){compact=document.createElement('div');compact.className='profile-compact-achievements';panel.insertBefore(compact,heading);}
+  if(heading.parentElement!==compact)compact.appendChild(heading);
+  if(description&&description.parentElement!==compact)compact.appendChild(description);
+  if(grid.parentElement!==compact)compact.appendChild(grid);
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',syncCompactAchievements);
- else syncCompactAchievements();
- window.addEventListener('resize',syncCompactAchievements,{passive:true});
- var observer=new MutationObserver(syncCompactAchievements);
- observer.observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange);
+ else arrange();
 })();
 </script>
-
 </body>
 </html>
