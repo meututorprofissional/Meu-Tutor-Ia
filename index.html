@@ -480,7 +480,7 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v75.76 Teste</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v75.77 Teste</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
 </div>
 <section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V75.15 — Layout do perfil inspirado na referência</strong></p><p>Nova estrutura do banner, medalhas roláveis no celular, seção de conquistas e painéis reorganizados, sem alterar os registros.</p><p><strong>V75.14 — Perfil e conquistas responsivos</strong></p><p>Hierarquia visual do cabeçalho, medalhas, próxima conquista e painéis ajustada para celular, sem alterar dados.</p><p><strong>V75.13 — Perfil premium</strong></p><p>Brilho e acabamento das medalhas, painel de nível, emblema Beta, próxima conquista e adaptação ao celular; XP e registros preservados.</p><p><strong>V75.12 — Conquistas em destaque</strong></p><p>Conquistas acima das configurações, avatar ampliado e medalhas hexagonais; registros e XP preservados.</p><p><strong>V75.11 — Perfil premium responsivo</strong></p><p>Refinamento do brilho Beta, medalhas, nível, cartões e espaçamentos, sem mudar registros nem conceder conquistas.</p><p><strong>V75.10 — Acabamento visual do perfil</strong></p><p>Realce do emblema, painel de nível, medalhas e distribuição responsiva, sem alterar o XP ou os registros.</p><p><strong>V75.9 — Refinamento do perfil</strong></p><p>Emblema Beta maior, medalhas aprimoradas e ajustes responsivos no cabeçalho.</p><p><strong>V75.8 — Cabeçalho e emblema Beta</strong></p><p>Emblema dourado de demonstração, status do estudante, data de entrada quando disponível e melhor acabamento responsivo.</p><p><strong>V75.7 — Perfil inspirado no protótipo</strong></p><p>Cabeçalho em três áreas, medalhas e painéis de evolução com layout adaptável ao celular.</p><p><strong>V75.6 — Níveis e prévia Beta</strong></p><p>XP baseado em registros locais e prévia opcional do emblema Pioneiro Beta, sem conceder conquistas reais.</p><p><strong>V75.2 — Conquistas no perfil</strong></p><p>Medalhas e metas reais de desbloqueio disponíveis no perfil, sem apagar estudos.</p><p><strong>V75.1 — Acesso ao tutor pela tela Início</strong></p><p>O Tutor de ajuda saiu do menu superior e ganhou atalhos na tela inicial, mantendo o tutorial, dúvidas e conquistas.</p><p><strong>V75.0 — Tutor de ajuda e conquistas</strong></p><p>Primeira versão do tutorial guiado, respostas preparadas para dúvidas e conquistas locais. O chat generativo de IA será desenvolvido em outra etapa.</p><p><strong>V74.5 — Navegação reforçada para Flashcards</strong></p><p>Os botões de revisão do Progresso agora usam uma navegação direta, independente de outros módulos.</p><p><strong>V74.4 — Correção dos botões de revisão</strong></p><p>Revisar agora e Praticar flashcards passam a abrir corretamente a tela de cartões, sem alterar os registros de estudo.</p><p><strong>V74.3 — Acabamento final do painel</strong></p><p>Grade de estatísticas mais equilibrada em telas grandes, melhor espaçamento e contraste dos painéis, com respeito à preferência de movimento reduzido.</p><p><strong>V74.2 — Ajustes de legibilidade e revisões</strong></p><p>Cartões em grade de três no celular, revisão imediata mais evidente e escala visual do gráfico semanal aprimorada.</p><p><strong>V74.1 — Acabamento visual do Progresso</strong></p><p>Gráfico de linha com dados reais, cartões mais legíveis, revisões por data, gráfico circular de autoavaliações e próximos passos destacados.</p><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
 <div class="layout">
@@ -3158,6 +3158,97 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
  #profile .featured-change-button{
   font-size:.57rem!important;padding:8px 3px!important;min-height:34px!important;
   overflow-wrap:break-word!important;
+ }
+}
+</style>
+<style id="profile-achievements-layout-v75-77">
+/* v75.77 Teste — Android: sete medalhas visíveis e destaque horizontal.
+   A largura reduzida do celular exige empilhar os painéis; desktop intacto. */
+@media screen and (max-width:700px){
+ #profile .profile-achievement-showcase{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:10px!important;align-items:start!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+  padding:12px 9px!important;overflow:hidden!important;
+ }
+ #profile .profile-achievements-heading{
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;
+  gap:5px 9px!important;align-items:start!important;
+ }
+ #profile .profile-achievements-heading>div:first-child{min-width:0!important}
+ #profile .profile-achievements-heading h2{
+  font-size:clamp(.98rem,4vw,1.2rem)!important;
+ }
+ #profile .profile-achievements-heading p{font-size:.68rem!important}
+ #profile .profile-achievement-progress{
+  width:min(125px,32vw)!important;align-self:start!important;
+ }
+ #profile #profileAchievementSummary{
+  text-align:right!important;font-size:.62rem!important;
+ }
+ #profile #profileAchievementGrid{
+  display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  gap:2px!important;overflow:visible!important;
+  scroll-snap-type:none!important;padding:2px 0 4px!important;
+  width:100%!important;margin:8px 0 0!important;
+ }
+ #profile .profile-achievement-item{
+  min-width:0!important;width:100%!important;min-height:144px!important;
+  padding:5px 1px!important;gap:3px!important;
+ }
+ #profile .profile-achievement-emoji{
+  width:clamp(30px,8.4vw,42px)!important;
+  height:clamp(35px,9.5vw,48px)!important;
+  min-width:0!important;font-size:clamp(1.05rem,4.6vw,1.6rem)!important;
+ }
+ #profile .profile-achievement-item strong{
+  font-size:clamp(.49rem,1.8vw,.65rem)!important;
+  min-height:34px!important;line-height:1.12!important;
+  overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-item small{
+  font-size:clamp(.43rem,1.55vw,.55rem)!important;
+  min-height:25px!important;line-height:1.1!important;
+  overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-item button{
+  font-size:clamp(.43rem,1.5vw,.53rem)!important;
+  min-height:34px!important;padding:3px 1px!important;
+  border-radius:7px!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-featured-standalone .profile-hero-badge{
+  padding:10px 12px!important;height:auto!important;
+ }
+ #profile .featured-section-heading{
+  font-size:clamp(.87rem,3.6vw,1.1rem)!important;
+  margin-bottom:7px!important;
+ }
+ #profile .featured-content{
+  display:grid!important;grid-template-columns:minmax(95px,.85fr) minmax(0,1.4fr)!important;
+  align-items:center!important;gap:12px!important;
+ }
+ #profile .featured-medal .emblem{
+  width:clamp(72px,21vw,95px)!important;
+  height:clamp(80px,23vw,105px)!important;
+  font-size:clamp(2.3rem,7vw,3.1rem)!important;
+ }
+ #profile .featured-medal strong{
+  font-size:clamp(.67rem,2.3vw,.82rem)!important;
+ }
+ #profile .featured-information{
+  border-left:1px solid rgba(199,161,248,.6)!important;
+  padding-left:10px!important;gap:8px!important;
+ }
+ #profile .featured-information .featured-description{
+  font-size:clamp(.69rem,2.4vw,.82rem)!important;line-height:1.3!important;
+ }
+ #profile .featured-information #profileFeaturedHint{
+  font-size:clamp(.59rem,2vw,.7rem)!important;
+ }
+ #profile .featured-change-button{
+  font-size:clamp(.68rem,2.2vw,.78rem)!important;
+  min-height:42px!important;
  }
 }
 </style>
