@@ -3774,5 +3774,16 @@ html.profile-desktop-on-phone #profile>.profile-premium-tabs{
 }
 html.profile-desktop-on-phone #profile>.profile-premium-tabs::before{display:none!important}
 html.profile-desktop-on-phone #profile .profile-hero{margin-bottom:0!important}
+</style><style id="profile-tabs-outside-hero-v7594">
+/* Abas logo ABAIXO do cartão, nunca sobrepostas ou dentro dele. */
+html.profile-desktop-on-phone #profile>.profile-premium-tabs{
+ position:relative!important;z-index:1!important;
+ margin:12px 0 12px!important;padding:0!important;
+ transform:none!important;top:auto!important;bottom:auto!important;
+}
+html.profile-desktop-on-phone #profile>.profile-premium-tabs::before{display:none!important}
+html.profile-desktop-on-phone #profile>.profile-hero{
+ margin-bottom:0!important;overflow:visible!important;
+}
 </style></body>
 </html>
