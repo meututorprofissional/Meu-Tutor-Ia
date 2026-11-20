@@ -3718,5 +3718,53 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achi
  else arrange();
 })();
 </script>
+<style id="profile-desktop-phone-hero-reference-v7592">
+/* Somente Chrome Android com "site para computador": hero alinhado à referência.
+   Não cria selos, conquistas ou privilégios fictícios. */
+html.profile-desktop-on-phone #profile .profile-hero{
+ align-items:center!important;align-content:center!important;
+ min-height:0!important;height:auto!important;
+ padding:13px 12px!important;gap:9px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero>.profile-hero-main{
+ align-self:center!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-main>.row{
+ align-items:center!important;gap:9px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero .profile-avatar-wrap{
+ flex:0 0 72px!important;width:72px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero #profileAvatar{
+ width:72px!important;height:72px!important;flex:0 0 72px!important;
+ border:2px solid #c58aff!important;
+ box-shadow:0 0 0 2px #7139d5,0 0 14px #b34cff99!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-main #profileDisplayName{
+ font-size:clamp(.86rem,2.2vw,1.2rem)!important;font-weight:800!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-main #profileEmail{
+ font-size:clamp(.48rem,1.25vw,.7rem)!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero>.profile-hero-seals{
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+ align-items:center!important;gap:5px!important;
+ min-height:0!important;height:auto!important;padding:5px 8px!important;
+ border-left:1px solid #c08aee55!important;border-right:1px solid #c08aee55!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-seals h3{
+ order:0!important;font-size:clamp(.58rem,1.5vw,.85rem)!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-seals small{
+ display:block!important;text-align:center!important;font-size:.48rem!important;
+ opacity:.75!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-seal-icons{
+ justify-content:center!important;gap:5px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero>.profile-level-card{
+ align-self:center!important;min-height:88px!important;
+}
+</style>
 </body>
 </html>
