@@ -1630,6 +1630,28 @@ html,body{max-width:100%;overflow-x:clip}
 }
 
 
+/* EXPERIMENTO ANDROID — leitura confortável dos painéis inferiores. */
+@media screen and (max-width:480px){
+ #profile .profile-bottom-panels{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:12px!important;
+ }
+ #profile .profile-bottom-panels .panel{
+  min-width:0;
+  min-height:0!important;
+  padding:16px!important;
+ }
+ #profile .profile-bottom-panels h3{
+  font-size:1rem!important;
+  line-height:1.35!important;
+ }
+ #profile .profile-bottom-panels p,
+ #profile .profile-bottom-panels .profile-tip{
+  font-size:.875rem!important;
+  line-height:1.45!important;
+ }
+}
+
 /* EXPERIMENTO ANDROID — 3 medalhas por linha. Somente branch de desenvolvimento. */
 @media screen and (max-width:700px){
  #profile .profile-achievement-showcase .profile-achievement-grid,
