@@ -2570,5 +2570,109 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
  #profile #profileAchievementGrid .profile-achievement-item{flex-basis:80px!important;width:80px!important;min-width:80px!important;max-width:80px!important}
 }
 </style>
+
+<style id="profile-android-ref-v75-69">
+/* v75.69 Teste — aproximacao visual da referencia, somente CSS mobile.
+   Sem alterar JS, dados, backend, versao oficial ou desktop. */
+@media screen and (max-width:700px){
+ #profile .profile-page-heading{margin:0 0 5px!important}
+ #profile .profile-hero{
+   grid-template-columns:minmax(0,1fr) minmax(0,112px)!important;
+   grid-template-areas:"identity level" "seals level"!important;
+   gap:3px 7px!important;padding:9px 8px!important;
+   background:radial-gradient(circle at 28% 38%,#5220a5 0,transparent 52%),linear-gradient(115deg,#21063e,#19072f)!important;
+ }
+ #profile .profile-hero-main{min-width:0!important}
+ #profile .profile-hero-main .row{gap:5px!important;align-items:center!important}
+ #profile .profile-hero #profileAvatar{width:52px!important;height:52px!important;flex:0 0 52px!important}
+ #profile .profile-hero-main #profileDisplayName{font-size:clamp(.75rem,2.85vw,1rem)!important}
+ #profile .profile-hero-main #profileEmail{font-size:.55rem!important;line-height:1.1!important}
+ #profile .profile-hero-seals{gap:3px!important;padding:2px 0!important}
+ #profile .profile-hero-seals h3{font-size:.58rem!important}
+ #profile .profile-hero-seals .profile-hero-seal-icons{gap:3px!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:24px!important;height:27px!important;flex:0 0 24px!important}
+ #profile .profile-level-card{padding:6px 4px!important;gap:3px!important;align-self:center!important}
+ #profile .profile-level-head{gap:2px!important}
+ #profile .profile-level-head strong{font-size:.58rem!important}
+ #profile .profile-level-head small{font-size:.5rem!important}
+ #profile .profile-level-title{font-size:.52rem!important}
+ #profile > .profile-premium-tabs{margin:6px 0!important;gap:4px!important}
+ #profile > .profile-premium-tabs button{
+   min-height:38px!important;font-size:clamp(.52rem,1.9vw,.7rem)!important;
+   background:linear-gradient(180deg,#5425a7,#3a1378)!important;
+   border:1px solid #a24fe4!important;
+   box-shadow:0 0 5px #8f3bea88,inset 0 1px 2px #c18cf077!important;
+ }
+ #profile .profile-achievement-showcase{
+   grid-template-columns:minmax(0,1.8fr) minmax(0,1fr)!important;
+   gap:5px!important;align-items:start!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+   padding:8px 5px!important;
+   background:linear-gradient(155deg,#2a0b56,#16072e)!important;
+ }
+ #profile .profile-achievements-heading h2{font-size:.75rem!important}
+ #profile .profile-achievements-heading p{font-size:.55rem!important}
+ #profile #profileAchievementSummary{font-size:.56rem!important}
+ #profile #profileAchievementGrid{
+   gap:2px!important;padding:3px 0 6px!important;
+   scroll-snap-type:x proximity!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item{
+   flex:0 0 64px!important;width:64px!important;min-width:64px!important;max-width:64px!important;
+   padding:3px 1px!important;border-radius:8px!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-emoji{
+   width:46px!important;height:49px!important;font-size:1.5rem!important;margin-bottom:2px!important;
+   background:linear-gradient(145deg,#5823ae,#22084b)!important;
+   filter:drop-shadow(0 0 4px #a343ff88)!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item.is-locked .profile-achievement-emoji{
+   background:linear-gradient(145deg,#6e6b79,#292431)!important;
+   filter:grayscale(1)!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item strong{
+   font-size:.53rem!important;line-height:1.15!important;min-height:27px!important;
+   white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item small{
+   font-size:.46rem!important;line-height:1.12!important;min-height:22px!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item button{
+   min-height:29px!important;font-size:.47rem!important;line-height:1.12!important;
+   border:1px solid #8d47da!important;
+ }
+ #profile .profile-featured-standalone{align-self:start!important}
+ #profile .profile-featured-standalone .profile-hero-badge{
+   height:auto!important;min-height:0!important;
+   padding:8px 5px!important;
+   background:linear-gradient(145deg,#2e0b5a,#17072f)!important;
+ }
+ #profile .profile-featured-standalone .featured-section-heading{font-size:.67rem!important;margin-bottom:5px!important}
+ #profile .profile-featured-standalone .featured-medal .emblem{
+   width:65px!important;height:69px!important;font-size:2rem!important;
+   filter:drop-shadow(0 0 6px #f6c74a88)!important;
+ }
+ #profile .profile-featured-standalone .featured-medal strong{
+   font-size:.62rem!important;background:linear-gradient(120deg,#ffe5a5,#edbb59)!important;
+   color:#42205d!important;padding:4px 3px!important;border-radius:8px!important;
+ }
+ #profile .profile-featured-standalone .featured-information{padding:4px 0!important}
+ #profile .profile-featured-standalone .featured-description,
+ #profile .profile-featured-standalone #profileFeaturedHint{font-size:.52rem!important;line-height:1.2!important}
+ #profile .profile-featured-standalone .featured-change-button{min-height:30px!important}
+ #profile > .profile-achievement-stats-strip{
+   background:linear-gradient(110deg,#2d0b56,#16062d)!important;
+   border:1px solid #8142c7!important;
+   box-shadow:0 0 8px #7028ad55!important;
+   margin-top:7px!important;
+ }
+}
+@media screen and (max-width:360px){
+ #profile .profile-hero{grid-template-columns:minmax(0,1fr) minmax(0,98px)!important}
+ #profile .profile-achievement-showcase{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)!important}
+ #profile #profileAchievementGrid .profile-achievement-item{flex-basis:58px!important;width:58px!important;min-width:58px!important;max-width:58px!important}
+}
+</style>
 </body>
 </html>
