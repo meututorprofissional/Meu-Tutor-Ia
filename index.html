@@ -3461,5 +3461,60 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
 }
 /* Não alterar a borda selecionada nem os ícones dos outros selos. */
 </style>
+<style id="profile-desktop-on-phone-v7583">
+/* Chrome Android em "Site para computador": viewport largo, tela física estreita.
+   Não afeta a visualização móvel normal nem notebooks comuns. */
+html.profile-desktop-on-phone #profile .profile-hero{
+ display:grid!important;grid-template-columns:minmax(0,1.5fr) minmax(0,.95fr) minmax(0,.95fr)!important;
+ gap:12px!important;align-items:center!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-main{
+ grid-column:1!important;grid-row:1!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-seals{
+ grid-column:2!important;grid-row:1!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-level,
+html.profile-desktop-on-phone #profile .profile-level-panel{
+ grid-column:3!important;grid-row:1!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ display:grid!important;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;
+ gap:10px!important;align-items:stretch!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementsPanel,
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-featured-standalone{
+ width:auto!important;min-width:0!important;max-width:100%!important;margin:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:3px!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item{
+ min-width:0!important;max-width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-featured-standalone .featured-content{
+ display:flex!important;flex-direction:column!important;gap:8px!important;align-items:center!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-featured-standalone .featured-information{
+ width:100%!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-stats-strip{margin-top:10px!important}
+</style>
+<script id="profile-desktop-on-phone-detection-v7583">
+(function(){
+ function update(){
+   // Chrome Android desktop mode uses a ~980px layout viewport while the physical
+   // screen remains narrow. Distinguish it from a genuine desktop via screen width.
+   var mobileDevice=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+   var narrowScreen=Math.min(screen.width,screen.height)<700;
+   var desktopViewport=document.documentElement.clientWidth>=701;
+   document.documentElement.classList.toggle('profile-desktop-on-phone',
+     mobileDevice && narrowScreen && desktopViewport);
+ }
+ update();
+ window.addEventListener('resize',update,{passive:true});
+})();
+</script>
 </body>
 </html>
