@@ -3453,5 +3453,13 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
 #profile #profileIdentityBadges #profileFounderIdentityTag[hidden],
 #profile #profileIdentityBadges #profileAdminAuthorityTag[hidden]{display:none!important}
 </style>
+<style id="profile-hide-orphan-ornaments-v7582">
+/* Ornamentos ❧ pertencem exclusivamente ao selo Fundador visível. */
+#profile .profile-hero .profile-avatar-wrap:not(.has-official-founder)::before,
+#profile .profile-hero .profile-avatar-wrap:not(.has-official-founder)::after{
+ content:none!important;display:none!important;animation:none!important;
+}
+/* Não alterar a borda selecionada nem os ícones dos outros selos. */
+</style>
 </body>
 </html>
