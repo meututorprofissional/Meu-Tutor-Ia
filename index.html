@@ -1739,7 +1739,7 @@ html,body{max-width:100%;overflow-x:clip}
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="profile.js?v=75.46"></script>
+<script src="profile.js?v=75.79"></script>
 <script src="settings.js?v=2"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=5"></script>
@@ -3403,6 +3403,34 @@ update();const summary=document.getElementById('profileAchievementSummary');if(s
   font-size:clamp(.48rem,1.6vw,.6rem)!important;line-height:1.15!important;padding:6px 2px!important;
  }
  #profile > .profile-achievement-stats-strip{margin-top:7px!important}
+}
+</style>
+<style id="profile-identity-badges-v7579">
+/* Fundador e ADM pequenos, alinhados lado a lado, sem alterar concessão de selos. */
+#profile .profile-identity-badges{
+ display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+ align-items:center!important;justify-content:flex-start!important;
+ gap:5px!important;margin:4px 0!important;min-width:0!important;
+}
+#profile .profile-identity-badges .profile-founder-identity-tag,
+#profile .profile-identity-badges .profile-admin-authority-tag{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ gap:3px!important;width:auto!important;max-width:100%!important;
+ min-height:22px!important;margin:0!important;padding:3px 7px!important;
+ font-size:.64rem!important;line-height:1.15!important;white-space:nowrap!important;
+ border-radius:999px!important;box-sizing:border-box!important;
+}
+#profile .profile-identity-badges .profile-founder-identity-tag span,
+#profile .profile-identity-badges .profile-admin-authority-tag span{
+ font-size:.75rem!important;line-height:1!important;
+}
+#profile .profile-identity-badges [hidden]{display:none!important}
+@media screen and (max-width:700px){
+ #profile .profile-identity-badges{gap:4px!important;margin:3px 0!important}
+ #profile .profile-identity-badges .profile-founder-identity-tag,
+ #profile .profile-identity-badges .profile-admin-authority-tag{
+  font-size:.56rem!important;padding:3px 6px!important;min-height:20px!important;
+ }
 }
 </style>
 </body>
