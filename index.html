@@ -3599,5 +3599,47 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achi
  margin:0!important;
 }
 </style>
+<style id="profile-desktop-phone-compact-v7587">
+/* Corrige o vão entre progresso e medalhas sem alterar cores nem outras telas.
+   Grid explícito impede distribuição vertical por regras legadas. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > #profileAchievementsPanel{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ grid-template-rows:repeat(4,max-content)!important;
+ align-content:start!important;
+ justify-content:stretch!important;
+ align-items:start!important;
+ row-gap:9px!important;
+ column-gap:0!important;
+ height:max-content!important;
+ min-height:0!important;
+ max-height:none!important;
+ padding:12px 10px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > p.muted,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote{
+ position:static!important;
+ display:block;
+ grid-column:1!important;
+ grid-row:auto!important;
+ align-self:start!important;
+ justify-self:stretch!important;
+ margin:0!important;
+ margin-top:0!important;
+ margin-bottom:0!important;
+ min-height:0!important;
+ height:auto!important;
+ transform:none!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading{
+ display:flex!important;flex-direction:column!important;gap:7px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:4px!important;
+}
+</style>
 </body>
 </html>
