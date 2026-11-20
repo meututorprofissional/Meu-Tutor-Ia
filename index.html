@@ -3641,5 +3641,35 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchie
  gap:4px!important;
 }
 </style>
+<style id="profile-desktop-phone-no-gap-v7588">
+/* Evita linhas implícitas e regras de posicionamento antigas no cartão. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > #profileAchievementsPanel{
+ display:flex!important;flex-direction:column!important;
+ justify-content:flex-start!important;align-items:stretch!important;
+ align-content:flex-start!important;gap:8px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > p.muted,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote{
+ position:static!important;top:auto!important;bottom:auto!important;
+ flex:0 0 auto!important;order:0!important;
+ align-self:stretch!important;min-height:0!important;
+ height:auto!important;max-height:none!important;
+ margin:0!important;padding-top:0!important;padding-bottom:0!important;
+ transform:none!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:4px!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ align-items:start!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > .profile-featured-standalone{
+ align-self:start!important;
+}
+</style>
 </body>
 </html>
