@@ -3671,5 +3671,41 @@ html.profile-desktop-on-phone #profile .profile-achievement-showcase > .profile-
  align-self:start!important;
 }
 </style>
+<style id="profile-desktop-phone-tight-stack-v7589">
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading{
+ display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ align-items:stretch!important;gap:7px!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > p.muted{
+ margin:0!important;padding:0!important;flex:none!important;position:static!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid{
+ margin-top:0!important;align-self:stretch!important;
+}
+</style>
+<script>
+(function(){
+ function syncCompactAchievements(){
+  var panel=document.getElementById('profileAchievementsPanel');
+  if(!panel)return;
+  var heading=panel.querySelector('.profile-achievements-heading');
+  var progress=heading&&heading.querySelector('.profile-achievement-progress');
+  if(!heading||!progress)return;
+  var description=panel.querySelector(':scope > p.muted')||heading.querySelector(':scope > p.muted');
+  if(!description)return;
+  if(document.documentElement.classList.contains('profile-desktop-on-phone')){
+   // Colocar a descrição no mesmo fluxo da barra: elimina o vão criado pelo layout legado.
+   if(description.parentElement!==heading)heading.insertBefore(description,progress.nextSibling);
+  }else if(description.parentElement===heading){
+   panel.insertBefore(description,document.getElementById('profileAchievementGrid'));
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',syncCompactAchievements);
+ else syncCompactAchievements();
+ window.addEventListener('resize',syncCompactAchievements,{passive:true});
+ var observer=new MutationObserver(syncCompactAchievements);
+ observer.observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+})();
+</script>
 </body>
 </html>
