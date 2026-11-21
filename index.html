@@ -1106,7 +1106,7 @@ html,body{max-width:100%;overflow-x:clip}
 #profile > .profile-premium-tabs button{min-width:0;white-space:normal;overflow-wrap:normal}
 @media(max-width:650px){#profile > .profile-premium-tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin:22px 0 18px!important;gap:9px}}
 </style>
-<nav class="profile-premium-tabs" aria-label="Seções do meu perfil"><button type="button" data-profile-jump="profileAchievementsPanel">🏆 Minhas conquistas</button><button type="button" data-profile-jump="profileSpecialSealFounder">👑 Meus selos</button><button type="button" data-profile-jump="profileXpPanel">▥ Minha evolução</button><button type="button" data-profile-jump="profileName">👤 Meu perfil</button></nav><div class="profile-achievement-showcase"><div class="panel" id="profileAchievementsPanel"><div class="profile-achievements-heading"><div><h2>🏆 Minhas conquistas</h2><p class="muted">Conquistas que você desbloqueia estudando e usando o aplicativo.</p></div><div class="profile-achievement-progress" aria-label="Progresso das conquistas"><div id="profileAchievementSummary" class="profile-achievement-progress-label" aria-live="polite"></div><div class="profile-achievement-progress-track" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><div class="profile-achievement-progress-fill"></div></div></div></div><p class="muted">Medalhas calculadas com seus registros de estudo disponíveis neste navegador. Conquistas bloqueadas mostram o que falta para desbloquear.</p><div id="profileAchievementGrid" class="profile-achievement-grid" aria-live="polite"></div><div class="profile-achievement-footnote"><p class="muted" style="font-size:.85rem">O selo Pioneiro Beta será disponibilizado apenas após a identificação dos participantes elegíveis. As medalhas ainda não são um certificado de aprendizagem.</p></div></div>
+<nav class="profile-premium-tabs" aria-label="Seções do meu perfil"><button type="button" data-profile-jump="profileAchievementsPanel">🏆 Minhas conquistas</button><button type="button" data-profile-jump="profileSpecialSealFounder">👑 Meus selos</button><button type="button" data-profile-jump="profileXpPanel">▥ Minha evolução</button><button type="button" data-profile-jump="profileName">👤 Meu perfil</button></nav><div class="profile-achievement-showcase"><div class="panel" id="profileAchievementsPanel"><div class="profile-achievements-heading"><div><h2>🏆 Minhas conquistas</h2><p class="muted">Conquistas que você desbloqueia estudando e usando o aplicativo.</p></div><div class="profile-achievement-progress" aria-label="Progresso das conquistas"><div id="profileAchievementSummary" class="profile-achievement-progress-label" aria-live="polite"></div><div class="profile-achievement-progress-track" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><div class="profile-achievement-progress-fill"></div></div></div></div><div id="profileAchievementGrid" class="profile-achievement-grid" aria-live="polite"></div><div class="profile-achievement-footnote"><p class="muted" style="font-size:.85rem">O selo Pioneiro Beta será disponibilizado apenas após a identificação dos participantes elegíveis. As medalhas ainda não são um certificado de aprendizagem.</p></div></div>
 <div class="profile-featured-standalone" aria-label="Conquista em destaque"><div class="profile-hero-badge"><h3 class="featured-section-heading">⭐ Conquista em destaque</h3><div class="featured-content"><div class="featured-medal"><span id="profileFeaturedEmblem" class="emblem">🏆</span><strong id="profileFeaturedTitle">Sua conquista em destaque</strong></div><div class="featured-information"><p class="featured-description">Essa conquista é exibida no topo do seu perfil e também em listas do app.</p><p id="profileFeaturedHint" class="muted">Escolha uma medalha conquistada</p><button type="button" class="featured-change-button" id="profileFeaturedChange">⚙️ Alterar destaque</button></div></div></div></div>
 </div>
 <div class="profile-achievement-stats-strip" id="profileAchievementStatsStrip" aria-label="Estatísticas dos estudos">
@@ -4060,6 +4060,26 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
 @media(max-width:600px){
  #profile #profileAchievementsPanel .profile-achievements-heading{
   grid-template-columns:minmax(0,1fr) minmax(110px,34%)!important;
+ }
+}
+</style><style id="profile-achievement-progress-compact-v7579">
+/* Progresso compacto alinhado à direita, sem modificar cores ou dados. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ grid-template-columns:minmax(0,1fr) minmax(135px,29%)!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ width:100%!important;max-width:175px!important;justify-self:end!important;
+ align-items:flex-end!important;
+}
+#profile #profileAchievementsPanel #profileAchievementSummary{
+ width:100%!important;text-align:right!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-track{
+ width:100%!important;max-width:175px!important;align-self:flex-end!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  grid-template-columns:minmax(0,1fr) minmax(110px,30%)!important;
  }
 }
 </style></body>
