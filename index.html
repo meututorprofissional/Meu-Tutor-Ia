@@ -4383,5 +4383,23 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
  body #profile .profile-achievement-stats-strip small{color:#6b7280!important}
 }
 </style>
+
+<style id="profile-mobile-contrast-fix-v1">
+/* Contraste em cartões claros do perfil Android; sem alterar layout ou funcionalidades. */
+@media screen and (max-width:700px){
+ body #profile #profileAchievementsPanel .profile-achievement-progress-label,
+ body #profile #profileAchievementsPanel .profile-achievement-progress-label *,
+ body #profile .profile-achievement-showcase .profile-achievement-progress-label,
+ body #profile .profile-achievement-showcase .profile-achievement-progress-label *{color:#30365f!important;text-shadow:none!important}
+ body #profile .profile-achievement-stats-strip strong,
+ body #profile .profile-achievement-stats-strip span,
+ body #profile .profile-achievement-stats-strip b{color:#292d50!important;text-shadow:none!important}
+ body #profile .profile-achievement-stats-strip small{color:#5f657b!important}
+ body #profile .profile-featured-standalone .featured-description,
+ body #profile .profile-featured-standalone #profileFeaturedHint,
+ body #profile .profile-featured-standalone .featured-information,
+ body #profile .profile-featured-standalone .featured-information p{color:#535b75!important;text-shadow:none!important}
+}
+</style>
 </body>
 </html>
