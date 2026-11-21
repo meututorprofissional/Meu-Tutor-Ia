@@ -135,3 +135,41 @@ Saida:
 - Nao conceder acesso a `main`, Cloudflare de producao ou Supabase de producao.
 
 **Estado:** especificacao pronta; integracao Claude por API ainda nao implementada nem ativada.
+
+
+## Fase 4 — Operacao gratuita e manual (aprovada)
+
+**Decisao do fundador:** usar apenas colaboracao manual gratuita, sem compra de creditos Anthropic, sem API paga e sem exigir cartao. As fases de API descritas acima sao apenas possibilidades futuras, nao autorizadas para ativacao.
+
+### Passo a passo por tarefa
+1. **Fundador** abre ou escolhe uma issue, descreve a mudanca e envia as referencias. Para a tarefa atual de cores do perfil Android, usar a Issue #1, observando que suas especificacoes historicas podem estar desatualizadas.
+2. **ChatGPT** registra na issue o objetivo atualizado, branch, commit SHA e os arquivos relevantes; investiga o codigo quando autorizado.
+3. **Fundador** encaminha ao **Claude** o link da issue e, se necessario, ZIP/arquivos da branch sem credenciais, junto com o SHA e instrucoes de revisao. O Claude responde no chat com diagnostico, evidencias e patch sugerido; nao presumir acesso direto ao GitHub.
+4. **Fundador** copia o parecer do Claude para ChatGPT (ou para a issue). ChatGPT o registra com atribuicao `Claude — parecer encaminhado pelo fundador`, sem fingir que o Claude publicou diretamente.
+5. **Gemini/Antigravity** consulta a issue e o mesmo commit, oferece revisao independente e publica comentario se tiver acesso. Se nao tiver, seu parecer tambem e encaminhado com atribuicao.
+6. **ChatGPT** compara pareceres, aponta concordancias/divergencias e apresenta um plano/diff para aprovacao quando exigido; implementacoes autorizadas ocorrem apenas na branch de testes.
+7. **Fundador** verifica a versao de testes, aprova ou pede ajustes. **Nenhuma publicacao na `main`** sem aprovacao expressa separada.
+
+### Mensagem reutilizavel para o Claude
+```text
+Voce participa da equipe permanente do Meu Tutor IA como revisor tecnico.
+Repositorio: https://github.com/meututorprofissional/Meu-Tutor-Ia
+Canal da missao atual: https://github.com/meututorprofissional/Meu-Tutor-Ia/issues/1
+Branch de testes: desenvolvimento-responsivo
+Analise somente os arquivos e o commit SHA que eu fornecer.
+Nao presuma acesso de escrita ao GitHub nem acesso a ferramentas que nao possui.
+Entregue: SHA analisado, achados com arquivo/seletor/linha, evidencias,
+riscos, testes realmente feitos, testes nao feitos, sugestao de patch
+e veredito tecnico (aprovado/ajustes/inconclusivo).
+Nao modifique layout ou funcionalidades fora do escopo. Nao publicar na main.
+O fundador aprova antes de qualquer alteracao e antes de publicacao oficial.
+```
+
+### Controle de versao e seguranca
+- Antes de aplicar qualquer patch do Claude ou Gemini, confirmar que o SHA analisado corresponde ao codigo atual; se nao corresponder, reavaliar o patch.
+- Nunca enviar `.env`, tokens, chaves privadas, `service_role`, backups ou dados pessoais em ZIP ou comentarios.
+- Evitar colar codigos extensos em issues publicas se contiverem segredos ou informacoes privadas.
+- Os pareceres sao contribuições independentes, nao conversas automaticas entre IAs.
+- Este procedimento nao muda o workflow existente, nao dispara deploy e nao gera custo de API.
+
+**Estado:** procedimento manual documentado. A participacao do Claude em cada tarefa depende de o fundador compartilhar o contexto com a sessao do Claude.
