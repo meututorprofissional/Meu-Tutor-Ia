@@ -4431,12 +4431,14 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
  }
 }
 </style>
-<style id="profile-featured-button-desktop-color-mobile-v1">
-/* Somente a paleta do botão Alterar destaque no Android; sem mudanças de layout. */
+<style id="profile-achievement-buttons-blue-mobile-v2">
+/* Android: mesma paleta azul do topo do perfil para os botoes de conquistas.
+   Altera apenas fundo e borda, sem tocar em layout, texto ou funcionalidade. */
 @media screen and (max-width:700px){
+ body #profile #profileAchievementGrid .profile-achievement-item button,
  body #profile .profile-featured-standalone .featured-change-button{
-  background:linear-gradient(110deg,#6744b1,#4c318e)!important;
-  border-color:#b89bdd!important;
+  background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+  border-color:#8190d5!important;
   color:#fff!important;
  }
 }
