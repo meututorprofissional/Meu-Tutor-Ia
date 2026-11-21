@@ -19,9 +19,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Preparar ambiente
         run: |
-          python3 -m pip install --user playwright==1.56.0
+          python3 -m pip install --user playwright==1.56.0 pillow
           python3 -m playwright install --with-deps chromium
-      - name: Capturar Android normal, modo desktop simulado e computador
+      - name: Capturar antes e depois nos tres formatos
         env:
           APP_URL: http://127.0.0.1:8765/
         run: |
@@ -29,29 +29,48 @@ jobs:
           mkdir -p evidencias
           cat > /tmp/capturar.py <<'PY'
           import asyncio, os
+          from PIL import Image, ImageChops, ImageStat
           from playwright.async_api import async_playwright
 
           async def main():
               async with async_playwright() as p:
                   browser = await p.chromium.launch()
-                  for nome, viewport, mobile in [
+                  modos = [
                       ("android-normal", {"width": 393, "height": 852}, True),
                       # Aproximacao do modo "Site para computador": viewport desktop reduzido na tela do celular.
                       ("android-site-desktop-simulado", {"width": 980, "height": 852}, True),
                       ("desktop", {"width": 1365, "height": 900}, False),
-                  ]:
+                  ]
+                  for versao, url in [("antes", "https://meututorprofissional.github.io/Meu-Tutor-Ia/"), ("depois", os.environ["APP_URL"])]:
+                    for nome, viewport, mobile in modos:
                       page = await browser.new_page(
                           viewport=viewport,
                           device_scale_factor=1,
                           is_mobile=mobile,
                           has_touch=mobile,
                       )
-                      response = await page.goto(os.environ["APP_URL"], wait_until="domcontentloaded", timeout=45000)
+                      response = await page.goto(url, wait_until="domcontentloaded", timeout=45000)
                       if not response or response.status >= 400:
                           raise RuntimeError(f"Pagina indisponivel: {nome}")
-                      await page.screenshot(path=f"evidencias/{nome}.png", full_page=True, animations="disabled")
+                      await page.screenshot(path=f"evidencias/{versao}-{nome}.png", full_page=True, animations="disabled")
                       await page.close()
                   await browser.close()
+                  relatorio = ["# Comparacao visual — Meu Tutor IA", "", "ANTES: versao publicada no GitHub Pages", "DEPOIS: codigo desta branch de desenvolvimento", "", "Diferencas de pixels podem incluir conteudo dinamico e nao provam erro visual.", "Modo site desktop no Android e apenas uma simulacao.", ""]
+                  for nome, _, _ in modos:
+                      a = Image.open(f"evidencias/antes-{nome}.png").convert("RGB")
+                      b = Image.open(f"evidencias/depois-{nome}.png").convert("RGB")
+                      largura = max(a.width, b.width)
+                      altura = max(a.height, b.height)
+                      canvas_a = Image.new("RGB", (largura, altura), "white")
+                      canvas_b = Image.new("RGB", (largura, altura), "white")
+                      canvas_a.paste(a, (0, 0))
+                      canvas_b.paste(b, (0, 0))
+                      diferenca = ImageChops.difference(canvas_a, canvas_b)
+                      diferenca.save(f"evidencias/diferenca-{nome}.png")
+                      media = sum(ImageStat.Stat(diferenca).mean) / 3
+                      relatorio.append(f"- {nome}: antes {a.width}x{a.height}, depois {b.width}x{b.height}; diferenca media de pixel {media:.2f}/255")
+                  with open("evidencias/RELATORIO.md", "w", encoding="utf-8") as arquivo:
+                      arquivo.write("\\n".join(relatorio) + "\\n")
 
           asyncio.run(main())
           PY
@@ -59,7 +78,7 @@ jobs:
       - name: Disponibilizar imagens para revisao humana
         uses: actions/upload-artifact@v4
         with:
-          name: previa-visual-android-desktop
+          name: comparacao-visual-antes-depois
           path: evidencias/
           retention-days: 7
           if-no-files-found: error
