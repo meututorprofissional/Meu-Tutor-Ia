@@ -4420,6 +4420,18 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
   filter:none!important;
  }
 }
+<style id="profile-achievement-medal-colors-mobile-v1">
+/* Apenas cores das medalhas Android, alinhadas à paleta violeta do notebook. */
+@media screen and (max-width:700px){
+ body #profile #profileAchievementGrid .profile-achievement-item:not(.is-locked) .profile-achievement-emoji{
+  background:linear-gradient(155deg,#53208c,#240b50)!important;
+  border-color:#b86bf2!important;
+ }
+ body #profile #profileAchievementGrid .profile-achievement-item.is-selected .profile-achievement-emoji{
+  border-color:#f6cb4e!important;
+ }
+}
+</style>
 </style>
 </body>
 </html>
