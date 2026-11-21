@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/previa-visual-aprovacao.yml'
+      - 'index.html'
 
 permissions:
   contents: read
@@ -14,14 +15,17 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
+      - name: Obter versao em desenvolvimento
+        uses: actions/checkout@v4
       - name: Preparar ambiente
         run: |
           python3 -m pip install --user playwright==1.56.0
           python3 -m playwright install --with-deps chromium
       - name: Capturar Android normal, modo desktop simulado e computador
         env:
-          APP_URL: https://meututorprofissional.github.io/Meu-Tutor-Ia/
+          APP_URL: http://127.0.0.1:8765/
         run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/meu-tutor-http.log 2>&1 &
           mkdir -p evidencias
           cat > /tmp/capturar.py <<'PY'
           import asyncio, os
