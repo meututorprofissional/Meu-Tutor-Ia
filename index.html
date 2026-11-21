@@ -4113,5 +4113,46 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
   width:125px!important;max-width:125px!important;
  }
 }
+</style><style id="achievement-counter-right-anchored-v2">
+/* Contador e barra curta, presos ao canto superior direito do cartão. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ position:relative!important;display:block!important;
+ padding-right:0!important;min-height:64px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+ width:100%!important;max-width:100%!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+ position:absolute!important;top:0!important;right:0!important;left:auto!important;
+ display:flex!important;flex-direction:column!important;align-items:flex-end!important;
+ width:140px!important;min-width:140px!important;max-width:140px!important;
+ height:auto!important;flex:none!important;grid-column:auto!important;
+ margin:0!important;padding:0!important;gap:4px!important;
+ transform:none!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary{
+ position:static!important;display:block!important;
+ width:140px!important;min-width:0!important;max-width:140px!important;
+ margin:0!important;padding:0!important;text-align:right!important;
+ font-size:9px!important;line-height:1.2!important;white-space:normal!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+ position:relative!important;display:block!important;
+ width:140px!important;min-width:140px!important;max-width:140px!important;
+ height:6px!important;flex:none!important;align-self:flex-end!important;
+ margin:0!important;padding:0!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  min-height:62px!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+  width:112px!important;min-width:112px!important;max-width:112px!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary,
+ #profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+  width:112px!important;min-width:112px!important;max-width:112px!important;
+ }
+}
 </style></body>
 </html>
