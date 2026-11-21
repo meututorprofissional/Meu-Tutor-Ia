@@ -4082,5 +4082,36 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
   grid-template-columns:minmax(0,1fr) minmax(110px,30%)!important;
  }
 }
+</style><style id="profile-achievement-progress-final-fix">
+/* Forçar a barra a ficar logo abaixo do contador, sem ocupar a largura do cartão. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) 150px!important;
+ align-items:start!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;
+ position:relative!important;
+ width:150px!important;max-width:150px!important;min-width:0!important;
+ justify-self:end!important;align-self:start!important;
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+}
+#profile #profileAchievementsPanel #profileAchievementSummary{
+ width:150px!important;max-width:150px!important;text-align:right!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-track{
+ width:150px!important;max-width:150px!important;min-width:0!important;
+ flex:0 0 6px!important;align-self:flex-end!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  grid-template-columns:minmax(0,1fr) 125px!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress,
+ #profile #profileAchievementsPanel #profileAchievementSummary,
+ #profile #profileAchievementsPanel .profile-achievement-progress-track{
+  width:125px!important;max-width:125px!important;
+ }
+}
 </style></body>
 </html>
