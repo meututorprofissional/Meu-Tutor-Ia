@@ -52,6 +52,12 @@ jobs:
                       response = await page.goto(url, wait_until="domcontentloaded", timeout=45000)
                       if not response or response.status >= 400:
                           raise RuntimeError(f"Pagina indisponivel: {nome}")
+                      await page.evaluate("window.scrollTo(0, 0)")
+                      await page.wait_for_timeout(300)
+                      cabecalho = await page.locator("header").first.bounding_box()
+                      if not cabecalho or abs(cabecalho["y"]) > 5:
+                          raise RuntimeError(f"Cabecalho deslocado: {versao}-{nome}: {cabecalho}")
+                      await page.screenshot(path=f"evidencias/{versao}-{nome}-primeira-tela.png", full_page=False, animations="disabled")
                       await page.screenshot(path=f"evidencias/{versao}-{nome}.png", full_page=True, animations="disabled")
                       await page.close()
                   await browser.close()
