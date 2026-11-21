@@ -1,0 +1,73 @@
+name: Meu Tutor IA - Revisao colaborativa (piloto seguro)
+
+# Piloto somente leitura. O evento issue_comment so sera ativado quando
+# este workflow estiver na branch padrao; publicado na main com aprovacao do proprietario; somente leitura.
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Numero da issue a revisar"
+        required: true
+        default: "1"
+        type: string
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: tutor-collab-readonly-${{ github.ref }}-${{ inputs.issue_number }}
+  cancel-in-progress: true
+
+jobs:
+  relatorio:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      ISSUE_NUMBER: ${{ inputs.issue_number }}
+    steps:
+      - name: Validar numero da issue
+        shell: bash
+        run: |
+          [[ "$ISSUE_NUMBER" =~ ^[1-9][0-9]{0,5}$ ]] || { echo "Numero de issue invalido"; exit 1; }
+      - name: Ler issue e comentarios (somente leitura)
+        shell: bash
+        run: |
+          gh api "repos/$GH_REPO/issues/$ISSUE_NUMBER" > issue.json
+          gh api --paginate "repos/$GH_REPO/issues/$ISSUE_NUMBER/comments?per_page=100" --jq '.[]' > comments.ndjson
+      - name: Gerar relatorio de revisao
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          issue=json.load(open("issue.json",encoding="utf-8"))
+          comments=[]
+          for line in open("comments.ndjson",encoding="utf-8"):
+              if line.strip():
+                  comments.append(json.loads(line))
+          out=[
+              "# Meu Tutor IA — Relatorio de comunicacao (somente leitura)",
+              "",
+              f"Issue: #{issue['number']} — {issue['title']}",
+              f"URL: {issue['html_url']}",
+              f"Comentarios encontrados: {len(comments)}",
+              "",
+              "## Ultimos comentarios",
+          ]
+          for c in comments[-20:]:
+              author=c["user"]["login"]
+              body=c.get("body") or ""
+              out.extend([f"### {author} — {c['created_at']}",f"Link: {c['html_url']}","",body[:8000],""])
+          out.extend(["## Status","Nenhuma IA foi chamada, nenhum comentario foi publicado e nenhum codigo foi alterado.",""])
+          with open("relatorio-colaboracao.md","w",encoding="utf-8") as f:
+              f.write("\n".join(out))
+          PY
+      - name: Disponibilizar relatorio para revisao humana
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-colaboracao-issue-${{ inputs.issue_number }}
+          path: relatorio-colaboracao.md
+          retention-days: 7
