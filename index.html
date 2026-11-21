@@ -4401,5 +4401,25 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
  body #profile .profile-featured-standalone .featured-information p{color:#535b75!important;text-shadow:none!important}
 }
 </style>
+
+<style id="profile-achievements-neutral-frame-mobile-v1">
+/* Apenas bordas e sombras da seção Minhas conquistas no Android, iguais ao aspecto neutro do notebook. */
+@media screen and (max-width:700px){
+ body #profile .profile-achievement-showcase #profileAchievementsPanel,
+ body #profile #profileAchievementsPanel{
+  border-color:#e4e5ed!important;
+  box-shadow:0 4px 16px rgba(32,43,74,.08)!important;
+  outline-color:transparent!important;
+  filter:none!important;
+ }
+ body #profile .profile-achievement-showcase .profile-featured-standalone,
+ body #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{
+  border-color:#e4e5ed!important;
+  box-shadow:0 4px 16px rgba(32,43,74,.08)!important;
+  outline-color:transparent!important;
+  filter:none!important;
+ }
+}
+</style>
 </body>
 </html>
