@@ -4028,5 +4028,39 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel #profileAchieve
 html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-track{
  display:block!important;width:100%!important;max-width:none!important;margin:0!important;
 }
+</style><style id="profile-achievement-progress-right-v7578">
+/* Indicador compacto no canto direito do cabeçalho, inclusive no modo desktop do Android. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) minmax(125px,32%)!important;
+ align-items:start!important;gap:8px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > div:first-child{
+ grid-column:1!important;grid-row:1!important;min-width:0!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;position:static!important;
+ justify-self:end!important;align-self:start!important;
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+ min-width:0!important;flex:none!important;margin:0!important;padding:0!important;gap:5px!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-label,
+#profile #profileAchievementsPanel #profileAchievementSummary{
+ position:static!important;display:block!important;box-sizing:border-box!important;
+ width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;
+ text-align:right!important;white-space:normal!important;overflow-wrap:anywhere!important;
+ font-size:clamp(.6rem,.85vw,.8rem)!important;line-height:1.25!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-track{
+ position:static!important;display:block!important;box-sizing:border-box!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ margin:0!important;padding:0!important;align-self:stretch!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  grid-template-columns:minmax(0,1fr) minmax(110px,34%)!important;
+ }
+}
 </style></body>
 </html>
