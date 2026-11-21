@@ -4004,5 +4004,29 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
   width:100%!important;max-width:100%!important;margin-top:5px!important;
  }
 }
+</style><style id="profile-progress-desktop-phone-final">
+/* Corrige especificamente o modo computador do Android, mesmo com viewport CSS abaixo de 901px. */
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(115px,33%)!important;
+ align-items:start!important;column-gap:8px!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > div:first-child{
+ grid-column:1!important;grid-row:1!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;display:flex!important;
+ flex-direction:column!important;align-items:stretch!important;
+ justify-self:end!important;align-self:start!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ margin:0!important;padding:0!important;gap:4px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel #profileAchievementSummary{
+ display:block!important;width:100%!important;text-align:right!important;
+ font-size:clamp(.48rem,1vw,.7rem)!important;line-height:1.2!important;
+ white-space:normal!important;overflow-wrap:normal!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-track{
+ display:block!important;width:100%!important;max-width:none!important;margin:0!important;
+}
 </style></body>
 </html>
