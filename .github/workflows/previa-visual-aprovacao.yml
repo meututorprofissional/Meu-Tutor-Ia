@@ -19,9 +19,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Preparar ambiente
         run: |
-          python3 -m pip install --user playwright==1.56.0 pillow
+          python3 -m pip install --user playwright==1.56.0
           python3 -m playwright install --with-deps chromium
-      - name: Capturar antes e depois nos tres formatos
+      - name: Capturar somente primeira tela antes e depois nos tres formatos
         env:
           APP_URL: http://127.0.0.1:8765/
         run: |
@@ -29,7 +29,6 @@ jobs:
           mkdir -p evidencias
           cat > /tmp/capturar.py <<'PY'
           import asyncio, os
-          from PIL import Image, ImageChops, ImageStat
           from playwright.async_api import async_playwright
 
           async def main():
@@ -58,23 +57,21 @@ jobs:
                       if not cabecalho or abs(cabecalho["y"]) > 5:
                           raise RuntimeError(f"Cabecalho deslocado: {versao}-{nome}: {cabecalho}")
                       await page.screenshot(path=f"evidencias/{versao}-{nome}-primeira-tela.png", full_page=False, animations="disabled")
-                      await page.screenshot(path=f"evidencias/{versao}-{nome}.png", full_page=True, animations="disabled")
                       await page.close()
                   await browser.close()
-                  relatorio = ["# Comparacao visual — Meu Tutor IA", "", "ANTES: versao publicada no GitHub Pages", "DEPOIS: codigo desta branch de desenvolvimento", "", "Diferencas de pixels podem incluir conteudo dinamico e nao provam erro visual.", "Modo site desktop no Android e apenas uma simulacao.", ""]
-                  for nome, _, _ in modos:
-                      a = Image.open(f"evidencias/antes-{nome}.png").convert("RGB")
-                      b = Image.open(f"evidencias/depois-{nome}.png").convert("RGB")
-                      largura = max(a.width, b.width)
-                      altura = max(a.height, b.height)
-                      canvas_a = Image.new("RGB", (largura, altura), "white")
-                      canvas_b = Image.new("RGB", (largura, altura), "white")
-                      canvas_a.paste(a, (0, 0))
-                      canvas_b.paste(b, (0, 0))
-                      diferenca = ImageChops.difference(canvas_a, canvas_b)
-                      diferenca.save(f"evidencias/diferenca-{nome}.png")
-                      media = sum(ImageStat.Stat(diferenca).mean) / 3
-                      relatorio.append(f"- {nome}: antes {a.width}x{a.height}, depois {b.width}x{b.height}; diferenca media de pixel {media:.2f}/255")
+                  relatorio = [
+                      "# Comparacao visual — Meu Tutor IA",
+                      "",
+                      "ANTES: versao publicada no GitHub Pages",
+                      "DEPOIS: codigo desta branch de desenvolvimento",
+                      "",
+                      "Arquivos incluidos: somente primeira tela, antes/depois, em tres formatos.",
+                      "O modo site desktop no Android e uma simulacao, nao um teste em aparelho fisico.",
+                      "As capturas nao validam interacoes nem garantem ausencia de problemas visuais.",
+                      "",
+                  ]
+                  for nome, viewport, _ in modos:
+                      relatorio.append(f"- {nome}: primeira tela {viewport['width']}x{viewport['height']} (antes e depois)")
                   with open("evidencias/RELATORIO.md", "w", encoding="utf-8") as arquivo:
                       arquivo.write("\\n".join(relatorio) + "\\n")
 
