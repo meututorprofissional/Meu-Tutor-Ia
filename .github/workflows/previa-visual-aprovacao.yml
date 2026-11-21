@@ -18,7 +18,7 @@ jobs:
         run: |
           python3 -m pip install --user playwright==1.56.0
           python3 -m playwright install --with-deps chromium
-      - name: Capturar versao publicada em Android e desktop
+      - name: Capturar Android normal, modo desktop simulado e computador
         env:
           APP_URL: https://meututorprofissional.github.io/Meu-Tutor-Ia/
         run: |
@@ -31,7 +31,9 @@ jobs:
               async with async_playwright() as p:
                   browser = await p.chromium.launch()
                   for nome, viewport, mobile in [
-                      ("android", {"width": 393, "height": 852}, True),
+                      ("android-normal", {"width": 393, "height": 852}, True),
+                      # Aproximacao do modo "Site para computador": viewport desktop reduzido na tela do celular.
+                      ("android-site-desktop-simulado", {"width": 980, "height": 852}, True),
                       ("desktop", {"width": 1365, "height": 900}, False),
                   ]:
                       page = await browser.new_page(
