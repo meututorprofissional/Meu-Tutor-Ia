@@ -3921,5 +3921,65 @@ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-me
 html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information{
  padding-left:9px!important;
 }
+</style><style id="profile-featured-visible-fix-v7599">
+/* Ajuste do destaque no Android com site para computador: medalha grande,
+   descrição e botão ao lado, mantendo o fundo claro. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ grid-template-columns:minmax(0,1.65fr) minmax(0,1fr)!important;gap:8px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .profile-hero-badge{
+ padding:10px 9px!important;overflow:visible!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-section-heading{
+ font-size:clamp(.68rem,1.65vw,1rem)!important;
+ line-height:1.2!important;margin:0 0 9px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-content{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ align-items:center!important;gap:7px!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-width:0!important;padding:4px 0!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal .emblem{
+ width:min(100%,104px)!important;height:auto!important;aspect-ratio:1/1.13!important;
+ font-size:clamp(1.9rem,4vw,3.3rem)!important;
+ border:3px solid #d5a342!important;
+ filter:drop-shadow(0 0 5px #e6af65a0)!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal strong{
+ font-size:clamp(.49rem,1.22vw,.78rem)!important;line-height:1.15!important;
+ padding:5px 4px!important;min-width:0!important;max-width:100%!important;
+ margin-top:-8px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information{
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+ align-items:stretch!important;min-width:0!important;gap:7px!important;
+ border-left:1px solid #c6b2e2!important;padding-left:8px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-description,
+html.profile-desktop-on-phone #profile .profile-featured-standalone #profileFeaturedHint{
+ font-size:clamp(.47rem,1.1vw,.72rem)!important;line-height:1.35!important;
+ margin:0!important;overflow-wrap:break-word!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-change-button{
+ font-size:clamp(.48rem,1.12vw,.75rem)!important;line-height:1.2!important;
+ padding:7px 4px!important;min-width:0!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ display:flex!important;flex-direction:row!important;align-items:start!important;
+ justify-content:space-between!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress{
+ width:34%!important;max-width:34%!important;flex:0 0 34%!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-label{
+ font-size:clamp(.47rem,1.08vw,.7rem)!important;white-space:normal!important;
+ text-align:right!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-track{
+ width:100%!important;
+}
 </style></body>
 </html>
