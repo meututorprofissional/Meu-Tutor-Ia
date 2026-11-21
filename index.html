@@ -4154,5 +4154,31 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
   width:112px!important;min-width:112px!important;max-width:112px!important;
  }
 }
+</style><style id="achievement-counter-text-position-v3">
+/* O contador deve permanecer imediatamente acima da barra curta, à direita. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ position:relative!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+ top:3px!important;right:4px!important;left:auto!important;
+ z-index:2!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary{
+ position:static!important;inset:auto!important;transform:none!important;
+ display:block!important;visibility:visible!important;
+ text-align:right!important;line-height:1.2!important;
+ font-size:9px!important;white-space:normal!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+ margin-top:3px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+ padding-right:120px!important;box-sizing:border-box!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+  padding-right:116px!important;
+ }
+}
 </style></body>
 </html>
