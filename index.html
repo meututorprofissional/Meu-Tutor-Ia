@@ -3981,5 +3981,28 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
 html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-track{
  width:100%!important;
 }
+</style><style id="profile-achievement-progress-right-alignment">
+/* Barra de conquistas à direita do cabeçalho, como na referência. */
+@media (min-width: 901px) {
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  display:flex!important;flex-direction:row!important;align-items:flex-start!important;
+  justify-content:space-between!important;gap:10px!important;width:100%!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading > div:first-child{
+  flex:1 1 auto!important;min-width:0!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievement-progress{
+  position:static!important;flex:0 0 31%!important;width:31%!important;
+  max-width:31%!important;min-width:0!important;margin:0 0 0 auto!important;
+  padding:0!important;align-self:flex-start!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievement-progress-label{
+  width:100%!important;max-width:100%!important;text-align:right!important;
+  white-space:normal!important;line-height:1.25!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievement-progress-track{
+  width:100%!important;max-width:100%!important;margin-top:5px!important;
+ }
+}
 </style></body>
 </html>
