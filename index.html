@@ -4645,5 +4645,50 @@ header .home-account-menu button:hover{
  background:#e0e9ff!important;
 }
 </style>
+<style id="android-desktop-readable-scale-v1">
+/* Chrome Android: 'Site para computador' cria viewport ~980px e reduz
+   todo o site para caber na tela física. Ampliar somente esse modo.
+   Notebook/desktop e modo celular normal permanecem inalterados. */
+html.profile-desktop-on-phone body{
+ zoom:1.55;
+ width:64.516129%!important;
+ max-width:64.516129%!important;
+ box-sizing:border-box!important;
+ overflow-x:hidden!important;
+}
+html.profile-desktop-on-phone header,
+html.profile-desktop-on-phone .layout,
+html.profile-desktop-on-phone main{
+ box-sizing:border-box!important;
+ max-width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero{
+ width:100%!important;max-width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid{
+ display:flex!important;
+ grid-template-columns:none!important;
+ flex-wrap:nowrap!important;
+ overflow-x:auto!important;
+ overflow-y:hidden!important;
+ gap:9px!important;
+ padding:4px 2px 12px!important;
+ scroll-snap-type:x proximity!important;
+ -webkit-overflow-scrolling:touch;
+}
+html.profile-desktop-on-phone #profile #profileAchievementGrid .profile-achievement-item{
+ flex:0 0 100px!important;
+ width:100px!important;
+ min-width:100px!important;
+ max-width:100px!important;
+ scroll-snap-align:start!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementGrid .profile-achievement-item strong{
+ font-size:12px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementGrid .profile-achievement-item button{
+ font-size:11px!important;
+}
+</style>
 </body>
 </html>
