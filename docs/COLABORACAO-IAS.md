@@ -82,3 +82,56 @@ PROXIMA ACAO / APROVACAO NECESSARIA: <acao concreta>
 
 ### Estado desta fase
 **Somente protocolo escrito.** Nenhum agente adicional foi conectado ou executado por esta documentacao. O workflow piloto da Fase 1 permanece manual e somente leitura.
+
+
+## Fase 3 — Preparacao tecnica da integracao Claude (plano, sem ativacao)
+
+### Objetivo e escopo aprovado
+Preparar uma integracao **somente leitura** para que Claude produza pareceres sobre commits e diffs da branch `desenvolvimento-responsivo`. Esta fase **nao** instala cliente de API, cria secrets, executa chamadas pagas, concede escrita ou altera o workflow existente.
+
+### Arquitetura recomendada (futura, depende de nova aprovacao)
+1. **Entrada controlada:** execucao manual por `workflow_dispatch` com numero da issue/PR e SHA do commit. Validar que o SHA pertence ao repositorio e a branch permitida.
+2. **Coleta limitada:** GitHub Actions com `permissions: contents: read, issues: read, pull-requests: read`. Ler diff e arquivos estritamente necessarios; excluir `.env`, tokens, arquivos de credenciais, dados pessoais e conteudo de producao.
+3. **Preparacao de contexto:** gerar pacote com objetivo, instrucoes atuais do fundador, arquivos alterados, testes e SHA. Limitar tamanho, remover segredos e tratar codigo/issue como dados nao confiaveis.
+4. **Revisao Claude:** quando o fundador aprovar API/custos, chamar modelo Claude por API autenticada com secret armazenado exclusivamente em GitHub Actions Secrets; aplicar limite de tokens, tempo e gasto. Sem ferramentas de escrita ou credenciais de deploy.
+5. **Saida:** gravar relatorio como artifact Markdown/JSON da execucao; publicar comentario na issue **somente mediante autorizacao adicional**, pois isso exige `issues: write`.
+6. **Revisao cruzada:** ChatGPT e Gemini/Antigravity verificam o parecer e testes; registrar divergencias. Parecer automatico nunca equivale a aprovacao humana.
+
+### Alternativa disponivel sem API
+Claude pode receber ZIP do commit ou trechos de diff e devolver parecer estruturado, que o fundador ou ChatGPT registra na issue com atribuicao e SHA. Isto permite participacao recorrente, mas **nao e comunicacao automatica nem integracao direta**.
+
+### Contrato de entrada e saida para pareceres
+Entrada:
+```json
+{
+  "missao": "issue ou PR",
+  "branch": "desenvolvimento-responsivo",
+  "commit_sha": "SHA completo",
+  "escopo": "arquivos e objetivo autorizado",
+  "criterios_aceite": ["criterios definidos pelo fundador"],
+  "evidencias": ["links ou resultados de testes"],
+  "limites": ["nao alterar main", "somente revisao"]
+}
+```
+Saida:
+```json
+{
+  "agente": "Claude",
+  "commit_sha_analisado": "SHA completo",
+  "parecer": "aprovado tecnicamente | ajustes necessarios | inconclusivo",
+  "achados": [{"gravidade": "alta | media | baixa", "arquivo": "caminho", "evidencia": "linha/regra/teste", "recomendacao": "acao"}],
+  "testes_executados": [],
+  "testes_nao_executados": [],
+  "limitacoes": [],
+  "patch_proposto": "opcional; nunca aplicado automaticamente"
+}
+```
+
+### Criterios para ativacao posterior
+- O fundador aprova separadamente o provedor/API, custo maximo, mecanismo de acionamento e permissoes.
+- Validar workflow em branch de testes, sem dados reais, com simulacao sem custo e checagens de seguranca.
+- Evitar disparos recursivos, execucoes duplicadas e comentarios nao autorizados.
+- Registrar SHA, logs sem segredos, custos e estado de cada parecer.
+- Nao conceder acesso a `main`, Cloudflare de producao ou Supabase de producao.
+
+**Estado:** especificacao pronta; integracao Claude por API ainda nao implementada nem ativada.
