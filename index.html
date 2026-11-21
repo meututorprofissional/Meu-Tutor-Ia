@@ -1816,7 +1816,7 @@ html,body{max-width:100%;overflow-x:clip}
  if(!el)return;
  function update(){
   const m=(el.textContent||'').match(/(\d+)\s*(?:de|\/)\s*(\d+)/i);
-  if(m)el.setAttribute('data-short-summary',m[1]+' de '+m[2]+' desbloqueadas');
+  if(m){const short=m[1]+' de '+m[2]+' desbloqueadas';if(el.textContent!==short)el.textContent=short;el.setAttribute('data-short-summary',short);}
  }
  new MutationObserver(update).observe(el,{childList:true,characterData:true,subtree:true});
  update();
