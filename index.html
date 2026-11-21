@@ -4296,5 +4296,42 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
   margin-bottom:0!important;
  }
 }
+</style><style id="profile-mobile-identity-spacing-v7602">
+/* Chrome Android normal: foto, selos e informações sem sobreposição. */
+@media(max-width:600px){
+ html:not(.profile-desktop-on-phone) #profile .profile-hero-main{min-width:0!important;overflow:visible!important}
+ html:not(.profile-desktop-on-phone) #profile .profile-hero-main>.row{
+  display:grid!important;grid-template-columns:76px minmax(0,1fr)!important;
+  align-items:center!important;gap:14px!important;width:100%!important;min-width:0!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile .profile-avatar-wrap{
+  width:72px!important;min-width:72px!important;flex:0 0 72px!important;
+  margin-right:0!important;position:relative!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile .profile-hero-main>.row>div:last-child{
+  min-width:0!important;width:100%!important;flex:initial!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile .profile-name-line{
+  display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:5px!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileDisplayName{
+  max-width:100%!important;overflow-wrap:anywhere!important;line-height:1.15!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileEmail{
+  display:block!important;max-width:100%!important;overflow-wrap:anywhere!important;
+  word-break:break-word!important;line-height:1.35!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile .profile-student-status{
+  display:flex!important;flex-wrap:wrap!important;align-items:flex-start!important;
+  gap:6px!important;min-width:0!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile .profile-member-since{
+  display:block!important;max-width:100%!important;overflow-wrap:break-word!important;
+  line-height:1.3!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile .profile-camera-button{
+  z-index:3!important;
+ }
+}
 </style></body>
 </html>
