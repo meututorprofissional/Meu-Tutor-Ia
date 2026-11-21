@@ -3880,5 +3880,46 @@ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-me
 html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-description{
  font-size:clamp(.5rem,1.1vw,.75rem)!important;line-height:1.3!important;
 }
+</style><style id="profile-achievements-polish-v7598">
+/* Refinamento visual: apenas Android no modo site para computador. */
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(115px,34%)!important;
+ align-items:start!important;gap:7px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;width:100%!important;max-width:none!important;
+ min-width:0!important;justify-self:end!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements{
+ gap:7px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel #profileAchievementGrid{
+ grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:5px!important;
+ margin-top:8px!important;align-items:start!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementGrid .emblem{
+ width:100%!important;max-width:72px!important;min-width:0!important;
+ height:auto!important;aspect-ratio:1/1.12!important;
+ font-size:clamp(1.35rem,3.3vw,2.4rem)!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementGrid > *{
+ min-width:0!important;align-self:start!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-content{
+ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)!important;
+ gap:10px!important;align-items:center!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal .emblem{
+ width:clamp(62px,9.5vw,100px)!important;
+ height:clamp(70px,10.5vw,110px)!important;
+ font-size:clamp(2rem,3.5vw,3.3rem)!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal strong{
+ font-size:clamp(.58rem,1.15vw,.85rem)!important;
+ padding:5px 7px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information{
+ padding-left:9px!important;
+}
 </style></body>
 </html>
