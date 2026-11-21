@@ -4180,5 +4180,43 @@ html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achiev
   padding-right:116px!important;
  }
 }
+</style><style id="achievement-heading-final-layout-v4">
+/* Título à esquerda, contador e barra à direita: sem sobreposição. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) 118px!important;
+ grid-template-rows:auto!important;
+ align-items:start!important;
+ column-gap:8px!important;
+ position:relative!important;
+ min-height:0!important;
+ padding:0!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+ grid-column:1!important;grid-row:1!important;
+ padding:0!important;margin:0!important;
+ width:auto!important;min-width:0!important;max-width:100%!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;
+ position:static!important;inset:auto!important;transform:none!important;
+ width:118px!important;min-width:0!important;max-width:118px!important;
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ justify-self:end!important;align-self:start!important;
+ margin:0!important;padding:0!important;gap:4px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary{
+ position:static!important;inset:auto!important;transform:none!important;
+ width:118px!important;max-width:118px!important;
+ margin:0!important;padding:0!important;
+ text-align:right!important;white-space:normal!important;
+ font-size:9px!important;line-height:1.25!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+ position:relative!important;inset:auto!important;
+ width:118px!important;min-width:0!important;max-width:118px!important;
+ height:6px!important;flex:0 0 6px!important;
+ margin:0!important;padding:0!important;align-self:stretch!important;
+}
 </style></body>
 </html>
