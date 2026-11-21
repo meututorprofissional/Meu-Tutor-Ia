@@ -527,6 +527,22 @@ html,body{max-width:100%;overflow-x:clip}
  #profile > .profile-achievement-stats-strip{margin-top:7px!important}
 }
 </style>
+
+<style id="profile-android-colors-notebook-v1">
+/* Padronização cromática Android -> notebook; somente cores, sem alterar layout ou lógica. */
+@media screen and (max-width:700px){
+ #profile .profile-hero{background:radial-gradient(ellipse at 53% 45%,#5366d7 0%,#35449b 43%,#171c49 90%)!important;box-shadow:0 12px 24px #202e7026!important}
+ #profile > .profile-premium-tabs button{background:linear-gradient(110deg,#4b61c8,#343b98)!important;border-color:#8795e5!important;box-shadow:0 3px 10px #293e8a24!important;color:#fff!important}
+ #profile #profileAchievementsPanel,#profile .profile-featured-standalone,#profile .profile-featured-standalone .profile-hero-badge{background:#fff!important;color:#282b50!important;border-color:#e3e5f2!important}
+ #profile .profile-achievements-heading h2,#profile .featured-section-heading{color:#292d5d!important}
+ #profile .profile-achievements-heading p,#profile .featured-description,#profile #profileFeaturedHint{color:#656b82!important}
+ #profile .profile-achievement-progress-label{color:#30365f!important}
+ #profile .profile-achievement-progress-fill{background:linear-gradient(90deg,#6264d5,#8388e8)!important}
+ #profile .featured-change-button{background:linear-gradient(110deg,#5364c5,#353d91)!important;border-color:#7c8bce!important;color:#fff!important}
+ #profile > .profile-achievement-stats-strip{background:#fff!important;color:#292344!important;border-color:#e5e7eb!important}
+ #profile > .profile-achievement-stats-strip small{color:#6b7280!important}
+}
+</style>
 </head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
