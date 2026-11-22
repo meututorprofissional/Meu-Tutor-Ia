@@ -3,13 +3,13 @@ on:
   workflow_dispatch:
     inputs:
       modo:
-        description: 'dry_run sem rede; diagnostico lista modelos; live envia uma geracao'
+        description: 'dry_run sem rede; diagnostico lista; detalhe consulta modelo; live gera'
         type: choice
-        options: [dry_run, diagnostico, live]
+        options: [dry_run, diagnostico, detalhe, live]
         default: dry_run
         required: true
       confirmar_gratuito:
-        description: 'Para live digite CONFIRMO_GRATUITO apos verificar billing desativado'
+        description: 'Para consultas e live digite CONFIRMO_GRATUITO; sem faturamento'
         type: string
         required: false
         default: ''
@@ -36,7 +36,7 @@ jobs:
           if mode == "dry_run":
               print("DRY RUN: nenhuma chamada feita.")
               raise SystemExit(0)
-          if mode not in ("live", "diagnostico") or os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
+          if mode not in ("live", "diagnostico", "detalhe") or os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
               raise SystemExit("Bloqueado: modo ou confirmacao invalida.")
           key = os.environ.get("GEMINI_API_KEY")
           if not key:
@@ -70,6 +70,36 @@ jobs:
               print("Modelos encontrados:", len(supported))
               print("Observacao: disponibilidade nao garante cota gratuita; conferir precos antes de usar.")
               raise SystemExit(0 if supported else 1)
+          if mode == "detalhe":
+              # GET de metadados publicos; nao gera texto nem imprime resposta bruta.
+              for api_version in ("v1beta", "v1"):
+                  url = ("https://generativelanguage.googleapis.com/"
+                         + api_version + "/models/gemini-2.5-flash-lite")
+                  request = urllib.request.Request(url, headers={"x-goog-api-key": key})
+                  try:
+                      with urllib.request.urlopen(request, timeout=20) as response:
+                          raw = response.read(50001)
+                  except urllib.error.HTTPError as error:
+                      print("GET modelo", api_version, "HTTP", error.code)
+                      continue
+                  except urllib.error.URLError:
+                      print("GET modelo", api_version, "falha de rede")
+                      continue
+                  if len(raw) > 50000:
+                      print("GET modelo", api_version, "resposta excessiva")
+                      continue
+                  try:
+                      metadata = json.loads(raw)
+                      methods = metadata.get("supportedGenerationMethods", [])
+                      model_name = metadata.get("name", "")
+                      valid_name = model_name == "models/gemini-2.5-flash-lite"
+                      print("GET modelo", api_version, "HTTP 200",
+                            "nome esperado:", valid_name,
+                            "suporta generateContent:", "generateContent" in methods)
+                  except (ValueError, TypeError, AttributeError):
+                      print("GET modelo", api_version, "formato inesperado")
+              print("Consulta de metadados finalizada. Nenhuma geracao realizada.")
+              raise SystemExit(0)
           url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
           body = json.dumps({"contents":[{"parts":[{"text":"Responda somente OK."}]}],
                              "generationConfig":{"temperature":0,"maxOutputTokens":16}}).encode()
