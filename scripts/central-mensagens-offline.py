@@ -13,7 +13,11 @@ MAX_COMMENTS = 100
 MAX_BODY = 12000
 
 def build_report(payload):
+    if not isinstance(payload, dict):
+        raise ValueError("pacote precisa ser um objeto")
     issue = payload.get("issue", {})
+    if not isinstance(issue, dict):
+        raise ValueError("issue precisa ser um objeto")
     comments = payload.get("comments", [])
     if not isinstance(comments, list):
         raise ValueError("comments precisa ser uma lista")
@@ -24,17 +28,19 @@ def build_report(payload):
     seen = set()
     rows = []
     for c in comments:
+        if not isinstance(c, dict):
+            raise ValueError("comentario precisa ser um objeto")
         cid = c.get("id")
         if not isinstance(cid, int) or cid <= 0 or cid in seen:
             raise ValueError("ID de comentario invalido ou duplicado")
         seen.add(cid)
         body = str(c.get("body") or "")[:MAX_BODY]
-        match = HEADER.search(body)
-        forwarded_header = FORWARDED_HEADER.search(body)
+        match = HEADER.match(body)
+        forwarded_header = FORWARDED_HEADER.match(body)
         first_line = body.splitlines()[0] if body else ""
         wrapper = (first_line.startswith("[REGISTRO DE ENCAMINHAMENTO")
                    and "PELO CLAUDE" in first_line.upper())
-        embedded_claude = bool(re.search(r"\*\*\[AGENTE:\s*Claude\]", body))
+        embedded_claude = bool(re.search(r"^\*\*\[AGENTE:\s*Claude\]", body, re.MULTILINE))
         declared = match.group(1).strip() if match else "nao declarado"
         if declared not in AGENTS:
             if forwarded_header and "ENCAMINHAD" in forwarded_header.group(2).upper():
@@ -43,7 +49,10 @@ def build_report(payload):
                 declared = "Claude"
             else:
                 declared = "nao verificado"
-        author = (c.get("user") or {}).get("login") or "desconhecido"
+        user = c.get("user") or {}
+        if not isinstance(user, dict):
+            raise ValueError("user precisa ser um objeto")
+        author = user.get("login") or "desconhecido"
         forwarded = (wrapper or bool(forwarded_header and
                      "ENCAMINHAD" in forwarded_header.group(2).upper()))
         rows.append({
