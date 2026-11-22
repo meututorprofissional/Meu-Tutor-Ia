@@ -32,6 +32,13 @@ class CentralTests(unittest.TestCase):
         self.assertIn("Agente declarado (nao autenticado): Gemini/Antigravity", report)
         self.assertIn("Indicacao textual de encaminhamento: nao", report)
 
+    def test_forwarded_claude_wrapper(self):
+        report = central.build_report({"issue": {"number": 10}, "comments": [
+            {"id": 7086163745, "user": {"login": "meututorprofissional"},
+             "body": "[REGISTRO DE ENCAMINHAMENTO — NÃO É COMENTÁRIO PUBLICADO DIRETAMENTE PELO CLAUDE]\\n**[AGENTE: Claude] TIPO: revisão cruzada**"}]})
+        self.assertIn("Agente declarado (nao autenticado): Claude", report)
+        self.assertIn("Indicacao textual de encaminhamento: sim", report)
+
     def test_duplicate_rejected(self):
         with self.assertRaises(ValueError):
             central.build_report({"issue": {"number": 10}, "comments": [{"id": 1}, {"id": 1}]})
