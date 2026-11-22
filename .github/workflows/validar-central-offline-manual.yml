@@ -4,6 +4,7 @@ on:
     branches:
       - desenvolvimento-responsivo
     paths:
+      - 'scripts/preparar-pacote-revisao.py'
       - 'scripts/central-mensagens-offline.py'
       - 'scripts/coletar-issue10-publica.py'
       - 'tests/test_central_mensagens.py'
@@ -55,4 +56,29 @@ jobs:
           assert report.count("## Comentario ") == len(comments), "Relatorio incompleto"
           assert report.count("Indicacao textual de encaminhamento: sim") >= 2
           print(f"Coleta real aprovada: {len(comments)} comentarios; relatorio completo.")
+          PY
+      - name: Validar pacote real de revisao em ambiente isolado
+        env:
+          GITHUB_ACTIONS: "true"
+          GITHUB_REF_NAME: desenvolvimento-responsivo
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          import tempfile
+          from pathlib import Path
+          sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          base = subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip()
+          with tempfile.TemporaryDirectory() as tmp:
+              out = Path(tmp) / "pacote.json"
+              subprocess.run(["python", "scripts/preparar-pacote-revisao.py",
+                              "--sha", sha, "--base", base,
+                              "--missao", "Revisar mudancas da branch de testes",
+                              "--output", str(out)], check=True)
+              data = json.loads(out.read_text(encoding="utf-8"))
+              assert data["commit_sha"] == sha
+              assert data["base_sha"] == base
+              assert data["agentes_destino"] == ["ChatGPT", "Gemini/Antigravity", "Claude"]
+              assert data["arquivos"] and data["diff_nao_confiavel"]
+              print("Pacote real gerado e validado localmente, sem publicacao.")
           PY
