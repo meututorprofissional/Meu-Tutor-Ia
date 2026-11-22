@@ -3,6 +3,7 @@
 import argparse
 import json
 import html
+import re
 from pathlib import Path
 
 AGENTS = ("ChatGPT", "Gemini/Antigravity", "Claude")
@@ -52,7 +53,7 @@ def compare(payload):
                     safe = html.escape(value, quote=True)
                     # Render user text in a fenced code block, never as active Markdown.
                     # The fence length exceeds any consecutive backtick sequence in the text.
-                    fence = "`" * (max((len(x) for x in __import__("re").findall(r"`+", safe)), default=0) + 3)
+                    fence = "`" * (max((len(x) for x in re.findall(r"`+", safe)), default=0) + 3)
                     lines.extend([fence + "text", safe.replace("\r", " "), fence])
         lines.append("")
     return "\n".join(lines)
