@@ -25,7 +25,11 @@ def collect():
         batch = fetch_json(API + f"/issues/10/comments?per_page=100&page={page}")
         if not isinstance(batch, list):
             raise ValueError("Resposta inesperada de comentarios")
-        if page == 2:\n            if batch:\n                raise ValueError("Mais de 100 comentarios: exportacao incompleta")\n            break\n        comments.extend({
+        if page == 2:
+            if batch:
+                raise ValueError("Mais de 100 comentarios: exportacao incompleta")
+            break
+        comments.extend({
             "id": item["id"],
             "user": {"login": item["user"]["login"]},
             "body": item.get("body") or "",
