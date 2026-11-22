@@ -53,6 +53,11 @@ class CentralTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             central.build_report({"issue": {"number": 10}, "comments": [None]})
 
+    def test_oversized_comment_rejected_instead_of_truncated(self):
+        with self.assertRaisesRegex(ValueError, "relatorio incompleto"):
+            central.build_report({"issue": {"number": 10}, "comments": [
+                {"id": 23, "body": "[AGENTE: ChatGPT]" + "x" * 12001}]})
+
     def test_duplicate_rejected(self):
         with self.assertRaises(ValueError):
             central.build_report({"issue": {"number": 10}, "comments": [{"id": 1}, {"id": 1}]})
