@@ -34,7 +34,7 @@ def build_report(payload):
         first_line = body.splitlines()[0] if body else ""
         wrapper = (first_line.startswith("[REGISTRO DE ENCAMINHAMENTO")
                    and "PELO CLAUDE" in first_line.upper())
-        embedded_claude = bool(re.search(r"\\*\\*\\[AGENTE:\\s*Claude\\]", body))
+        embedded_claude = bool(re.search(r"\*\*\[AGENTE:\s*Claude\]", body))
         declared = match.group(1).strip() if match else "nao declarado"
         if declared not in AGENTS:
             if forwarded_header and "ENCAMINHAD" in forwarded_header.group(2).upper():
@@ -45,9 +45,7 @@ def build_report(payload):
                 declared = "nao verificado"
         author = (c.get("user") or {}).get("login") or "desconhecido"
         forwarded = (wrapper or bool(forwarded_header and
-                     "ENCAMINHAD" in forwarded_header.group(2).upper())
-                     or "ENCAMINHADO" in body.upper()
-                     or "encaminhado pelo fundador" in body.lower())
+                     "ENCAMINHAD" in forwarded_header.group(2).upper()))
         rows.append({
             "id": cid, "github_author": author, "declared_agent": declared,
             "forwarded_hint": forwarded, "sha_mentions": sorted(set(SHA.findall(body))),
