@@ -2,6 +2,7 @@
 """Create a local, read-only review packet from an explicitly selected Git commit."""
 import argparse
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -18,7 +19,10 @@ def make_packet(sha, base, mission):
         raise ValueError("SHAs completos de 40 caracteres obrigatorios")
     if not mission.strip() or len(mission) > 1000:
         raise ValueError("Missao deve conter entre 1 e 1000 caracteres")
-    head = git("rev-parse", "refs/heads/desenvolvimento-responsivo")
+    branch = os.getenv("GITHUB_REF_NAME") if os.getenv("GITHUB_ACTIONS") else git("symbolic-ref", "--quiet", "--short", "HEAD")
+    if branch != "desenvolvimento-responsivo":
+        raise ValueError("Executar somente na branch de testes")
+    head = git("rev-parse", "HEAD")
     if head != sha:
         raise ValueError("SHA deve corresponder ao HEAD local da branch de testes")
     if git("merge-base", base, sha) != base:
