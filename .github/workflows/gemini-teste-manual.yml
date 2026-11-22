@@ -1,0 +1,68 @@
+name: Gemini - teste manual controlado
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: 'dry_run nao envia requisicoes; live envia apenas uma'
+        type: choice
+        options: [dry_run, live]
+        default: dry_run
+        required: true
+      confirmar_gratuito:
+        description: 'Para live digite CONFIRMO_GRATUITO apos verificar billing desativado'
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: gemini-teste-manual
+  cancel-in-progress: false
+jobs:
+  conectividade:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Verificar modo e realizar no maximo uma chamada
+        env:
+          MODO: ${{ inputs.modo }}
+          CONFIRMACAO: ${{ inputs.confirmar_gratuito }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          mode = os.environ.get("MODO")
+          if mode == "dry_run":
+              print("DRY RUN: nenhuma chamada feita.")
+              raise SystemExit(0)
+          if mode != "live" or os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
+              raise SystemExit("Bloqueado: modo ou confirmacao invalida.")
+          key = os.environ.get("GEMINI_API_KEY")
+          if not key:
+              raise SystemExit("Bloqueado: segredo ausente.")
+          url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
+          body = json.dumps({"contents":[{"parts":[{"text":"Responda somente OK."}]}],
+                             "generationConfig":{"temperature":0,"maxOutputTokens":16}}).encode()
+          request = urllib.request.Request(url, data=body, method="POST",
+                    headers={"Content-Type":"application/json","x-goog-api-key":key})
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  data = response.read(20001)
+          except urllib.error.HTTPError as error:
+              print("Falha HTTP:", error.code)
+              raise SystemExit(1)
+          except urllib.error.URLError:
+              raise SystemExit("Falha de rede.")
+          if len(data)>20000:
+              raise SystemExit("Resposta muito grande.")
+          try:
+              candidates=json.loads(data).get("candidates",[])
+              parts=candidates[0].get("content",{}).get("parts",[])
+              ok=any(isinstance(p.get("text"),str) and p["text"].strip() for p in parts)
+          except (ValueError,IndexError,TypeError,AttributeError):
+              ok=False
+          print("Uma chamada realizada; texto recebido:",ok)
+          if not ok:
+              raise SystemExit(1)
+          PY
