@@ -201,7 +201,7 @@ html,body{max-width:100%;overflow-x:clip}
 @media(max-width:440px){#profile .profile-level-head strong{font-size:.85rem!important}#profile .profile-level-head #profileXpValue{font-size:.68rem!important}}
 </style><style>/* V75.22: bandeira decorativa no canto inferior direito do painel de XP */
 #profile #profileXpPanel{position:relative!important;isolation:isolate!important;overflow:hidden!important;padding-bottom:32px!important}
-#profile #profileXpPanel::after{content:"";position:absolute;right:8px;bottom:-9px;width:112px;height:79px;pointer-events:none;z-index:-1;opacity:.88;background-repeat:no-repeat;background-position:right bottom;background-size:contain;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 79'%3E%3Cdefs%3E%3ClinearGradient id='m' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop stop-color='%23bf63ff'/%3E%3Cstop offset='1' stop-color='%2343229c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 79 28 52 43 65 75 28 112 79Z' fill='url(%23m)' stroke='%23c780ff' stroke-width='2'/%3E%3Cpath d='M74 29V5' stroke='%23edcaff' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M75 6 Q87 0 98 9 L93 16 99 22 Q87 18 75 22Z' fill='%23c75cff' stroke='%23edb5ff' stroke-width='1.5'/%3E%3C/svg%3E")}
+#profile #profileXpPanel::after{content:"";position:absolute;right:8px;bottom:-9px;width:112px;height:79px;pointer-events:none;z-index:-1;opacity:.88;background-repeat:no-repeat;background-position:right bottom;background-size:contain;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 79'%3E%3Cdefs%3E%3ClinearGradient id='m' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop stop-color='%23bf63ff'/%3E%3Cstop offset='1' stop-color='%2343229c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 79 28 52 43 65 75 28 112 79Z' fill='url(%23m)' stroke='%23c780ff' stroke-width='2'/%3E%3Cpath d='M74 29V5' stroke='%23edcaff' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M75 6 Q87 0 98 9 L93 16 99 22 Q87 18 75 22Z' fill='%23bf63ff' stroke='%23edb5ff' stroke-width='1.5'/%3E%3C/svg%3E")}
 @media(max-width:440px){#profile #profileXpPanel::after{width:78px;height:56px;opacity:.65}#profile #profileXpPanel{padding-bottom:23px!important}}
 </style><style id="profile-stats-layout-v77">
 /* Somente disposição dos blocos: preserva cores e estilos atuais. */
@@ -470,6 +470,79 @@ html,body{max-width:100%;overflow-x:clip}
  #profile .profile-achievement-showcase .profile-achievement-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 }
 </style>
+<style id="profile-showcase-alignment-v7572">
+/* v75.72: alinhar vitrine de conquistas no Android à referência, sem alterar lógica ou dados. */
+@media screen and (min-width:390px) and (max-width:700px){
+ #profile .profile-achievement-showcase{display:grid!important;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;gap:6px!important;align-items:stretch!important}
+ #profile .profile-achievement-showcase #profileAchievementsPanel{min-width:0!important;width:auto!important;padding:9px 6px!important;margin:0!important;overflow:hidden!important}
+ #profile .profile-achievement-showcase .profile-featured-standalone{min-width:0!important;width:auto!important;margin:0!important;align-self:stretch!important}
+ #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{height:100%!important;min-height:0!important;padding:9px 5px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:5px!important}
+ #profile .profile-achievements-heading{display:block!important;margin:0 0 5px!important}
+ #profile .profile-achievements-heading h2{font-size:clamp(.69rem,2.5vw,.91rem)!important;margin:0 0 3px!important}
+ #profile .profile-achievements-heading p{font-size:clamp(.49rem,1.65vw,.61rem)!important;line-height:1.25!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress{width:100%!important;min-width:0!important;margin-top:5px!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{font-size:.59rem!important}
+ #profile #profileAchievementGrid{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:2px!important;margin:7px 0 0!important;overflow:visible!important}
+ #profile #profileAchievementGrid .profile-achievement-item{width:auto!important;min-width:0!important;padding:3px 0!important;gap:3px!important;background:transparent!important;border:0!important;box-shadow:none!important}
+ #profile #profileAchievementGrid .profile-achievement-emoji{width:clamp(23px,5.1vw,35px)!important;height:clamp(27px,6vw,40px)!important;font-size:clamp(.9rem,3vw,1.3rem)!important;margin:0 auto 3px!important}
+ #profile #profileAchievementGrid .profile-achievement-item strong{font-size:clamp(.36rem,1.1vw,.49rem)!important;line-height:1.15!important;min-height:27px!important;overflow-wrap:anywhere!important}
+ #profile #profileAchievementGrid .profile-achievement-item small{font-size:clamp(.34rem,1vw,.43rem)!important;line-height:1.15!important;min-height:24px!important;overflow-wrap:anywhere!important}
+ #profile #profileAchievementGrid .profile-achievement-item button{font-size:clamp(.34rem,1vw,.43rem)!important;line-height:1.1!important;padding:3px 1px!important;min-height:26px!important;max-width:100%!important;overflow-wrap:anywhere!important}
+ #profile .profile-featured-standalone .featured-section-heading{font-size:clamp(.62rem,2vw,.78rem)!important;margin:0 0 4px!important}
+ #profile .profile-featured-standalone .featured-content{display:flex!important;flex-direction:column!important;gap:6px!important;min-width:0!important}
+ #profile .profile-featured-standalone .featured-medal .emblem{width:clamp(48px,12vw,72px)!important;height:clamp(54px,13vw,80px)!important;font-size:1.8rem!important}
+ #profile .profile-featured-standalone .featured-medal strong{font-size:.59rem!important;line-height:1.15!important}
+ #profile .profile-featured-standalone .featured-information{border:0!important;padding:0!important;min-width:0!important}
+ #profile .profile-featured-standalone .featured-description,#profile .profile-featured-standalone #profileFeaturedHint{font-size:.56rem!important;line-height:1.25!important}
+ #profile .profile-featured-standalone .featured-change-button{font-size:.56rem!important;line-height:1.2!important;padding:7px 3px!important;width:100%!important}
+ #profile > .profile-achievement-stats-strip{margin-top:8px!important}
+}
+</style>
+<style id="profile-showcase-alignment-v7573">
+/* v75.73 — Android estreito: preservar vitrine lado a lado em 320–389px CSS.
+   Sem modificar dados, scripts, cores ou a versão oficial. */
+@media screen and (min-width:320px) and (max-width:389.98px){
+ #profile .profile-achievement-showcase{display:grid!important;grid-template-columns:minmax(0,1.72fr) minmax(0,1fr)!important;gap:5px!important;align-items:stretch!important}
+ #profile .profile-achievement-showcase #profileAchievementsPanel{width:auto!important;min-width:0!important;max-width:100%!important;margin:0!important;padding:7px 4px!important;overflow:hidden!important}
+ #profile .profile-achievement-showcase .profile-featured-standalone{width:auto!important;min-width:0!important;max-width:100%!important;margin:0!important;align-self:stretch!important}
+ #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{height:100%!important;min-height:0!important;padding:7px 4px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:4px!important}
+ #profile .profile-achievements-heading{display:block!important;margin:0 0 4px!important}
+ #profile .profile-achievements-heading h2{font-size:.68rem!important;line-height:1.15!important;margin:0 0 3px!important}
+ #profile .profile-achievements-heading p{font-size:.48rem!important;line-height:1.2!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress{width:100%!important;min-width:0!important;margin:4px 0!important}
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{font-size:.52rem!important;line-height:1.2!important}
+ #profile #profileAchievementGrid{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:1px!important;margin:6px 0 0!important;padding:0!important;overflow:visible!important}
+ #profile #profileAchievementGrid .profile-achievement-item{width:auto!important;min-width:0!important;max-width:none!important;flex:initial!important;padding:2px 0!important;gap:2px!important;border:0!important;background:transparent!important;box-shadow:none!important}
+ #profile #profileAchievementGrid .profile-achievement-emoji{width:clamp(18px,5.3vw,28px)!important;height:clamp(23px,6.3vw,33px)!important;font-size:.86rem!important;margin:0 auto 2px!important}
+ #profile #profileAchievementGrid .profile-achievement-item strong{font-size:.35rem!important;line-height:1.1!important;min-height:25px!important;overflow-wrap:anywhere!important}
+ #profile #profileAchievementGrid .profile-achievement-item small{font-size:.33rem!important;line-height:1.1!important;min-height:22px!important;overflow-wrap:anywhere!important}
+ #profile #profileAchievementGrid .profile-achievement-item button{width:100%!important;max-width:100%!important;min-height:24px!important;font-size:.33rem!important;line-height:1.1!important;padding:2px 0!important;overflow-wrap:anywhere!important}
+ #profile .profile-featured-standalone .featured-section-heading{font-size:.64rem!important;line-height:1.15!important;margin:0 0 5px!important}
+ #profile .profile-featured-standalone .featured-content{display:flex!important;flex-direction:column!important;gap:5px!important;min-width:0!important}
+ #profile .profile-featured-standalone .featured-medal .emblem{width:48px!important;height:55px!important;font-size:1.7rem!important}
+ #profile .profile-featured-standalone .featured-medal strong{font-size:.55rem!important;line-height:1.15!important}
+ #profile .profile-featured-standalone .featured-information{min-width:0!important;border:0!important;padding:0!important}
+ #profile .profile-featured-standalone .featured-description,#profile .profile-featured-standalone #profileFeaturedHint{font-size:.51rem!important;line-height:1.2!important}
+ #profile .profile-featured-standalone .featured-change-button{width:100%!important;font-size:.51rem!important;padding:6px 2px!important;line-height:1.15!important}
+ #profile > .profile-achievement-stats-strip{margin-top:7px!important}
+}
+</style>
+
+<style id="profile-android-colors-notebook-v1">
+/* Padronização cromática Android -> notebook; somente cores, sem alterar layout ou lógica. */
+@media screen and (max-width:700px){
+ #profile .profile-hero{background:radial-gradient(ellipse at 53% 45%,#5366d7 0%,#35449b 43%,#171c49 90%)!important;box-shadow:0 12px 24px #202e7026!important}
+ #profile > .profile-premium-tabs button{background:linear-gradient(110deg,#4b61c8,#343b98)!important;border-color:#8795e5!important;box-shadow:0 3px 10px #293e8a24!important;color:#fff!important}
+ #profile #profileAchievementsPanel,#profile .profile-featured-standalone,#profile .profile-featured-standalone .profile-hero-badge{background:#fff!important;color:#282b50!important;border-color:#e3e5f2!important}
+ #profile .profile-achievements-heading h2,#profile .featured-section-heading{color:#292d5d!important}
+ #profile .profile-achievements-heading p,#profile .featured-description,#profile #profileFeaturedHint{color:#656b82!important}
+ #profile .profile-achievement-progress-label{color:#30365f!important}
+ #profile .profile-achievement-progress-fill{background:linear-gradient(90deg,#6264d5,#8388e8)!important}
+ #profile .featured-change-button{background:linear-gradient(110deg,#5364c5,#353d91)!important;border-color:#7c8bce!important;color:#fff!important}
+ #profile > .profile-achievement-stats-strip{background:#fff!important;color:#292344!important;border-color:#e5e7eb!important}
+ #profile > .profile-achievement-stats-strip small{color:#6b7280!important}
+}
+</style>
 <style id="nav-real-device-refinement-20261122">
 /* Ajustes isolados a partir de capturas reais: sem alterar páginas ou dados. */
 header nav{scroll-behavior:smooth;scroll-padding-inline:12px;overscroll-behavior-x:contain}
@@ -491,6 +564,13 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
  header nav button{min-height:42px}
 }
 </style>
+<style id="home-layout-balance-20261122">
+/* Etapa 3: evitar duas colunas estreitas em telas intermediarias. */
+@media (min-width:701px) and (max-width:900px){
+ #home .home-layout{grid-template-columns:minmax(0,1fr)}
+ #home .home-left,#home .home-right{min-width:0}
+}
+</style>
 <style id="home-action-cards-contrast-20261122">
 /* Etapa 3: contraste e separacao visual dos cartoes da pagina inicial. */
 #home .home-actions .action-card{
@@ -503,26 +583,6 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 #home .home-actions .action-card span:not(.emoji){color:#475569}
 #home .home-actions .action-card:focus-visible{outline:3px solid #818cf8;outline-offset:2px}
 </style>
-<script id="profile-desktop-on-phone-detection-v7584">
-(function(){
- function update(){
-   // A viewport do Chrome Android em modo desktop pode reportar screen.width=980;
-   // por isso não depender de screen.width para reconhecer o aparelho.
-   var ua=navigator.userAgent||'';
-   var isAndroid=/Android/i.test(ua);
-   // Chrome Android em "Site para computador" pode ocultar Android do userAgent.
-   // Detectar também viewport desktop em aparelho touch compacto.
-   var isTouch=(navigator.maxTouchPoints||0)>0;
-   var compactScreen=Math.min(screen.width,screen.height)<=700;
-   var androidDesktopFallback=isTouch&&compactScreen&&/Chrome|CriOS/i.test(ua);
-   var desktopViewport=document.documentElement.clientWidth>=701;
-   document.documentElement.classList.toggle('profile-desktop-on-phone',
-     desktopViewport&&(isAndroid||androidDesktopFallback));
- }
- update();
- window.addEventListener('resize',update,{passive:true});
-})();
-</script>
 <style id="android-desktop-home-readability-20261122">
 /* Etapa 4, teste 1: leitura da pagina inicial apenas no Android em modo computador. */
 @media (min-width:701px){
@@ -595,26 +655,6 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
  }
 }
 </style>
-<style id="profile-identity-badges-isolated-20261122">
-/* Preserva as cores oficiais ao posicionar os selos abaixo do nome. */
-#profile #profileIdentityBadges .profile-founder-identity-tag{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;margin-left:8px;padding:5px 10px;border:1px solid #edc66e;border-radius:999px;background:linear-gradient(115deg,#39205f,#6a3792);color:#ffe5a4;font-weight:800;font-size:.78rem;letter-spacing:.015em;box-shadow:0 2px 9px #170d3744}
-#profile #profileIdentityBadges .profile-founder-identity-tag span{font-size:1.05rem}
-#profile #profileIdentityBadges .profile-founder-identity-tag[hidden]{display:none!important}
-#profile #profileIdentityBadges .profile-founder-identity-tag{font-size:.7rem;padding:4px 7px}
-#profile #profileIdentityBadges .profile-admin-authority-tag{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;margin-left:8px;padding:5px 10px;border:1px solid #e9c777;border-radius:999px;background:linear-gradient(115deg,#211342,#52258e);color:#ffdf8b;font-weight:800;font-size:.78rem;letter-spacing:.035em;box-shadow:0 2px 9px #170d3777}
-#profile #profileIdentityBadges .profile-admin-authority-tag span{font-size:1.12rem}
-#profile #profileIdentityBadges .profile-admin-authority-tag[hidden]{display:none!important}
-#profile #profileIdentityBadges .profile-admin-authority-tag{font-size:.7rem;padding:4px 7px}
-</style>
-
-<style id="profile-mobile-badges-alignment-20261122">
-/* Identidades oficiais abaixo do nome em telas estreitas, sem alterar concessões. */
-@media screen and (max-width:700px){
- #profile #profileIdentityBadges{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;justify-content:flex-start!important;gap:4px!important;max-width:100%!important;width:auto!important;margin:4px 0 5px!important}
- #profile #profileIdentityBadges .profile-founder-identity-tag,
- #profile #profileIdentityBadges .profile-admin-authority-tag{margin:0!important;max-width:100%!important}
-}
-</style>
 </head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
@@ -625,7 +665,7 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 </div>
 <div style="max-width:1050px;margin:10px auto 0;padding:0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button id="checkForUpdates" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">🔄 Verificar atualização</button>
-  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão de testes v75.66</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
+  <span id="updateCheckStatus" role="status" aria-live="polite" style="font-size:.82rem;color:#6b7280">Versão v75.77</span><button id="showUpdateHistory" type="button" class="secondary" style="padding:7px 12px;font-size:.84rem">📋 O que mudou?</button>
 </div>
 <section id="updateHistoryPanel" hidden aria-label="Histórico de atualizações" style="max-width:1050px;margin:12px auto;padding:16px 18px;border:1px solid #d9d5f5;border-radius:14px;background:#f8f7ff;color:#28233e"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;font-size:1.1rem">📋 Histórico de atualizações</h2><button id="closeUpdateHistory" type="button" class="secondary">Fechar</button></div><p><strong>V75.15 — Layout do perfil inspirado na referência</strong></p><p>Nova estrutura do banner, medalhas roláveis no celular, seção de conquistas e painéis reorganizados, sem alterar os registros.</p><p><strong>V75.14 — Perfil e conquistas responsivos</strong></p><p>Hierarquia visual do cabeçalho, medalhas, próxima conquista e painéis ajustada para celular, sem alterar dados.</p><p><strong>V75.13 — Perfil premium</strong></p><p>Brilho e acabamento das medalhas, painel de nível, emblema Beta, próxima conquista e adaptação ao celular; XP e registros preservados.</p><p><strong>V75.12 — Conquistas em destaque</strong></p><p>Conquistas acima das configurações, avatar ampliado e medalhas hexagonais; registros e XP preservados.</p><p><strong>V75.11 — Perfil premium responsivo</strong></p><p>Refinamento do brilho Beta, medalhas, nível, cartões e espaçamentos, sem mudar registros nem conceder conquistas.</p><p><strong>V75.10 — Acabamento visual do perfil</strong></p><p>Realce do emblema, painel de nível, medalhas e distribuição responsiva, sem alterar o XP ou os registros.</p><p><strong>V75.9 — Refinamento do perfil</strong></p><p>Emblema Beta maior, medalhas aprimoradas e ajustes responsivos no cabeçalho.</p><p><strong>V75.8 — Cabeçalho e emblema Beta</strong></p><p>Emblema dourado de demonstração, status do estudante, data de entrada quando disponível e melhor acabamento responsivo.</p><p><strong>V75.7 — Perfil inspirado no protótipo</strong></p><p>Cabeçalho em três áreas, medalhas e painéis de evolução com layout adaptável ao celular.</p><p><strong>V75.6 — Níveis e prévia Beta</strong></p><p>XP baseado em registros locais e prévia opcional do emblema Pioneiro Beta, sem conceder conquistas reais.</p><p><strong>V75.2 — Conquistas no perfil</strong></p><p>Medalhas e metas reais de desbloqueio disponíveis no perfil, sem apagar estudos.</p><p><strong>V75.1 — Acesso ao tutor pela tela Início</strong></p><p>O Tutor de ajuda saiu do menu superior e ganhou atalhos na tela inicial, mantendo o tutorial, dúvidas e conquistas.</p><p><strong>V75.0 — Tutor de ajuda e conquistas</strong></p><p>Primeira versão do tutorial guiado, respostas preparadas para dúvidas e conquistas locais. O chat generativo de IA será desenvolvido em outra etapa.</p><p><strong>V74.5 — Navegação reforçada para Flashcards</strong></p><p>Os botões de revisão do Progresso agora usam uma navegação direta, independente de outros módulos.</p><p><strong>V74.4 — Correção dos botões de revisão</strong></p><p>Revisar agora e Praticar flashcards passam a abrir corretamente a tela de cartões, sem alterar os registros de estudo.</p><p><strong>V74.3 — Acabamento final do painel</strong></p><p>Grade de estatísticas mais equilibrada em telas grandes, melhor espaçamento e contraste dos painéis, com respeito à preferência de movimento reduzido.</p><p><strong>V74.2 — Ajustes de legibilidade e revisões</strong></p><p>Cartões em grade de três no celular, revisão imediata mais evidente e escala visual do gráfico semanal aprimorada.</p><p><strong>V74.1 — Acabamento visual do Progresso</strong></p><p>Gráfico de linha com dados reais, cartões mais legíveis, revisões por data, gráfico circular de autoavaliações e próximos passos destacados.</p><p><strong>V74.0 — Novo painel de Progresso</strong></p><p>Painel reorganizado com gráfico semanal de dados reais, metas opcionais, revisões, autoavaliações e próximos passos.</p><p><strong>V73.2 — Revisão a qualquer momento</strong></p><p>O botão Revisar perguntas fica disponível no modo IA, mesmo antes de esgotar novas perguntas. Revisões não apagam o progresso.</p><p><strong>V73.1 — Melhorias no sistema de versões</strong></p><p>Identificação de correções menores, histórico de alterações e manutenção do mecanismo de atualização sem reinstalar.</p><p><strong>V73 — Revisão de perguntas</strong></p><p>Melhoria na revisão quando não há perguntas antigas salvas e esclarecimento do aviso de esgotamento.</p><p><strong>V72 — Histórico de revisão</strong></p><p>Busca de perguntas em tentativas registradas anteriormente.</p><p><strong>V71 — Aviso de conclusão</strong></p><p>Apresentação visual do aviso e opções para revisar ou adicionar conteúdo.</p><p style="font-size:.82rem;opacity:.75">Seus estudos e cartões permanecem armazenados conforme as configurações atuais do aplicativo.</p></section>
 <div class="layout">
@@ -1194,7 +1234,7 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 #profile > .profile-premium-tabs button{min-width:0;white-space:normal;overflow-wrap:normal}
 @media(max-width:650px){#profile > .profile-premium-tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin:22px 0 18px!important;gap:9px}}
 </style>
-<nav class="profile-premium-tabs" aria-label="Seções do meu perfil"><button type="button" data-profile-jump="profileAchievementsPanel">🏆 Minhas conquistas</button><button type="button" data-profile-jump="profileSpecialSealFounder">👑 Meus selos</button><button type="button" data-profile-jump="profileXpPanel">▥ Minha evolução</button><button type="button" data-profile-jump="profileName">👤 Meu perfil</button></nav><div class="profile-achievement-showcase"><div class="panel" id="profileAchievementsPanel"><div class="profile-achievements-heading"><div><h2>🏆 Minhas conquistas</h2><p class="muted">Conquistas que você desbloqueia estudando e usando o aplicativo.</p></div><div class="profile-achievement-progress" aria-label="Progresso das conquistas"><div id="profileAchievementSummary" class="profile-achievement-progress-label" aria-live="polite"></div><div class="profile-achievement-progress-track" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><div class="profile-achievement-progress-fill"></div></div></div></div><p class="muted">Medalhas calculadas com seus registros de estudo disponíveis neste navegador. Conquistas bloqueadas mostram o que falta para desbloquear.</p><div id="profileAchievementGrid" class="profile-achievement-grid" aria-live="polite"></div><div class="profile-achievement-footnote"><p class="muted" style="font-size:.85rem">O selo Pioneiro Beta será disponibilizado apenas após a identificação dos participantes elegíveis. As medalhas ainda não são um certificado de aprendizagem.</p></div></div>
+<nav class="profile-premium-tabs" aria-label="Seções do meu perfil"><button type="button" data-profile-jump="profileAchievementsPanel">🏆 Minhas conquistas</button><button type="button" data-profile-jump="profileSpecialSealFounder">👑 Meus selos</button><button type="button" data-profile-jump="profileXpPanel">▥ Minha evolução</button><button type="button" data-profile-jump="profileName">👤 Meu perfil</button></nav><div class="profile-achievement-showcase"><div class="panel" id="profileAchievementsPanel"><div class="profile-achievements-heading" style="display:grid!important;grid-template-columns:minmax(0,1fr) 120px!important;column-gap:8px!important;align-items:start!important;position:relative!important"><div style="grid-column:1!important;grid-row:1!important;min-width:0!important;padding:0!important"><h2>🏆 Minhas conquistas</h2><p class="muted">Conquistas que você desbloqueia estudando e usando o aplicativo.</p></div><div class="profile-achievement-progress" aria-label="Progresso das conquistas" style="grid-column:2!important;grid-row:1!important;position:static!important;inset:auto!important;transform:none!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;width:120px!important;max-width:120px!important;min-width:0!important;margin:9px 0 0!important;padding:0!important;gap:4px!important"><div id="profileAchievementSummary" class="profile-achievement-progress-label" aria-live="polite" style="position:static!important;inset:auto!important;transform:none!important;display:block!important;width:120px!important;max-width:120px!important;margin:0!important;padding:0!important;text-align:right!important;font-size:9px!important;line-height:1.2!important;white-space:normal!important"></div><div class="profile-achievement-progress-track" style="position:static!important;inset:auto!important;display:block!important;width:120px!important;max-width:120px!important;height:6px!important;margin:0!important;padding:0!important" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><div class="profile-achievement-progress-fill"></div></div></div></div><div id="profileAchievementGrid" class="profile-achievement-grid" aria-live="polite"></div></div>
 <div class="profile-featured-standalone" aria-label="Conquista em destaque"><div class="profile-hero-badge"><h3 class="featured-section-heading">⭐ Conquista em destaque</h3><div class="featured-content"><div class="featured-medal"><span id="profileFeaturedEmblem" class="emblem">🏆</span><strong id="profileFeaturedTitle">Sua conquista em destaque</strong></div><div class="featured-information"><p class="featured-description">Essa conquista é exibida no topo do seu perfil e também em listas do app.</p><p id="profileFeaturedHint" class="muted">Escolha uma medalha conquistada</p><button type="button" class="featured-change-button" id="profileFeaturedChange">⚙️ Alterar destaque</button></div></div></div></div>
 </div>
 <div class="profile-achievement-stats-strip" id="profileAchievementStatsStrip" aria-label="Estatísticas dos estudos">
@@ -1775,6 +1815,47 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 }
 
 
+/* EXPERIMENTO ANDROID — leitura confortável dos painéis inferiores. */
+/* Até 700px: acompanha o breakpoint da grade de medalhas no Android. */
+@media screen and (max-width:700px){
+ #profile .profile-bottom-panels{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:12px!important;
+ }
+ #profile .profile-bottom-panels .panel{
+  min-width:0;
+  min-height:0!important;
+  padding:16px!important;
+ }
+ #profile .profile-bottom-panels h3{
+  font-size:1rem!important;
+  line-height:1.35!important;
+ }
+ #profile .profile-bottom-panels p,
+ #profile .profile-bottom-panels .profile-tip{
+  font-size:.875rem!important;
+  line-height:1.45!important;
+ }
+}
+
+/* EXPERIMENTO ANDROID — 3 medalhas por linha. Somente branch de desenvolvimento. */
+@media screen and (max-width:700px){
+ #profile .profile-achievement-showcase .profile-achievement-grid,
+ #profile #profileAchievementGrid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px 7px!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-item strong{
+  font-size:max(.75rem,12px)!important;
+  line-height:1.3!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-item button{
+  font-size:max(.72rem,11.5px)!important;
+  line-height:1.25!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+ }
+}
 </style>
 <section id="admin-support" class="screen"><div class="panel"><p class="overline">Acesso restrito · Administração</p><h2>🛡️ Painel de suporte</h2><p class="muted">Consulte conversas humanas, responda aos usuários e acompanhe relatos enviados.</p><button type="button" id="adminSupportRefresh" class="secondary">↻ Atualizar atendimentos</button><p id="adminSupportStatus" class="muted" role="status" aria-live="polite">Verificando permissão…</p><div id="adminSupportList"></div></div></section><section id="backup" class="screen"><div class="panel"><h2>Dados e backup</h2><p>Seus estudos são guardados neste navegador. Quando você entra em uma conta e a sincronização é concluída, eles também podem ser salvos na nuvem para acesso em outros dispositivos com a mesma conta. A sincronização depende da conexão e não substitui um backup próprio. Use “Exportar meus dados (JSON)” para guardar uma cópia e “Importar backup” para restaurar um arquivo. Antes de trocar ou limpar o dispositivo, confirme a sincronização e mantenha um backup.</p><div class="row"><button id="export">Exportar meus dados (JSON)</button><label class="secondary" style="padding:10px 13px;border-radius:10px;cursor:pointer;text-align:center">Importar backup<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label></div><hr><button class="danger" id="erase">Apagar todos os dados deste navegador</button><p id="backupMsg" class="muted" role="status"></p></div></section>
 </main></div>
@@ -1786,7 +1867,7 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="profile.js?v=75.57"></script>
+<script src="profile.js?v=75.80"></script>
 <script src="settings.js?v=2"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=5"></script>
@@ -1863,7 +1944,7 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
  if(!el)return;
  function update(){
   const m=(el.textContent||'').match(/(\d+)\s*(?:de|\/)\s*(\d+)/i);
-  if(m)el.setAttribute('data-short-summary',m[1]+' de '+m[2]+' desbloqueadas');
+  if(m){const short=m[1]+' de '+m[2]+' desbloqueadas';if(el.textContent!==short)el.textContent=short;el.setAttribute('data-short-summary',short);}
  }
  new MutationObserver(update).observe(el,{childList:true,characterData:true,subtree:true});
  update();
@@ -1891,5 +1972,2882 @@ if(dates.size){set('days',dates.size);let streak=0;const now=new Date();now.setH
 }
 update();const summary=document.getElementById('profileAchievementSummary');if(summary)new MutationObserver(update).observe(summary,{childList:true,subtree:true,characterData:true});document.addEventListener('visibilitychange',()=>{if(!document.hidden)update()});document.querySelectorAll('[data-profile-jump]').forEach(b=>b.addEventListener('click',update));
 })();
-</script></body>
+</script>
+<style id="profile-android-ref-v82">
+/* ==========================================================================
+   MISSÃO 02: Adaptação do Perfil Android à Referência Visual
+   Aplicado exclusivamente em telas mobile (<= 700px).
+   Desktop (> 700px e >= 1201px) 100% preservado.
+   ========================================================================== */
+@media screen and (max-width: 700px) {
+  /* 1. Estrutura geral do Perfil em telas mobile */
+  #profile {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow-x: visible !important;
+  }
+
+  #profile .profile-page-heading {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin: 4px 0 12px !important;
+    padding: 0 2px !important;
+  }
+  #profile .profile-page-heading h2 {
+    font-size: clamp(1.15rem, 4vw, 1.35rem) !important;
+    margin: 0 !important;
+  }
+  #profile .profile-page-heading p {
+    font-size: 0.75rem !important;
+    margin: 2px 0 0 !important;
+  }
+  #profile #profileShareButton {
+    font-size: 0.72rem !important;
+    padding: 7px 10px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 2. Cabeçalho Compacto com Nível e XP ao lado */
+  #profile .profile-hero {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.15fr) minmax(130px, 0.95fr) !important;
+    grid-template-areas:
+      "identity level"
+      "seals seals" !important;
+    gap: 10px 10px !important;
+    padding: 14px 12px !important;
+    border-radius: 20px !important;
+    background: radial-gradient(circle at 75% 25%, #6332c9 0%, transparent 45%),
+                linear-gradient(115deg, #201142 0%, #3e1b80 62%, #221345 100%) !important;
+    box-shadow: 0 8px 24px rgba(26, 12, 58, 0.22) !important;
+    min-height: 0 !important;
+    align-items: stretch !important;
+  }
+
+  /* Identidade do estudante (Coluna 1) */
+  #profile .profile-hero-main {
+    grid-area: identity !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+  #profile .profile-hero-main > .row {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+  }
+  #profile .profile-hero-main .profile-avatar-wrap {
+    flex: 0 0 auto !important;
+  }
+  #profile .profile-hero #profileAvatar {
+    width: clamp(52px, 15vw, 64px) !important;
+    height: clamp(52px, 15vw, 64px) !important;
+    flex: 0 0 auto !important;
+    border-radius: 50% !important;
+    font-size: 1.6rem !important;
+  }
+  #profile .profile-camera-button {
+    width: 24px !important;
+    height: 24px !important;
+    right: -4px !important;
+    bottom: -2px !important;
+  }
+  #profile .profile-camera-button svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  #profile .profile-hero-main .profile-name-line {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    flex-wrap: wrap !important;
+    min-width: 0 !important;
+  }
+  #profile .profile-hero #profileDisplayName {
+    font-size: clamp(1rem, 3.4vw, 1.25rem) !important;
+    font-weight: 850 !important;
+    line-height: 1.2 !important;
+    color: #fff !important;
+    overflow-wrap: anywhere !important;
+    margin: 0 !important;
+  }
+  #profile .profile-name-pencil {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    font-size: 13px !important;
+  }
+  #profile .profile-hero-main #profileEmail {
+    display: block !important;
+    font-size: 0.68rem !important;
+    color: #dfd4fa !important;
+    line-height: 1.25 !important;
+    margin: 1px 0 2px !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    opacity: 0.92 !important;
+  }
+  #profile .profile-student-status {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 3px !important;
+    margin: 2px 0 0 !important;
+  }
+  #profile .profile-active-pill {
+    font-size: 0.68rem !important;
+    padding: 3px 8px !important;
+    border-radius: 99px !important;
+    line-height: 1.2 !important;
+  }
+  #profile .profile-member-since {
+    font-size: 0.65rem !important;
+    color: #dfd4fa !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Painel de Nível e XP posicionado ao lado (Coluna 2) */
+  #profile .profile-hero .profile-level-card,
+  #profile .profile-level-card#profileXpPanel {
+    grid-area: level !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 10px !important;
+    border-radius: 14px !important;
+    background: rgba(18, 9, 44, 0.6) !important;
+    border: 1px solid rgba(177, 138, 255, 0.3) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+    margin: 0 !important;
+  }
+  #profile .profile-level-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+  }
+  #profile .profile-level-badge {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+  }
+  #profile .profile-level-signal {
+    display: inline-flex !important;
+    align-items: flex-end !important;
+    gap: 2px !important;
+    height: 16px !important;
+  }
+  #profile .profile-level-signal i {
+    width: 3px !important;
+  }
+  #profile .profile-level-signal i:nth-child(1) { height: 6px !important; }
+  #profile .profile-level-signal i:nth-child(2) { height: 11px !important; }
+  #profile .profile-level-signal i:nth-child(3) { height: 16px !important; }
+  #profile .profile-level-head strong {
+    font-size: 0.78rem !important;
+    padding: 3px 7px !important;
+    border-radius: 7px !important;
+    background: #7925eb !important;
+    color: #fff !important;
+    white-space: nowrap !important;
+  }
+  #profile .profile-level-head #profileXpValue {
+    font-size: 0.68rem !important;
+    color: #dcd1f3 !important;
+    white-space: nowrap !important;
+  }
+  #profile .profile-level-card .profile-xp-track {
+    height: 9px !important;
+    border-radius: 99px !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  #profile .profile-level-title {
+    font-size: 0.68rem !important;
+    color: #e8dcff !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Selos Oficiais integrados na base do cabeçalho */
+  #profile .profile-hero-seals {
+    grid-area: seals !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    padding: 7px 10px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    margin-top: 2px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-radius: 10px !important;
+  }
+  #profile .profile-hero-seals h3 {
+    margin: 0 !important;
+    font-size: 0.74rem !important;
+    color: #f0e6ff !important;
+    white-space: nowrap !important;
+  }
+  #profile .profile-hero-seals .profile-hero-seal-icons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  #profile .hero-seal-symbol,
+  #profile .hero-seal-shortcut {
+    width: 34px !important;
+    height: 38px !important;
+    flex: 0 0 34px !important;
+    font-size: 1.15rem !important;
+    border-radius: 10px !important;
+  }
+  #profile .profile-hero-seals small {
+    display: block !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* 3. Quatro botões de navegação organizados em duas linhas (2x2) */
+  #profile > .profile-premium-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px 10px !important;
+    margin: 16px 0 16px !important;
+    padding: 0 !important;
+  }
+  #profile > .profile-premium-tabs button {
+    min-height: 46px !important;
+    padding: 10px 8px !important;
+    font-size: clamp(0.74rem, 2.4vw, 0.82rem) !important;
+    font-weight: 750 !important;
+    border-radius: 12px !important;
+    border: 1px solid #a855f766 !important;
+    background: linear-gradient(135deg, #5b3ab2, #39247e) !important;
+    color: #f8e8ff !important;
+    box-shadow: 0 3px 8px rgba(35, 14, 70, 0.25) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;
+  }
+  #profile > .profile-premium-tabs button:active {
+    transform: translateY(1px) !important;
+  }
+
+  /* 4. Conquistas em Formato Compacto de Medalhas (3 colunas) */
+  #profile .profile-achievement-showcase {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  #profile .profile-achievement-showcase #profileAchievementsPanel {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 16px 12px !important;
+    border-radius: 18px !important;
+    border: 1px solid #e4def6 !important;
+    box-shadow: 0 4px 14px rgba(34, 18, 66, 0.05) !important;
+    background: #fff !important;
+  }
+  #profile .profile-achievements-heading {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+  #profile .profile-achievements-heading h2 {
+    font-size: 1.15rem !important;
+    margin: 0 !important;
+    color: #241743 !important;
+  }
+  #profile .profile-achievements-heading p {
+    font-size: 0.76rem !important;
+    color: #6b647b !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+  }
+  #profile .profile-achievement-progress {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+  #profile .profile-achievement-progress-label,
+  #profile #profileAchievementSummary {
+    font-size: 0.78rem !important;
+    font-weight: 800 !important;
+    color: #573587 !important;
+    text-align: left !important;
+  }
+  #profile .profile-achievement-progress-track {
+    width: 100% !important;
+    height: 10px !important;
+    border-radius: 99px !important;
+    background: #e5dafa !important;
+    overflow: hidden !important;
+  }
+  #profile #profileAchievementsPanel > p.muted {
+    display: block !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* Grade de medalhas em 3 colunas */
+  #profile .profile-achievement-showcase .profile-achievement-grid,
+  #profile #profileAchievementGrid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px 6px !important;
+    margin: 10px 0 !important;
+    padding: 0 !important;
+  }
+  #profile .profile-achievement-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 8px 3px !important;
+    border-radius: 14px !important;
+    background: transparent !important;
+    border: 0 !important;
+    min-width: 0 !important;
+  }
+  #profile .profile-achievement-emoji {
+    width: clamp(56px, 17vw, 68px) !important;
+    height: clamp(62px, 18vw, 74px) !important;
+    display: grid !important;
+    place-items: center !important;
+    margin: 0 auto 6px !important;
+    font-size: clamp(2rem, 6vw, 2.4rem) !important;
+    color: #fff !important;
+    clip-path: polygon(50% 0, 95% 24%, 95% 76%, 50% 100%, 5% 76%, 5% 24%) !important;
+    background: linear-gradient(145deg, #4b24a1, #191143) !important;
+    border: 2px solid #a78bfa !important;
+    filter: drop-shadow(0 3px 5px rgba(50, 20, 110, 0.25)) !important;
+  }
+  #profile .profile-achievement-item.is-selected .profile-achievement-emoji {
+    border-color: #f6cb4e !important;
+    box-shadow: 0 0 10px rgba(246, 203, 78, 0.5) !important;
+    filter: drop-shadow(0 3px 7px rgba(230, 180, 60, 0.4)) !important;
+  }
+  #profile .profile-achievement-item.is-locked .profile-achievement-emoji {
+    filter: grayscale(1) !important;
+    opacity: 0.65 !important;
+    background: linear-gradient(145deg, #62606d, #292732) !important;
+    border-color: #9b98a6 !important;
+  }
+  #profile .profile-achievement-item strong {
+    font-size: clamp(0.7rem, 2.3vw, 0.8rem) !important;
+    line-height: 1.25 !important;
+    margin: 2px 0 3px !important;
+    text-align: center !important;
+    overflow-wrap: anywhere !important;
+    color: #241743 !important;
+  }
+  #profile .profile-achievement-item small {
+    font-size: 0.65rem !important;
+    color: #6b647b !important;
+    margin-bottom: 6px !important;
+    text-align: center !important;
+  }
+  #profile .profile-achievement-item button {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(0.62rem, 2vw, 0.72rem) !important;
+    padding: 6px 3px !important;
+    min-height: 32px !important;
+    border-radius: 8px !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    margin-top: auto !important;
+  }
+
+  /* 5. Conquista em Destaque em Painel Próprio */
+  #profile .profile-featured-standalone {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+  #profile .profile-featured-standalone .profile-hero-badge {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 16px 14px !important;
+    border-radius: 18px !important;
+    border: 1px solid #d8c5f2 !important;
+    background: linear-gradient(115deg, #ffffff, #f7f2ff) !important;
+    box-shadow: 0 4px 14px rgba(34, 18, 66, 0.05) !important;
+    text-align: left !important;
+  }
+  #profile .featured-section-heading {
+    margin: 0 0 12px !important;
+    font-size: 1.05rem !important;
+    font-weight: 850 !important;
+    color: #35215e !important;
+  }
+  #profile .featured-content {
+    display: grid !important;
+    grid-template-columns: minmax(105px, 0.95fr) minmax(0, 1.25fr) !important;
+    gap: 12px !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  #profile .featured-medal {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    padding: 4px 0 !important;
+    min-width: 0 !important;
+  }
+  #profile .featured-medal .emblem {
+    width: clamp(82px, 24vw, 105px) !important;
+    height: clamp(92px, 26vw, 115px) !important;
+    font-size: clamp(2.8rem, 8vw, 3.6rem) !important;
+    clip-path: polygon(50% 0, 94% 24%, 94% 74%, 50% 100%, 6% 74%, 6% 24%) !important;
+    background: linear-gradient(145deg, #513c94, #30225c) !important;
+    border: 3px solid #d5a342 !important;
+    filter: drop-shadow(0 3px 6px rgba(107, 77, 153, 0.3)) !important;
+  }
+  #profile .featured-medal strong {
+    font-size: clamp(0.72rem, 2.2vw, 0.85rem) !important;
+    padding: 5px 8px !important;
+    margin-top: -10px !important;
+    border-radius: 9px !important;
+    background: linear-gradient(110deg, #ffe49b, #eec468) !important;
+    color: #39265a !important;
+    border: 1px solid #d7aa48 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+  }
+  #profile .featured-information {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    border-left: 1px solid #c6b2e2 !important;
+    border-top: 0 !important;
+    padding-left: 12px !important;
+    min-width: 0 !important;
+  }
+  #profile .featured-information .featured-description {
+    font-size: clamp(0.74rem, 2.2vw, 0.84rem) !important;
+    color: #51466c !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+  }
+  #profile .featured-information #profileFeaturedHint {
+    font-size: 0.7rem !important;
+    color: #7a6e95 !important;
+    margin: 0 !important;
+  }
+  #profile .featured-change-button {
+    width: 100% !important;
+    padding: 9px 8px !important;
+    font-size: clamp(0.72rem, 2.2vw, 0.82rem) !important;
+    font-weight: 750 !important;
+    border-radius: 999px !important;
+    background: linear-gradient(110deg, #6744b1, #4c318e) !important;
+    color: #fff !important;
+    border: 1px solid #b89bdd !important;
+    text-align: center !important;
+    cursor: pointer !important;
+  }
+
+  /* 6. Faixa Inferior de Estatísticas (Tema Roxo Oficial Preservado) */
+  #profile > .profile-achievement-stats-strip {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px 6px !important;
+    padding: 14px 8px !important;
+    margin: 16px 0 16px !important;
+    border-radius: 18px !important;
+    background: linear-gradient(135deg, #25134d 0%, #170932 100%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.35) !important;
+    box-shadow: 0 6px 18px rgba(18, 7, 38, 0.35) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #profile > .profile-achievement-stats-strip > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 2px 2px !important;
+    min-width: 0 !important;
+    border-left: 0 !important;
+  }
+  #profile > .profile-achievement-stats-strip span {
+    font-size: 1.25rem !important;
+    line-height: 1 !important;
+  }
+  #profile > .profile-achievement-stats-strip strong {
+    font-size: clamp(0.95rem, 3.2vw, 1.15rem) !important;
+    line-height: 1.2 !important;
+    color: #ffffff !important;
+  }
+  #profile > .profile-achievement-stats-strip small {
+    font-size: clamp(0.62rem, 2vw, 0.72rem) !important;
+    color: #dfd2f7 !important;
+    white-space: nowrap !important;
+    margin-top: 2px !important;
+  }
+
+  /* 7. Painéis inferiores de evolução e dicas empilhados */
+  #profile .profile-bottom-panels {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas: none !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+  }
+  #profile .profile-bottom-panels > * {
+    grid-area: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #profile .profile-bottom-panels .panel {
+    padding: 14px !important;
+    border-radius: 16px !important;
+    min-height: 0 !important;
+  }
+}
+
+/* Refinamento exclusivo para telas compactas (<= 360px - ex: Galaxy A10/A12, Moto E) */
+@media screen and (max-width: 360px) {
+  #profile .profile-hero {
+    grid-template-columns: minmax(0, 1.1fr) minmax(120px, 0.9fr) !important;
+    padding: 12px 10px !important;
+    gap: 8px !important;
+  }
+  #profile .profile-hero #profileAvatar {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.4rem !important;
+  }
+  #profile .profile-hero #profileDisplayName {
+    font-size: 0.95rem !important;
+  }
+  #profile .profile-hero-main #profileEmail {
+    font-size: 0.62rem !important;
+  }
+  #profile .profile-level-head strong {
+    font-size: 0.72rem !important;
+    padding: 2px 5px !important;
+  }
+  #profile .featured-content {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  #profile .featured-information {
+    border-left: 0 !important;
+    border-top: 1px solid #c6b2e2 !important;
+    padding-left: 0 !important;
+    padding-top: 10px !important;
+  }
+}
+</style>
+
+<style id="profile-android-exato-v75-67">
+/* v75.67 Teste — composição compacta do protótipo de referência.
+   Somente perfil em telas Android; preserva dados, scripts e desktop. */
+@media screen and (max-width:700px) {
+ #profile {padding:0 8px!important}
+ #profile .profile-page-heading{margin:2px 0 8px!important}
+ #profile .profile-hero{
+   display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;
+   grid-template-areas:"identity level" "seals level"!important;
+   gap:8px!important;padding:12px 10px!important;border-radius:16px!important;
+   background:radial-gradient(circle at 35% 35%,#5025a2,transparent 58%),linear-gradient(110deg,#19092e,#30115a)!important;
+ }
+ #profile .profile-hero-main{grid-area:identity!important;min-width:0!important}
+ #profile .profile-hero-main .row{gap:7px!important;align-items:center!important}
+ #profile .profile-hero #profileAvatar{width:54px!important;height:54px!important;flex-basis:54px!important}
+ #profile .profile-hero-main #profileDisplayName{font-size:clamp(.84rem,3.4vw,1.1rem)!important;line-height:1.15!important}
+ #profile .profile-hero-main #profileEmail{font-size:.62rem!important;overflow-wrap:anywhere!important}
+ #profile .profile-student-status{gap:2px!important}
+ #profile .profile-hero-seals{grid-area:seals!important;padding:5px!important;margin:0!important;border:0!important;background:transparent!important;min-width:0!important}
+ #profile .profile-hero-seals h3{font-size:.67rem!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:25px!important;height:28px!important;flex:0 0 25px!important;font-size:.9rem!important}
+ #profile .profile-hero-seals small{font-size:.55rem!important}
+ #profile .profile-level-card{grid-area:level!important;min-width:0!important;align-self:stretch!important;padding:8px!important;gap:5px!important}
+ #profile .profile-level-head{flex-wrap:wrap!important;gap:4px!important}
+ #profile .profile-level-head strong,#profile .profile-level-head small{font-size:.63rem!important}
+ #profile .profile-level-title{font-size:.62rem!important}
+ #profile > .profile-premium-tabs{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;margin:8px 0!important;padding:0!important}
+ #profile > .profile-premium-tabs::before{display:none!important}
+ #profile > .profile-premium-tabs button{min-height:37px!important;padding:5px 2px!important;font-size:clamp(.53rem,1.8vw,.7rem)!important;line-height:1.15!important;border-radius:12px!important}
+ #profile .profile-achievement-showcase{
+   display:grid!important;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)!important;
+   gap:6px!important;align-items:stretch!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel,
+ #profile .profile-featured-standalone .profile-hero-badge{
+   background:linear-gradient(145deg,#2b0d58,#190a34)!important;
+   border:1px solid #8c43dd!important;color:#fff!important;
+   border-radius:12px!important;padding:9px 6px!important;box-shadow:0 0 9px #6e28b855!important;
+ }
+ #profile .profile-achievements-heading{gap:4px!important;margin-bottom:5px!important}
+ #profile .profile-achievements-heading h2,#profile .featured-section-heading{color:#ffe1a3!important;font-size:.76rem!important;line-height:1.15!important;margin:0 0 4px!important}
+ #profile .profile-achievements-heading p{color:#e3d6ff!important;font-size:.59rem!important;line-height:1.2!important}
+ #profile .profile-achievement-progress-label,#profile #profileAchievementSummary{color:#e7d7ff!important;font-size:.58rem!important}
+ #profile .profile-achievement-progress-track{height:5px!important}
+ #profile #profileAchievementsPanel>p.muted,#profile .profile-achievement-footnote{display:none!important}
+ #profile .profile-achievement-showcase .profile-achievement-grid,#profile #profileAchievementGrid{
+   display:flex!important;gap:3px!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;
+   scrollbar-width:thin!important;padding:3px 0 7px!important;margin:3px 0!important;
+ }
+ #profile .profile-achievement-item{flex:0 0 57px!important;min-width:57px!important;padding:3px 1px!important}
+ #profile .profile-achievement-emoji{width:44px!important;height:48px!important;font-size:1.45rem!important;margin-bottom:3px!important}
+ #profile .profile-achievement-item strong{font-size:.55rem!important;color:#fff!important;line-height:1.2!important}
+ #profile .profile-achievement-item small{font-size:.5rem!important;color:#dec7ff!important}
+ #profile .profile-achievement-item button{min-height:27px!important;font-size:.5rem!important;padding:3px 1px!important;background:#512399!important;color:#fff!important}
+ #profile .profile-featured-standalone{min-width:0!important;align-self:stretch!important}
+ #profile .profile-featured-standalone .profile-hero-badge{height:100%!important;box-sizing:border-box!important}
+ #profile .featured-content{display:flex!important;flex-direction:column!important;gap:3px!important}
+ #profile .featured-medal .emblem{width:58px!important;height:66px!important;font-size:2rem!important}
+ #profile .featured-medal strong{font-size:.58rem!important;line-height:1.15!important}
+ #profile .featured-information{padding:3px 0!important;border:0!important;text-align:center!important}
+ #profile .featured-description,#profile #profileFeaturedHint{font-size:.55rem!important;line-height:1.25!important;color:#eadbff!important}
+ #profile .featured-change-button{padding:5px 3px!important;font-size:.55rem!important}
+ #profile > .profile-achievement-stats-strip{
+   display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+   gap:0!important;padding:9px 2px!important;margin:8px 0!important;
+   border-radius:12px!important;
+ }
+ #profile > .profile-achievement-stats-strip > div{padding:2px 1px!important;min-width:0!important;border-left:1px solid #a26bda66!important}
+ #profile > .profile-achievement-stats-strip > div:first-child{border-left:0!important}
+ #profile > .profile-achievement-stats-strip span{font-size:.9rem!important}
+ #profile > .profile-achievement-stats-strip strong{font-size:.7rem!important}
+ #profile > .profile-achievement-stats-strip small{font-size:clamp(.44rem,1.5vw,.59rem)!important;white-space:normal!important;overflow-wrap:anywhere!important}
+}
+</style>
+
+<style id="profile-android-fix-v75-68">
+/* v75.68 Teste — corrige cartões espremidos e evita texto vertical.
+   Isolado ao Android. Sem alterações em JS, banco ou desktop. */
+@media screen and (max-width:700px){
+ #profile .profile-hero{
+   grid-template-columns:minmax(0,1fr) minmax(0,120px)!important;
+   grid-template-areas:"identity level" "seals level"!important;
+   padding:10px 9px!important;gap:6px!important;
+ }
+ #profile .profile-hero-main .row{gap:6px!important}
+ #profile .profile-hero-main #profileAvatar{width:46px!important;height:46px!important;flex:0 0 46px!important}
+ #profile .profile-hero-main #profileDisplayName{font-size:clamp(.83rem,3vw,1rem)!important}
+ #profile .profile-name-pencil{width:21px!important;height:21px!important;min-width:21px!important;min-height:21px!important}
+ #profile .profile-student-status{margin-top:3px!important}
+ #profile .profile-hero-seals{padding:2px 0!important}
+ #profile .profile-hero-seals small{display:none!important}
+ #profile .profile-level-card{min-height:0!important;padding:6px!important;justify-content:center!important}
+ #profile .profile-level-head strong{padding:4px 5px!important;font-size:.64rem!important}
+ #profile .profile-level-head small{font-size:.55rem!important}
+ #profile .profile-xp-track{height:7px!important}
+ #profile .profile-achievement-showcase{
+   display:grid!important;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr)!important;
+   align-items:start!important;gap:6px!important;width:100%!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+   width:auto!important;min-width:0!important;max-width:100%!important;
+   padding:9px 7px!important;overflow:hidden!important;
+ }
+ #profile .profile-achievements-heading{gap:4px!important;margin:0 0 5px!important}
+ #profile .profile-achievements-heading h2{font-size:.75rem!important;color:#ffe4a1!important}
+ #profile .profile-achievements-heading p{font-size:.58rem!important;color:#eee1ff!important}
+ #profile .profile-achievement-progress{gap:3px!important}
+ #profile #profileAchievementSummary{font-size:.57rem!important;color:#eee1ff!important}
+ #profile .profile-achievement-progress-track{height:5px!important}
+ #profile #profileAchievementGrid{
+   display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+   grid-template-columns:none!important;gap:5px!important;
+   width:100%!important;min-width:0!important;max-width:100%!important;
+   overflow-x:auto!important;overflow-y:hidden!important;
+   scroll-snap-type:x proximity!important;overscroll-behavior-x:contain!important;
+   padding:4px 2px 8px!important;margin:4px 0 0!important;
+   scrollbar-width:thin!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item{
+   flex:0 0 88px!important;width:88px!important;min-width:88px!important;max-width:88px!important;
+   display:flex!important;flex-direction:column!important;align-items:center!important;
+   padding:4px 2px!important;scroll-snap-align:start!important;
+   box-sizing:border-box!important;overflow:visible!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-emoji{
+   width:49px!important;height:54px!important;font-size:1.6rem!important;
+   margin:0 auto 5px!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item strong{
+   width:100%!important;font-size:.65rem!important;line-height:1.2!important;
+   white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;
+   hyphens:none!important;text-align:center!important;color:#fff!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item small{
+   width:100%!important;font-size:.55rem!important;line-height:1.25!important;
+   white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;
+   color:#e7d9ff!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item button{
+   width:100%!important;min-height:32px!important;padding:4px 2px!important;
+   font-size:.55rem!important;line-height:1.15!important;
+   white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;
+   box-sizing:border-box!important;
+ }
+ #profile .profile-featured-standalone{
+   width:auto!important;min-width:0!important;max-width:100%!important;
+   align-self:stretch!important;
+ }
+ #profile .profile-featured-standalone .profile-hero-badge{
+   min-height:0!important;padding:8px 5px!important;
+ }
+ #profile .profile-featured-standalone .featured-section-heading{
+   font-size:.72rem!important;line-height:1.2!important;
+ }
+ #profile .profile-featured-standalone .featured-medal .emblem{
+   width:55px!important;height:61px!important;
+ }
+ #profile .profile-featured-standalone .featured-medal strong{
+   font-size:.65rem!important;line-height:1.2!important;
+   overflow-wrap:normal!important;word-break:normal!important;
+ }
+ #profile .profile-featured-standalone .featured-description,
+ #profile .profile-featured-standalone #profileFeaturedHint{
+   font-size:.57rem!important;line-height:1.3!important;
+   overflow-wrap:break-word!important;word-break:normal!important;
+ }
+ #profile .profile-featured-standalone .featured-change-button{
+   font-size:.57rem!important;min-height:32px!important;
+ }
+}
+@media screen and (max-width:360px){
+ #profile .profile-achievement-showcase{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)!important}
+ #profile #profileAchievementGrid .profile-achievement-item{flex-basis:80px!important;width:80px!important;min-width:80px!important;max-width:80px!important}
+}
+</style>
+
+<style id="profile-android-ref-v75-69">
+/* v75.69 Teste — aproximacao visual da referencia, somente CSS mobile.
+   Sem alterar JS, dados, backend, versao oficial ou desktop. */
+@media screen and (max-width:700px){
+ #profile .profile-page-heading{margin:0 0 5px!important}
+ #profile .profile-hero{
+   grid-template-columns:minmax(0,1fr) minmax(0,112px)!important;
+   grid-template-areas:"identity level" "seals level"!important;
+   gap:3px 7px!important;padding:9px 8px!important;
+   background:radial-gradient(circle at 28% 38%,#5220a5 0,transparent 52%),linear-gradient(115deg,#21063e,#19072f)!important;
+ }
+ #profile .profile-hero-main{min-width:0!important}
+ #profile .profile-hero-main .row{gap:5px!important;align-items:center!important}
+ #profile .profile-hero #profileAvatar{width:52px!important;height:52px!important;flex:0 0 52px!important}
+ #profile .profile-hero-main #profileDisplayName{font-size:clamp(.75rem,2.85vw,1rem)!important}
+ #profile .profile-hero-main #profileEmail{font-size:.55rem!important;line-height:1.1!important}
+ #profile .profile-hero-seals{gap:3px!important;padding:2px 0!important}
+ #profile .profile-hero-seals h3{font-size:.58rem!important}
+ #profile .profile-hero-seals .profile-hero-seal-icons{gap:3px!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:24px!important;height:27px!important;flex:0 0 24px!important}
+ #profile .profile-level-card{padding:6px 4px!important;gap:3px!important;align-self:center!important}
+ #profile .profile-level-head{gap:2px!important}
+ #profile .profile-level-head strong{font-size:.58rem!important}
+ #profile .profile-level-head small{font-size:.5rem!important}
+ #profile .profile-level-title{font-size:.52rem!important}
+ #profile > .profile-premium-tabs{margin:6px 0!important;gap:4px!important}
+ #profile > .profile-premium-tabs button{
+   min-height:38px!important;font-size:clamp(.52rem,1.9vw,.7rem)!important;
+   background:linear-gradient(180deg,#5425a7,#3a1378)!important;
+   border:1px solid #a24fe4!important;
+   box-shadow:0 0 5px #8f3bea88,inset 0 1px 2px #c18cf077!important;
+ }
+ #profile .profile-achievement-showcase{
+   grid-template-columns:minmax(0,1.8fr) minmax(0,1fr)!important;
+   gap:5px!important;align-items:start!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+   padding:8px 5px!important;
+   background:linear-gradient(155deg,#2a0b56,#16072e)!important;
+ }
+ #profile .profile-achievements-heading h2{font-size:.75rem!important}
+ #profile .profile-achievements-heading p{font-size:.55rem!important}
+ #profile #profileAchievementSummary{font-size:.56rem!important}
+ #profile #profileAchievementGrid{
+   gap:2px!important;padding:3px 0 6px!important;
+   scroll-snap-type:x proximity!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item{
+   flex:0 0 64px!important;width:64px!important;min-width:64px!important;max-width:64px!important;
+   padding:3px 1px!important;border-radius:8px!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-emoji{
+   width:46px!important;height:49px!important;font-size:1.5rem!important;margin-bottom:2px!important;
+   background:linear-gradient(145deg,#5823ae,#22084b)!important;
+   filter:drop-shadow(0 0 4px #a343ff88)!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item.is-locked .profile-achievement-emoji{
+   background:linear-gradient(145deg,#6e6b79,#292431)!important;
+   filter:grayscale(1)!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item strong{
+   font-size:.53rem!important;line-height:1.15!important;min-height:27px!important;
+   white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item small{
+   font-size:.46rem!important;line-height:1.12!important;min-height:22px!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item button{
+   min-height:29px!important;font-size:.47rem!important;line-height:1.12!important;
+   border:1px solid #8d47da!important;
+ }
+ #profile .profile-featured-standalone{align-self:start!important}
+ #profile .profile-featured-standalone .profile-hero-badge{
+   height:auto!important;min-height:0!important;
+   padding:8px 5px!important;
+   background:linear-gradient(145deg,#2e0b5a,#17072f)!important;
+ }
+ #profile .profile-featured-standalone .featured-section-heading{font-size:.67rem!important;margin-bottom:5px!important}
+ #profile .profile-featured-standalone .featured-medal .emblem{
+   width:65px!important;height:69px!important;font-size:2rem!important;
+   filter:drop-shadow(0 0 6px #f6c74a88)!important;
+ }
+ #profile .profile-featured-standalone .featured-medal strong{
+   font-size:.62rem!important;background:linear-gradient(120deg,#ffe5a5,#edbb59)!important;
+   color:#42205d!important;padding:4px 3px!important;border-radius:8px!important;
+ }
+ #profile .profile-featured-standalone .featured-information{padding:4px 0!important}
+ #profile .profile-featured-standalone .featured-description,
+ #profile .profile-featured-standalone #profileFeaturedHint{font-size:.52rem!important;line-height:1.2!important}
+ #profile .profile-featured-standalone .featured-change-button{min-height:30px!important}
+ #profile > .profile-achievement-stats-strip{
+   background:linear-gradient(110deg,#2d0b56,#16062d)!important;
+   border:1px solid #8142c7!important;
+   box-shadow:0 0 8px #7028ad55!important;
+   margin-top:7px!important;
+ }
+}
+@media screen and (max-width:360px){
+ #profile .profile-hero{grid-template-columns:minmax(0,1fr) minmax(0,98px)!important}
+ #profile .profile-achievement-showcase{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)!important}
+ #profile #profileAchievementGrid .profile-achievement-item{flex-basis:58px!important;width:58px!important;min-width:58px!important;max-width:58px!important}
+}
+</style>
+
+<style id="profile-android-reference-v75-70">
+/* v75.70 Teste — replica a composicao compacta da referencia no Android.
+   Apenas apresentacao; nenhuma alteracao em dados, scripts ou desktop. */
+@media screen and (max-width:700px){
+ #profile{padding:0 7px!important}
+ #profile .profile-hero{
+   display:grid!important;
+   grid-template-columns:minmax(0,1fr) minmax(0,112px)!important;
+   grid-template-areas:"identity level" "seals level"!important;
+   gap:2px 6px!important;padding:9px 8px!important;
+   border:1px solid #7f39d5!important;border-radius:13px!important;
+   background:radial-gradient(ellipse at 29% 40%,#4a159b 0%,transparent 55%),linear-gradient(115deg,#250747,#160525)!important;
+   box-shadow:0 0 10px #7a32d444!important;
+ }
+ #profile .profile-hero-main{grid-area:identity!important;min-width:0!important}
+ #profile .profile-hero-main .row{gap:5px!important;align-items:center!important}
+ #profile .profile-avatar-wrap{flex-shrink:0!important}
+ #profile .profile-hero #profileAvatar{width:49px!important;height:49px!important;flex:0 0 49px!important}
+ #profile .profile-hero-main .row>div:last-child{min-width:0!important}
+ #profile .profile-name-line{display:flex!important;flex-wrap:nowrap!important;gap:3px!important;min-width:0!important}
+ #profile .profile-hero-main #profileDisplayName{font-size:clamp(.76rem,2.85vw,.96rem)!important;line-height:1.1!important;white-space:normal!important}
+ #profile .profile-hero-main #profileEmail{font-size:.54rem!important;line-height:1.1!important;overflow-wrap:anywhere!important}
+ #profile .profile-student-status{gap:1px!important}
+ #profile .profile-active-pill{font-size:.55rem!important;padding:2px 5px!important}
+ #profile .profile-member-since{font-size:.51rem!important}
+ #profile .profile-hero-seals{
+   grid-area:seals!important;display:flex!important;align-items:center!important;
+   flex-wrap:nowrap!important;gap:3px!important;margin:0!important;padding:1px 0!important;
+   background:transparent!important;border:0!important;min-width:0!important;
+ }
+ #profile .profile-hero-seals h3{font-size:.56rem!important;white-space:nowrap!important;margin:0!important}
+ #profile .profile-hero-seal-icons{display:flex!important;gap:2px!important;min-width:0!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{
+   width:23px!important;height:25px!important;flex:0 0 23px!important;font-size:.82rem!important;
+   border-radius:7px!important;
+ }
+ #profile .profile-hero-seals small{display:none!important}
+ #profile .profile-level-card{
+   grid-area:level!important;align-self:center!important;min-width:0!important;
+   width:100%!important;padding:6px 5px!important;gap:4px!important;
+   border-radius:9px!important;border:1px solid #a365e088!important;
+   background:#140829cc!important;
+ }
+ #profile .profile-level-head{display:flex!important;flex-wrap:wrap!important;gap:2px!important}
+ #profile .profile-level-head strong{font-size:.55rem!important;padding:3px 5px!important}
+ #profile .profile-level-head small{font-size:.5rem!important}
+ #profile .profile-level-card .profile-xp-track{height:7px!important}
+ #profile .profile-level-title{font-size:.52rem!important;line-height:1.15!important}
+ #profile > .profile-premium-tabs{
+   display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+   gap:4px!important;margin:7px 0!important;
+ }
+ #profile > .profile-premium-tabs button{
+   min-height:38px!important;padding:5px 2px!important;
+   font-size:clamp(.5rem,1.75vw,.67rem)!important;
+   border-radius:12px!important;
+   background:linear-gradient(180deg,#5e2cb4,#35106c)!important;
+   border:1px solid #ae53fa!important;
+   box-shadow:0 0 6px #9b44f888,inset 0 1px 2px #d39cff77!important;
+ }
+ #profile .profile-achievement-showcase{
+   display:grid!important;
+   grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;
+   gap:5px!important;align-items:stretch!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel,
+ #profile .profile-featured-standalone .profile-hero-badge{
+   min-width:0!important;box-sizing:border-box!important;
+   border-radius:11px!important;border:1px solid #9e4ff2!important;
+   background:linear-gradient(145deg,#2a0954,#17052e)!important;
+   color:#fff!important;box-shadow:0 0 8px #8735e177!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{padding:7px 4px!important}
+ #profile .profile-achievements-heading{gap:2px!important;margin-bottom:3px!important}
+ #profile .profile-achievements-heading h2,
+ #profile .featured-section-heading{font-size:clamp(.63rem,2vw,.76rem)!important;color:#ffda83!important;line-height:1.1!important;margin:0 0 3px!important}
+ #profile .profile-achievements-heading p{font-size:.52rem!important;line-height:1.15!important;color:#e5d3ff!important}
+ #profile #profileAchievementSummary{font-size:.52rem!important;color:#e8d8ff!important}
+ #profile .profile-achievement-progress-track{height:5px!important}
+ #profile #profileAchievementsPanel>p.muted,
+ #profile .profile-achievement-footnote{display:none!important}
+ /* Seven medals in one row, as in the reference. */
+ #profile #profileAchievementGrid{
+   display:grid!important;
+   grid-template-columns:repeat(7,minmax(0,1fr))!important;
+   gap:1px!important;overflow:visible!important;
+   width:100%!important;margin:5px 0 1px!important;padding:0!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item{
+   display:flex!important;flex-direction:column!important;align-items:center!important;
+   min-width:0!important;width:auto!important;max-width:none!important;
+   padding:2px 0!important;gap:2px!important;border-radius:6px!important;
+   background:transparent!important;border:0!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-emoji{
+   width:clamp(21px,5.6vw,36px)!important;
+   height:clamp(25px,6.5vw,40px)!important;
+   font-size:clamp(.85rem,3.3vw,1.25rem)!important;
+   margin:0 auto 2px!important;border:1px solid #b36aff!important;
+   background:linear-gradient(145deg,#6931c7,#24074e)!important;
+   filter:drop-shadow(0 0 3px #a14ef5aa)!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item.is-locked .profile-achievement-emoji{
+   background:linear-gradient(145deg,#77717e,#2a2433)!important;
+   filter:grayscale(1)!important;opacity:.8!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item strong{
+   display:block!important;width:100%!important;min-height:31px!important;
+   font-size:clamp(.39rem,1.33vw,.55rem)!important;
+   line-height:1.1!important;color:#fff!important;
+   overflow-wrap:anywhere!important;word-break:normal!important;
+   text-align:center!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item small{
+   display:block!important;font-size:clamp(.35rem,1.1vw,.46rem)!important;
+   line-height:1.1!important;color:#e8d6ff!important;
+   min-height:24px!important;overflow-wrap:anywhere!important;
+ }
+ #profile #profileAchievementGrid .profile-achievement-item button{
+   width:100%!important;max-width:none!important;
+   min-height:30px!important;padding:2px 0!important;
+   font-size:clamp(.32rem,1vw,.43rem)!important;line-height:1.1!important;
+   background:linear-gradient(180deg,#6331af,#3d1579)!important;
+   border:1px solid #a76be7!important;border-radius:5px!important;
+   overflow-wrap:anywhere!important;
+ }
+ #profile .profile-featured-standalone{align-self:stretch!important;min-width:0!important}
+ #profile .profile-featured-standalone .profile-hero-badge{
+   display:flex!important;flex-direction:column!important;
+   height:100%!important;padding:7px 4px!important;
+ }
+ #profile .featured-content{display:flex!important;flex-direction:column!important;gap:5px!important}
+ #profile .featured-medal{display:flex!important;flex-direction:column!important;align-items:center!important}
+ #profile .featured-medal .emblem{
+   width:clamp(62px,16vw,88px)!important;height:clamp(70px,18vw,96px)!important;
+   font-size:clamp(2.2rem,7vw,3rem)!important;
+   filter:drop-shadow(0 0 7px #f6c34eaa)!important;
+ }
+ #profile .featured-medal strong{
+   display:block!important;font-size:clamp(.59rem,1.9vw,.76rem)!important;
+   line-height:1.1!important;padding:5px 4px!important;
+   color:#47205b!important;background:linear-gradient(120deg,#ffe8a7,#eebc54)!important;
+   border-radius:8px!important;box-shadow:0 0 5px #d5a43b77!important;
+ }
+ #profile .featured-information{padding:5px 1px!important;text-align:center!important;border:0!important}
+ #profile .featured-description,#profile #profileFeaturedHint{
+   font-size:clamp(.49rem,1.55vw,.62rem)!important;
+   line-height:1.2!important;color:#ead8ff!important;
+ }
+ #profile .featured-change-button{min-height:33px!important;padding:5px 2px!important;font-size:.55rem!important}
+ #profile > .profile-achievement-stats-strip{
+   display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+   padding:8px 1px!important;gap:0!important;margin:8px 0!important;
+   border-radius:11px!important;background:linear-gradient(110deg,#2d0a56,#18062f)!important;
+   border:1px solid #8f45e0!important;box-shadow:0 0 7px #7926c455!important;
+ }
+ #profile > .profile-achievement-stats-strip > div{
+   min-width:0!important;padding:2px 1px!important;
+   border-left:1px solid #9b62d077!important;
+ }
+ #profile > .profile-achievement-stats-strip > div:first-child{border-left:0!important}
+ #profile > .profile-achievement-stats-strip span{font-size:.8rem!important}
+ #profile > .profile-achievement-stats-strip strong{font-size:.72rem!important}
+ #profile > .profile-achievement-stats-strip small{
+   font-size:clamp(.38rem,1.25vw,.54rem)!important;
+   line-height:1.1!important;overflow-wrap:anywhere!important;
+ }
+}
+@media screen and (max-width:360px){
+ #profile .profile-hero{grid-template-columns:minmax(0,1fr) minmax(0,95px)!important}
+ #profile .profile-achievement-showcase{grid-template-columns:minmax(0,1.65fr) minmax(0,1fr)!important}
+ #profile #profileAchievementGrid .profile-achievement-item strong{font-size:.39rem!important}
+}
+</style>
+
+<style id="profile-hero-reference-v75-71">
+/* v75.71 Teste: somente cabecalho do perfil Android, preservando identidade e dados */
+@media screen and (max-width:700px){
+ #profile .profile-hero{
+   grid-template-columns:minmax(0,1.7fr) minmax(0,.72fr) minmax(0,1.16fr)!important;
+   grid-template-areas:"identity seals level"!important;
+   gap:5px!important;align-items:center!important;
+   min-height:122px!important;padding:11px 8px!important;
+   background:radial-gradient(ellipse at 32% 42%,#4d1398 0%,transparent 56%),linear-gradient(110deg,#250746,#160526)!important;
+ }
+ #profile .profile-hero-main{grid-area:identity!important;align-self:center!important}
+ #profile .profile-hero-main>.row{gap:5px!important;align-items:center!important}
+ #profile .profile-avatar-wrap{
+   position:relative!important;flex:0 0 58px!important;
+   filter:drop-shadow(0 0 7px #c77bff)!important;
+ }
+ #profile .profile-hero #profileAvatar{
+   width:58px!important;height:58px!important;flex:0 0 58px!important;
+   border:3px solid #f2cc63!important;
+   box-shadow:0 0 0 2px #8b36d9,0 0 11px #b964ff!important;
+ }
+ #profile .profile-avatar-wrap:before{
+   content:"❧";position:absolute;z-index:0;left:-11px;bottom:-6px;
+   font-size:27px;line-height:1;color:#eec65c;
+   transform:rotate(-37deg);text-shadow:0 0 5px #c58330;
+   pointer-events:none;
+ }
+ #profile .profile-avatar-wrap:after{
+   content:"❧";position:absolute;z-index:0;right:-9px;bottom:-6px;
+   font-size:27px;line-height:1;color:#eec65c;
+   transform:scaleX(-1) rotate(-37deg);text-shadow:0 0 5px #c58330;
+   pointer-events:none;
+ }
+ #profile .profile-name-line{
+   display:flex!important;flex-wrap:wrap!important;
+   gap:2px 4px!important;align-items:center!important;
+ }
+ #profile .profile-hero-main #profileDisplayName{
+   font-size:clamp(.76rem,2.7vw,.96rem)!important;line-height:1.1!important;
+ }
+ #profile .profile-name-line .profile-founder-identity-tag{
+   margin:2px 0!important;padding:2px 5px!important;
+   font-size:.53rem!important;line-height:1.15!important;
+   border-color:#e8b953!important;
+   box-shadow:0 0 6px #e7b44a55!important;
+ }
+ #profile .profile-name-line .profile-founder-identity-tag span{font-size:.72rem!important}
+ #profile .profile-hero-main #profileEmail{font-size:.52rem!important}
+ #profile .profile-student-status{margin-top:3px!important}
+ #profile .profile-hero-seals{
+   grid-area:seals!important;align-self:center!important;
+   display:flex!important;flex-direction:column!important;
+   justify-content:center!important;align-items:center!important;
+   gap:4px!important;padding:0 3px!important;
+   border-left:1px solid #c08aee55!important;
+   border-right:1px solid #c08aee55!important;
+   border-top:0!important;border-bottom:0!important;
+   min-height:75px!important;
+ }
+ #profile .profile-hero-seals h3{font-size:.53rem!important;order:2!important;margin:0!important}
+ #profile .profile-hero-seal-icons{
+   display:flex!important;flex-wrap:wrap!important;justify-content:center!important;
+   gap:2px!important;order:1!important;
+ }
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{
+   width:23px!important;height:25px!important;flex:0 0 23px!important;
+   font-size:.84rem!important;
+ }
+ #profile .profile-level-card{
+   grid-area:level!important;align-self:center!important;
+   min-height:79px!important;padding:8px 6px!important;
+   border:1px solid #b177f3aa!important;
+   background:linear-gradient(145deg,#210d43,#18082d)!important;
+   box-shadow:inset 0 0 10px #8b4bdd22!important;
+ }
+ #profile .profile-level-head{flex-wrap:wrap!important;justify-content:space-between!important}
+ #profile .profile-level-head strong{font-size:.57rem!important}
+ #profile .profile-level-head small{font-size:.5rem!important}
+ #profile .profile-level-card .profile-xp-track{height:9px!important}
+ #profile .profile-level-title{font-size:.53rem!important}
+}
+@media screen and (max-width:380px){
+ #profile .profile-hero{
+   grid-template-columns:minmax(0,1.8fr) minmax(0,.68fr) minmax(0,1.1fr)!important;
+   padding:9px 6px!important;gap:3px!important;
+ }
+ #profile .profile-avatar-wrap{flex-basis:49px!important}
+ #profile .profile-hero #profileAvatar{width:49px!important;height:49px!important;flex-basis:49px!important}
+ #profile .profile-hero-main #profileDisplayName{font-size:.73rem!important}
+ #profile .profile-name-line .profile-founder-identity-tag{font-size:.48rem!important}
+}
+</style>
+
+<style id="profile-hero-one-row-v75-72">
+/* v75.72 Teste: corrigir os posicionamentos herdados que forçavam XP e selos para novas linhas. */
+@media screen and (max-width:700px){
+ #profile .profile-hero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.85fr) minmax(0,.85fr) minmax(0,1.12fr)!important;
+  grid-template-rows:auto!important;
+  grid-template-areas:"identity seals level"!important;
+  align-items:center!important;
+  column-gap:5px!important;row-gap:0!important;
+  min-height:116px!important;padding:10px 7px!important;
+ }
+ #profile .profile-hero>.profile-hero-main{
+  grid-area:identity!important;grid-column:1!important;grid-row:1!important;
+  min-width:0!important;max-width:100%!important;
+  align-self:center!important;justify-self:stretch!important;
+ }
+ #profile .profile-hero>.profile-hero-seals{
+  grid-area:seals!important;grid-column:2!important;grid-row:1!important;
+  min-width:0!important;max-width:100%!important;
+  width:100%!important;align-self:center!important;
+  border-top:0!important;border-bottom:0!important;
+  border-left:1px solid #a669d555!important;border-right:1px solid #a669d555!important;
+  min-height:78px!important;padding:2px!important;
+  flex-direction:column!important;justify-content:center!important;align-items:center!important;
+ }
+ #profile .profile-hero>.profile-level-card{
+  grid-area:level!important;grid-column:3!important;grid-row:1!important;
+  min-width:0!important;max-width:100%!important;width:100%!important;
+  align-self:center!important;justify-self:stretch!important;
+  position:relative!important;inset:auto!important;
+  margin:0!important;transform:none!important;
+  min-height:78px!important;
+ }
+ #profile .profile-hero>.profile-beta-demo,
+ #profile .profile-hero>.profile-hero-stats{grid-column:1/-1!important}
+ #profile .profile-hero-seals small{display:none!important}
+ #profile .profile-hero-seals h3{order:2!important;margin:1px 0 0!important}
+ #profile .profile-hero-seal-icons{order:1!important}
+ #profile .profile-hero-main>.row{min-width:0!important}
+ #profile .profile-hero-main>.row>div:last-child{min-width:0!important}
+ #profile .profile-hero-main #profileEmail{overflow-wrap:anywhere!important}
+ #profile .profile-level-head{gap:2px!important}
+ #profile .profile-level-head small{white-space:normal!important;text-align:right!important}
+ #profile .profile-level-card .profile-xp-track{margin:5px 0!important}
+}
+@media screen and (max-width:380px){
+ #profile .profile-hero{
+  grid-template-columns:minmax(0,1.7fr) minmax(0,.7fr) minmax(0,1.12fr)!important;
+  column-gap:3px!important;padding:9px 5px!important;
+ }
+ #profile .profile-hero .profile-avatar-wrap{flex:0 0 44px!important}
+ #profile .profile-hero #profileAvatar{width:44px!important;height:44px!important;flex:0 0 44px!important}
+ #profile .profile-hero-main #profileDisplayName{font-size:.7rem!important}
+ #profile .profile-hero-seal-icons{gap:1px!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:19px!important;height:22px!important;flex-basis:19px!important}
+}
+</style>
+
+<style id="profile-hero-layout-v75-75">
+/* v75.75 Teste: manter identidade legivel no Android, selos e XP lado a lado.
+   Substitui v75.74 em vez de acumular outra camada. Desktop inalterado. */
+@media screen and (max-width:700px){
+ #profile .profile-hero{
+  display:grid!important;grid-template-areas:none!important;
+  grid-template-columns:minmax(0,2.2fr) minmax(0,.78fr) minmax(0,1.18fr)!important;
+  grid-template-rows:minmax(112px,auto)!important;grid-auto-rows:auto!important;
+  column-gap:5px!important;row-gap:0!important;padding:11px 8px!important;
+  align-items:center!important;overflow:hidden!important;min-height:0!important;
+ }
+ #profile .profile-hero>.profile-hero-main{
+  grid-area:1/1/2/2!important;grid-column:1/2!important;grid-row:1/2!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;align-self:center!important;
+ }
+ #profile .profile-hero-main>.row{
+  display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+  gap:5px!important;min-width:0!important;width:100%!important;
+ }
+ #profile .profile-hero-main>.row>div:last-child{flex:1 1 0!important;min-width:0!important}
+ #profile .profile-avatar-wrap{flex:0 0 45px!important;width:45px!important;min-width:45px!important}
+ #profile .profile-hero #profileAvatar{width:45px!important;height:45px!important;flex:0 0 45px!important}
+ #profile .profile-name-line{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:3px!important;min-width:0!important}
+ #profile .profile-hero #profileDisplayName{
+  font-size:clamp(.65rem,2.6vw,.85rem)!important;line-height:1.12!important;
+  white-space:nowrap!important;overflow:visible!important;word-break:normal!important;
+  overflow-wrap:normal!important;min-width:0!important;
+ }
+ #profile .profile-name-pencil{flex:0 0 18px!important;width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;font-size:11px!important}
+ #profile .profile-name-line .profile-founder-identity-tag{font-size:.5rem!important;padding:2px 4px!important;margin-left:0!important;gap:2px!important}
+ #profile .profile-name-line .profile-founder-identity-tag span{font-size:.63rem!important}
+ #profile .profile-hero-main #profileEmail{font-size:.51rem!important;line-height:1.16!important;overflow-wrap:anywhere!important;word-break:break-word!important;margin:3px 0!important}
+ #profile .profile-student-status{gap:2px!important;margin-top:2px!important}
+ #profile .profile-active-pill{font-size:.51rem!important;padding:2px 4px!important}
+ #profile .profile-member-since{font-size:.47rem!important;line-height:1.17!important}
+ #profile .profile-hero>.profile-hero-seals{
+  grid-area:1/2/2/3!important;grid-column:2/3!important;grid-row:1/2!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  min-height:84px!important;padding:3px 1px!important;align-self:center!important;
+  border-top:0!important;border-bottom:0!important;
+  border-left:1px solid #a669d555!important;border-right:1px solid #a669d555!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;
+ }
+ #profile .profile-hero-seal-icons{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;align-items:center!important;gap:2px!important;order:1!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:19px!important;height:22px!important;flex:0 0 19px!important;font-size:.72rem!important}
+ #profile .profile-hero-seals h3{order:2!important;margin:0!important;font-size:.53rem!important;line-height:1.1!important;text-align:center!important}
+ #profile .profile-hero-seals small{display:none!important}
+ #profile .profile-hero>#profileXpPanel{
+  grid-area:1/3/2/4!important;grid-column:3/4!important;grid-row:1/2!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  min-height:84px!important;padding:9px 5px!important;margin:0!important;
+  align-self:center!important;justify-self:stretch!important;position:relative!important;inset:auto!important;
+ }
+ #profile #profileXpPanel .profile-level-head{display:flex!important;flex-wrap:wrap!important;justify-content:space-between!important;align-items:center!important;gap:3px!important}
+ #profile #profileXpPanel .profile-level-head strong{font-size:.6rem!important;white-space:nowrap!important}
+ #profile #profileXpPanel .profile-level-head small{font-size:.5rem!important;white-space:nowrap!important;text-align:left!important}
+ #profile #profileXpPanel .profile-xp-track{height:9px!important;margin:6px 0!important}
+ #profile #profileXpPanel .profile-level-title{font-size:.54rem!important;line-height:1.15!important}
+ #profile #profileXpPanel::after{width:65px!important;height:46px!important;right:0!important;bottom:-5px!important;opacity:.55!important}
+ #profile .profile-hero>.profile-beta-demo:not([hidden]),#profile .profile-hero>.profile-hero-stats:not([hidden]){grid-column:1/-1!important;grid-row:auto!important}
+ #profile .profile-hero>[hidden]{display:none!important}
+}
+@media screen and (max-width:380px){
+ #profile .profile-hero{grid-template-columns:minmax(0,2.3fr) minmax(0,.7fr) minmax(0,1.1fr)!important;gap:3px!important;padding:9px 5px!important}
+ #profile .profile-avatar-wrap{flex-basis:40px!important;width:40px!important;min-width:40px!important}
+ #profile .profile-hero #profileAvatar{width:40px!important;height:40px!important;flex-basis:40px!important}
+ #profile .profile-hero #profileDisplayName{font-size:.63rem!important}
+ #profile .hero-seal-symbol,#profile .hero-seal-shortcut{width:17px!important;height:20px!important;flex-basis:17px!important}
+ #profile #profileXpPanel .profile-level-head small{font-size:.44rem!important}
+}
+</style>
+<style id="profile-achievements-alignment-v75-76">
+/* v75.76 Teste: medalhas com alturas iguais e destaque compacto.
+   Mobile: manter as duas vitrines lado a lado, com rolagem horizontal
+   apenas nas medalhas para preservar legibilidade e botões funcionais. */
+@media screen and (max-width:700px){
+ #profile .profile-achievement-showcase{
+  display:grid!important;grid-template-columns:minmax(0,1.65fr) minmax(0,.95fr)!important;
+  align-items:stretch!important;gap:7px!important;width:100%!important;min-width:0!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+  width:100%!important;min-width:0!important;min-height:0!important;
+  padding:10px 7px!important;border-radius:14px!important;
+  background:linear-gradient(145deg,#2b0955,#1a0837)!important;
+  border:1px solid #8136d4!important;color:#fff!important;
+ }
+ #profile .profile-achievements-heading{gap:5px!important;margin-bottom:6px!important}
+ #profile .profile-achievements-heading h2{font-size:clamp(.76rem,2.9vw,1.05rem)!important;color:#ffdc84!important;line-height:1.2!important}
+ #profile .profile-achievements-heading p{font-size:.62rem!important;line-height:1.24!important;color:#e3d7f3!important}
+ #profile .profile-achievement-progress{gap:3px!important}
+ #profile #profileAchievementSummary{font-size:.64rem!important;color:#f3e7ff!important}
+ #profile .profile-achievement-progress-track{height:6px!important;background:#e5dafa!important}
+ #profile #profileAchievementsPanel>p.muted,#profile .profile-achievement-footnote{display:none!important}
+ #profile #profileAchievementGrid{
+  display:grid!important;grid-template-columns:repeat(7,minmax(54px,1fr))!important;
+  gap:3px!important;width:100%!important;min-width:0!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  scroll-snap-type:x proximity!important;overscroll-behavior-x:contain!important;
+  margin:8px 0 0!important;padding:2px 0 5px!important;
+ }
+ #profile .profile-achievement-item{
+  min-width:54px!important;width:100%!important;min-height:156px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  justify-content:flex-start!important;gap:3px!important;padding:5px 2px!important;
+  scroll-snap-align:start!important;box-sizing:border-box!important;
+ }
+ #profile .profile-achievement-emoji{
+  width:40px!important;height:46px!important;min-width:40px!important;
+  font-size:1.45rem!important;margin:0 auto 3px!important;
+ }
+ #profile .profile-achievement-item strong{
+  color:#fff!important;font-size:.55rem!important;line-height:1.18!important;
+  margin:0!important;min-height:32px!important;overflow-wrap:break-word!important;
+ }
+ #profile .profile-achievement-item small{
+  color:#e2cffa!important;font-size:.48rem!important;line-height:1.15!important;
+  margin:0!important;min-height:24px!important;
+ }
+ #profile .profile-achievement-item button{
+  min-height:32px!important;padding:4px 2px!important;font-size:.48rem!important;
+  line-height:1.1!important;margin-top:auto!important;
+  background:#5c3298!important;color:#fff!important;border:1px solid #ab8cda!important;
+ }
+ #profile .profile-featured-standalone{width:100%!important;min-width:0!important;align-self:stretch!important}
+ #profile .profile-featured-standalone .profile-hero-badge{
+  width:100%!important;height:100%!important;min-height:0!important;
+  padding:10px 6px!important;box-sizing:border-box!important;
+  background:linear-gradient(145deg,#2a0953,#1b0838)!important;
+  border:1px solid #8136d4!important;border-radius:14px!important;
+ }
+ #profile .featured-section-heading{
+  font-size:clamp(.67rem,2.6vw,.95rem)!important;line-height:1.18!important;
+  color:#ffdc84!important;margin:0 0 8px!important;
+ }
+ #profile .featured-content{
+  display:flex!important;flex-direction:column!important;gap:7px!important;
+  align-items:stretch!important;min-width:0!important;width:100%!important;
+ }
+ #profile .featured-medal{width:100%!important;padding:2px 0!important}
+ #profile .featured-medal .emblem{
+  width:65px!important;height:72px!important;font-size:2.25rem!important;
+ }
+ #profile .featured-medal strong{font-size:.63rem!important;padding:4px 5px!important}
+ #profile .featured-information{
+  border:0!important;padding:0!important;gap:7px!important;min-width:0!important;
+ }
+ #profile .featured-information .featured-description{
+  font-size:.61rem!important;line-height:1.26!important;color:#eee3ff!important;
+  overflow-wrap:break-word!important;
+ }
+ #profile .featured-information #profileFeaturedHint{
+  font-size:.53rem!important;line-height:1.2!important;color:#cdb4ed!important;
+ }
+ #profile .featured-change-button{
+  font-size:.57rem!important;padding:8px 3px!important;min-height:34px!important;
+  overflow-wrap:break-word!important;
+ }
+}
+</style>
+<style id="profile-achievements-layout-v75-77">
+/* v75.77 Teste — Android: sete medalhas visíveis e destaque horizontal.
+   A largura reduzida do celular exige empilhar os painéis; desktop intacto. */
+@media screen and (max-width:700px){
+ #profile .profile-achievement-showcase{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:10px!important;align-items:start!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+  padding:12px 9px!important;overflow:hidden!important;
+ }
+ #profile .profile-achievements-heading{
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;
+  gap:5px 9px!important;align-items:start!important;
+ }
+ #profile .profile-achievements-heading>div:first-child{min-width:0!important}
+ #profile .profile-achievements-heading h2{
+  font-size:clamp(.98rem,4vw,1.2rem)!important;
+ }
+ #profile .profile-achievements-heading p{font-size:.68rem!important}
+ #profile .profile-achievement-progress{
+  width:min(125px,32vw)!important;align-self:start!important;
+ }
+ #profile #profileAchievementSummary{
+  text-align:right!important;font-size:.62rem!important;
+ }
+ #profile #profileAchievementGrid{
+  display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  gap:2px!important;overflow:visible!important;
+  scroll-snap-type:none!important;padding:2px 0 4px!important;
+  width:100%!important;margin:8px 0 0!important;
+ }
+ #profile .profile-achievement-item{
+  min-width:0!important;width:100%!important;min-height:144px!important;
+  padding:5px 1px!important;gap:3px!important;
+ }
+ #profile .profile-achievement-emoji{
+  width:clamp(30px,8.4vw,42px)!important;
+  height:clamp(35px,9.5vw,48px)!important;
+  min-width:0!important;font-size:clamp(1.05rem,4.6vw,1.6rem)!important;
+ }
+ #profile .profile-achievement-item strong{
+  font-size:clamp(.49rem,1.8vw,.65rem)!important;
+  min-height:34px!important;line-height:1.12!important;
+  overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-item small{
+  font-size:clamp(.43rem,1.55vw,.55rem)!important;
+  min-height:25px!important;line-height:1.1!important;
+  overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-item button{
+  font-size:clamp(.43rem,1.5vw,.53rem)!important;
+  min-height:34px!important;padding:3px 1px!important;
+  border-radius:7px!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-featured-standalone .profile-hero-badge{
+  padding:10px 12px!important;height:auto!important;
+ }
+ #profile .featured-section-heading{
+  font-size:clamp(.87rem,3.6vw,1.1rem)!important;
+  margin-bottom:7px!important;
+ }
+ #profile .featured-content{
+  display:grid!important;grid-template-columns:minmax(95px,.85fr) minmax(0,1.4fr)!important;
+  align-items:center!important;gap:12px!important;
+ }
+ #profile .featured-medal .emblem{
+  width:clamp(72px,21vw,95px)!important;
+  height:clamp(80px,23vw,105px)!important;
+  font-size:clamp(2.3rem,7vw,3.1rem)!important;
+ }
+ #profile .featured-medal strong{
+  font-size:clamp(.67rem,2.3vw,.82rem)!important;
+ }
+ #profile .featured-information{
+  border-left:1px solid rgba(199,161,248,.6)!important;
+  padding-left:10px!important;gap:8px!important;
+ }
+ #profile .featured-information .featured-description{
+  font-size:clamp(.69rem,2.4vw,.82rem)!important;line-height:1.3!important;
+ }
+ #profile .featured-information #profileFeaturedHint{
+  font-size:clamp(.59rem,2vw,.7rem)!important;
+ }
+ #profile .featured-change-button{
+  font-size:clamp(.68rem,2.2vw,.78rem)!important;
+  min-height:42px!important;
+ }
+}
+</style>
+<style id="profile-achievements-final-mobile-v7578">
+/* v75.78 — regra FINAL depois de todos os estilos: vitrine lado a lado como protótipo.
+   A v75.77 ao final do body sobrescrevia os ajustes anteriores no head. */
+@media screen and (max-width:700px){
+ #profile .profile-achievement-showcase{
+  display:grid!important;flex-direction:unset!important;
+  grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;
+  align-items:stretch!important;gap:5px!important;width:100%!important;min-width:0!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementsPanel{
+  width:auto!important;max-width:100%!important;min-width:0!important;
+  margin:0!important;padding:8px 5px!important;overflow:hidden!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone{
+  width:auto!important;max-width:100%!important;min-width:0!important;
+  margin:0!important;align-self:stretch!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{
+  height:100%!important;min-height:0!important;padding:8px 5px!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  gap:5px!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievements-heading{
+  display:block!important;margin:0 0 5px!important;padding:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievements-heading h2{
+  font-size:clamp(.68rem,2.35vw,.9rem)!important;line-height:1.15!important;margin:0 0 3px!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievements-heading p{
+  font-size:clamp(.47rem,1.55vw,.63rem)!important;line-height:1.2!important;margin:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress{
+  width:100%!important;max-width:100%!important;min-width:0!important;margin:5px 0!important;
+ }
+ #profile .profile-achievement-showcase .profile-achievement-progress-label{
+  font-size:clamp(.47rem,1.5vw,.6rem)!important;line-height:1.2!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid{
+  display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  gap:1px!important;overflow:visible!important;width:100%!important;
+  margin:6px 0 0!important;padding:0!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  flex:initial!important;width:auto!important;min-width:0!important;max-width:none!important;
+  padding:2px 0!important;gap:2px!important;border:0!important;background:transparent!important;
+  box-shadow:none!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-emoji{
+  width:clamp(18px,5.1vw,35px)!important;height:clamp(23px,6vw,40px)!important;
+  min-width:0!important;font-size:clamp(.85rem,2.9vw,1.2rem)!important;margin:0 auto 2px!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item strong{
+  font-size:clamp(.34rem,1.06vw,.47rem)!important;line-height:1.12!important;
+  min-height:25px!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item small{
+  font-size:clamp(.32rem,.98vw,.43rem)!important;line-height:1.1!important;
+  min-height:22px!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item button{
+  width:100%!important;max-width:100%!important;min-height:25px!important;
+  font-size:clamp(.32rem,.98vw,.43rem)!important;line-height:1.1!important;
+  padding:2px 0!important;overflow-wrap:anywhere!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-section-heading{
+  font-size:clamp(.61rem,2vw,.8rem)!important;line-height:1.15!important;margin:0 0 4px!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-content{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  gap:5px!important;min-width:0!important;width:100%!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-medal{
+  width:100%!important;padding:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-medal .emblem{
+  width:clamp(44px,11vw,70px)!important;height:clamp(50px,12vw,76px)!important;
+  font-size:1.8rem!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-medal strong{
+  font-size:.55rem!important;line-height:1.1!important;padding:3px 2px!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-information{
+  border:0!important;padding:0!important;gap:4px!important;min-width:0!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-description,
+ #profile .profile-achievement-showcase .profile-featured-standalone #profileFeaturedHint{
+  font-size:clamp(.48rem,1.6vw,.61rem)!important;line-height:1.2!important;
+ }
+ #profile .profile-achievement-showcase .profile-featured-standalone .featured-change-button{
+  width:100%!important;min-height:28px!important;
+  font-size:clamp(.48rem,1.6vw,.6rem)!important;line-height:1.15!important;padding:6px 2px!important;
+ }
+ #profile > .profile-achievement-stats-strip{margin-top:7px!important}
+}
+</style>
+<style id="profile-identity-badges-v7579">
+/* Fundador e ADM pequenos, alinhados lado a lado, sem alterar concessão de selos. */
+#profile .profile-identity-badges{
+ display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+ align-items:center!important;justify-content:flex-start!important;
+ gap:5px!important;margin:4px 0!important;min-width:0!important;
+}
+#profile .profile-identity-badges .profile-founder-identity-tag,
+#profile .profile-identity-badges .profile-admin-authority-tag{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ gap:3px!important;width:auto!important;max-width:100%!important;
+ min-height:22px!important;margin:0!important;padding:3px 7px!important;
+ font-size:.64rem!important;line-height:1.15!important;white-space:nowrap!important;
+ border-radius:999px!important;box-sizing:border-box!important;
+}
+#profile .profile-identity-badges .profile-founder-identity-tag span,
+#profile .profile-identity-badges .profile-admin-authority-tag span{
+ font-size:.75rem!important;line-height:1!important;
+}
+#profile .profile-identity-badges [hidden]{display:none!important}
+@media screen and (max-width:700px){
+ #profile .profile-identity-badges{gap:4px!important;margin:3px 0!important}
+ #profile .profile-identity-badges .profile-founder-identity-tag,
+ #profile .profile-identity-badges .profile-admin-authority-tag{
+  font-size:.56rem!important;padding:3px 6px!important;min-height:20px!important;
+ }
+}
+</style>
+<style id="profile-official-badges-gold-v7581">
+/* Apenas acabamento dos emblemas oficiais; preservar layout e demais cores. */
+#profile #profileIdentityBadges #profileFounderIdentityTag,
+#profile #profileIdentityBadges #profileAdminAuthorityTag{
+ color:#ffe09a!important;
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+ border:1px solid #f0c65d!important;
+ border-radius:999px!important;
+ box-shadow:0 0 5px #e9b84a55,inset 0 0 3px #ffe0a322!important;
+ text-shadow:0 0 3px #ffdc8b44!important;
+ font-weight:750!important;
+}
+#profile #profileIdentityBadges #profileFounderIdentityTag span,
+#profile #profileIdentityBadges #profileAdminAuthorityTag span{
+ color:#ffdb79!important;
+ text-shadow:0 0 5px #ffcb55aa!important;
+}
+#profile #profileIdentityBadges #profileFounderIdentityTag[hidden],
+#profile #profileIdentityBadges #profileAdminAuthorityTag[hidden]{display:none!important}
+</style>
+<style id="profile-hide-orphan-ornaments-v7582">
+/* Ornamentos ❧ pertencem exclusivamente ao selo Fundador visível. */
+#profile .profile-hero .profile-avatar-wrap:not(.has-official-founder)::before,
+#profile .profile-hero .profile-avatar-wrap:not(.has-official-founder)::after{
+ content:none!important;display:none!important;animation:none!important;
+}
+/* Não alterar a borda selecionada nem os ícones dos outros selos. */
+</style>
+<style id="profile-desktop-on-phone-v7584">
+/* Android em modo computador: somente viewport desktop no Android.
+   Regras isoladas: Android normal e PC permanecem inalterados. */
+html.profile-desktop-on-phone #profile .profile-hero{
+ display:grid!important;
+ grid-template-columns:minmax(0,1.45fr) minmax(0,.95fr) minmax(0,1fr)!important;
+ align-items:center!important;gap:12px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero > .profile-hero-main{
+ grid-column:1!important;grid-row:1!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero > .profile-hero-seals{
+ grid-column:2!important;grid-row:1!important;min-width:0!important;
+ border:0!important;padding:8px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero > .profile-level-card{
+ grid-column:3!important;grid-row:1!important;min-width:0!important;
+ width:100%!important;max-width:100%!important;margin:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero > .profile-beta-demo,
+html.profile-desktop-on-phone #profile .profile-hero > .profile-hero-stats{
+ grid-column:1/-1!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ display:grid!important;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;
+ align-items:stretch!important;gap:10px!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > #profileAchievementsPanel,
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > .profile-featured-standalone{
+ grid-column:auto!important;grid-row:auto!important;
+ min-width:0!important;max-width:100%!important;width:auto!important;
+ margin:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:3px!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item{
+ min-width:0!important;max-width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-featured-standalone .featured-content{
+ display:flex!important;flex-direction:column!important;gap:8px!important;align-items:center!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-featured-standalone .featured-information{
+ width:100%!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-stats-strip{margin-top:10px!important}
+</style>
+<script id="profile-desktop-on-phone-detection-v7584">
+(function(){
+ function update(){
+   // A viewport do Chrome Android em modo desktop pode reportar screen.width=980;
+   // por isso não depender de screen.width para reconhecer o aparelho.
+   var ua=navigator.userAgent||'';
+   var isAndroid=/Android/i.test(ua);
+   // Chrome Android em "Site para computador" pode ocultar Android do userAgent.
+   // Detectar também viewport desktop em aparelho touch compacto.
+   var isTouch=(navigator.maxTouchPoints||0)>0;
+   var compactScreen=Math.min(screen.width,screen.height)<=700;
+   var androidDesktopFallback=isTouch&&compactScreen&&/Chrome|CriOS/i.test(ua);
+   var desktopViewport=document.documentElement.clientWidth>=701;
+   document.documentElement.classList.toggle('profile-desktop-on-phone',
+     desktopViewport&&(isAndroid||androidDesktopFallback));
+ }
+ update();
+ window.addEventListener('resize',update,{passive:true});
+})();
+</script>
+<style id="profile-desktop-phone-polish-v7585">
+/* Acabamento exclusivo: Chrome Android com Site para computador ativado. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementsPanel{
+ box-sizing:border-box!important;overflow:hidden!important;padding:12px 10px!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-achievements-heading{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ gap:8px!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-achievements-heading > div:first-child{
+ width:100%!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-achievement-progress{
+ box-sizing:border-box!important;position:static!important;display:flex!important;
+ flex-direction:column!important;align-items:stretch!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ margin:0!important;padding:0!important;gap:5px!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-achievement-progress-label{
+ box-sizing:border-box!important;position:static!important;display:block!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ white-space:normal!important;overflow-wrap:break-word!important;
+ font-size:11px!important;line-height:1.25!important;text-align:left!important;
+ margin:0!important;padding:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase .profile-achievement-progress-label::after{
+ max-width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid{
+ grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:4px!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item{
+ box-sizing:border-box!important;padding:5px 2px!important;gap:4px!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item strong{
+ font-size:10px!important;line-height:1.2!important;overflow-wrap:break-word!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item small{
+ font-size:9px!important;line-height:1.2!important;overflow-wrap:break-word!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementGrid .profile-achievement-item button{
+ box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+ font-size:9px!important;line-height:1.15!important;padding:5px 2px!important;
+ white-space:normal!important;overflow-wrap:break-word!important;
+}
+</style>
+<style id="profile-desktop-phone-gap-fix-v7586">
+/* Evita que a altura do cartão distribua seus filhos criando um vazio entre barra e medalhas. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase #profileAchievementsPanel{
+ display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ align-content:initial!important;align-items:stretch!important;gap:9px!important;
+ height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading{
+ flex:0 0 auto!important;margin:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > p.muted{
+ flex:0 0 auto!important;margin:0!important;padding:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid{
+ flex:0 0 auto!important;align-self:stretch!important;
+ margin:0!important;padding:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote{
+ flex:0 0 auto!important;margin:0!important;padding:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote p{
+ margin:0!important;
+}
+</style>
+<style id="profile-desktop-phone-compact-v7587">
+/* Corrige o vão entre progresso e medalhas sem alterar cores nem outras telas.
+   Grid explícito impede distribuição vertical por regras legadas. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > #profileAchievementsPanel{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ grid-template-rows:repeat(4,max-content)!important;
+ align-content:start!important;
+ justify-content:stretch!important;
+ align-items:start!important;
+ row-gap:9px!important;
+ column-gap:0!important;
+ height:max-content!important;
+ min-height:0!important;
+ max-height:none!important;
+ padding:12px 10px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > p.muted,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote{
+ position:static!important;
+ display:block;
+ grid-column:1!important;
+ grid-row:auto!important;
+ align-self:start!important;
+ justify-self:stretch!important;
+ margin:0!important;
+ margin-top:0!important;
+ margin-bottom:0!important;
+ min-height:0!important;
+ height:auto!important;
+ transform:none!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading{
+ display:flex!important;flex-direction:column!important;gap:7px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:4px!important;
+}
+</style>
+<style id="profile-desktop-phone-no-gap-v7588">
+/* Evita linhas implícitas e regras de posicionamento antigas no cartão. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > #profileAchievementsPanel{
+ display:flex!important;flex-direction:column!important;
+ justify-content:flex-start!important;align-items:stretch!important;
+ align-content:flex-start!important;gap:8px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievements-heading,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > p.muted,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid,
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote{
+ position:static!important;top:auto!important;bottom:auto!important;
+ flex:0 0 auto!important;order:0!important;
+ align-self:stretch!important;min-height:0!important;
+ height:auto!important;max-height:none!important;
+ margin:0!important;padding-top:0!important;padding-bottom:0!important;
+ transform:none!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > #profileAchievementGrid{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:4px!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ align-items:start!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > .profile-featured-standalone{
+ align-self:start!important;
+}
+</style>
+
+
+<style id="profile-phone-compact-structure-v7591">
+html.profile-desktop-on-phone #profile #profileAchievementsPanel{
+ display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ align-items:stretch!important;gap:0!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements{
+ display:flex!important;flex-direction:column!important;gap:7px!important;
+ width:100%!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > .profile-achievements-heading{
+ display:flex!important;flex-direction:column!important;gap:6px!important;
+ flex:0 0 auto!important;height:auto!important;min-height:0!important;margin:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > p.muted{
+ position:static!important;display:block!important;flex:0 0 auto!important;
+ margin:0!important;padding:0!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > #profileAchievementGrid{
+ position:static!important;display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:4px!important;flex:0 0 auto!important;margin:0!important;
+ height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel > .profile-achievement-footnote{
+ margin-top:7px!important;
+}
+</style>
+<script>
+(function(){
+ function arrange(){
+  var panel=document.getElementById('profileAchievementsPanel');
+  if(!panel)return;
+  var heading=panel.querySelector('.profile-achievements-heading');
+  var grid=panel.querySelector('#profileAchievementGrid');
+  var description=Array.from(panel.children).find(function(el){return el.matches('p.muted')});
+  if(!heading||!grid)return;
+  var compact=panel.querySelector('.profile-compact-achievements');
+  if(!compact){compact=document.createElement('div');compact.className='profile-compact-achievements';panel.insertBefore(compact,heading);}
+  if(heading.parentElement!==compact)compact.appendChild(heading);
+  if(description&&description.parentElement!==compact)compact.appendChild(description);
+  if(grid.parentElement!==compact)compact.appendChild(grid);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange);
+ else arrange();
+})();
+</script>
+<style id="profile-desktop-phone-hero-reference-v7592">
+/* Somente Chrome Android com "site para computador": hero alinhado à referência.
+   Não cria selos, conquistas ou privilégios fictícios. */
+html.profile-desktop-on-phone #profile .profile-hero{
+ align-items:center!important;align-content:center!important;
+ min-height:0!important;height:auto!important;
+ padding:13px 12px!important;gap:9px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero>.profile-hero-main{
+ align-self:center!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-main>.row{
+ align-items:center!important;gap:9px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero .profile-avatar-wrap{
+ flex:0 0 72px!important;width:72px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero #profileAvatar{
+ width:72px!important;height:72px!important;flex:0 0 72px!important;
+ border:2px solid #c58aff!important;
+ box-shadow:0 0 0 2px #7139d5,0 0 14px #b34cff99!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-main #profileDisplayName{
+ font-size:clamp(.86rem,2.2vw,1.2rem)!important;font-weight:800!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-main #profileEmail{
+ font-size:clamp(.48rem,1.25vw,.7rem)!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero>.profile-hero-seals{
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+ align-items:center!important;gap:5px!important;
+ min-height:0!important;height:auto!important;padding:5px 8px!important;
+ border-left:1px solid #c08aee55!important;border-right:1px solid #c08aee55!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-seals h3{
+ order:0!important;font-size:clamp(.58rem,1.5vw,.85rem)!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-seals small{
+ display:block!important;text-align:center!important;font-size:.48rem!important;
+ opacity:.75!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero-seal-icons{
+ justify-content:center!important;gap:5px!important;
+}
+html.profile-desktop-on-phone #profile .profile-hero>.profile-level-card{
+ align-self:center!important;min-height:88px!important;
+}
+</style>
+<style id="profile-tabs-tight-desktop-phone-v7593">
+/* Aproxima os quatro atalhos do cartão superior apenas no modo computador do Android. */
+html.profile-desktop-on-phone #profile>.profile-premium-tabs{
+ margin-top:5px!important;margin-bottom:12px!important;padding-top:0!important;
+ gap:8px!important;
+}
+html.profile-desktop-on-phone #profile>.profile-premium-tabs::before{display:none!important}
+html.profile-desktop-on-phone #profile .profile-hero{margin-bottom:0!important}
+</style><style id="profile-tabs-outside-hero-v7594">
+/* Abas logo ABAIXO do cartão, nunca sobrepostas ou dentro dele. */
+html.profile-desktop-on-phone #profile>.profile-premium-tabs{
+ position:relative!important;z-index:1!important;
+ margin:12px 0 12px!important;padding:0!important;
+ transform:none!important;top:auto!important;bottom:auto!important;
+}
+html.profile-desktop-on-phone #profile>.profile-premium-tabs::before{display:none!important}
+html.profile-desktop-on-phone #profile>.profile-hero{
+ margin-bottom:0!important;overflow:visible!important;
+}
+</style><style id="profile-achievements-structure-only-v7596">
+/* Apenas geometria da referência; preservar cores, bordas e fundos existentes. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > #profileAchievementsPanel{
+ display:block!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements{
+ display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ align-items:stretch!important;gap:6px!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > .profile-achievements-heading{
+ order:0!important;margin:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > p.muted{
+ order:1!important;margin:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > #profileAchievementGrid{
+ order:2!important;margin:5px 0 0!important;align-self:stretch!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-footnote{
+ margin:7px 0 0!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ align-items:start!important;
+}
+html.profile-desktop-on-phone #profile .profile-achievement-showcase > .profile-featured-standalone{
+ align-self:start!important;
+}
+</style><style id="profile-achievements-reference-spacing-v7597">
+/* Referência: conteúdo compacto no topo, sem espaço vazio. Paleta existente intacta. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ display:grid!important;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)!important;
+ align-items:start!important;gap:8px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel{
+ display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ align-items:stretch!important;align-content:start!important;gap:7px!important;
+ min-height:0!important;height:auto!important;padding:10px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements{
+ display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ align-content:start!important;align-items:stretch!important;gap:6px!important;
+ flex:0 0 auto!important;min-height:0!important;height:auto!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ display:flex!important;flex-direction:row!important;align-items:flex-start!important;
+ justify-content:space-between!important;gap:8px!important;
+ flex:0 0 auto!important;min-height:0!important;height:auto!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress{
+ flex:0 0 35%!important;width:35%!important;max-width:35%!important;
+ margin:0!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements > p.muted{
+ position:static!important;flex:0 0 auto!important;min-height:0!important;
+ height:auto!important;margin:0!important;padding:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel #profileAchievementGrid{
+ position:static!important;display:grid!important;
+ grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ flex:0 0 auto!important;align-self:stretch!important;align-content:start!important;
+ min-height:0!important;height:auto!important;margin:4px 0 0!important;
+ gap:3px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-footnote{
+ position:static!important;margin:5px 0 0!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone{
+ align-self:start!important;height:auto!important;min-height:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .profile-hero-badge{
+ height:auto!important;min-height:0!important;padding:10px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-section-heading{
+ margin:0 0 7px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-content{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ align-items:center!important;gap:7px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information{
+ min-width:0!important;gap:6px!important;padding-left:7px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal{
+ padding:0!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal .emblem{
+ width:clamp(44px,8vw,82px)!important;height:clamp(52px,9vw,94px)!important;
+ font-size:clamp(1.5rem,3vw,3rem)!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal strong{
+ font-size:clamp(.48rem,1.1vw,.78rem)!important;padding:4px 5px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-description{
+ font-size:clamp(.5rem,1.1vw,.75rem)!important;line-height:1.3!important;
+}
+</style><style id="profile-achievements-polish-v7598">
+/* Refinamento visual: apenas Android no modo site para computador. */
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(115px,34%)!important;
+ align-items:start!important;gap:7px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;width:100%!important;max-width:none!important;
+ min-width:0!important;justify-self:end!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-compact-achievements{
+ gap:7px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel #profileAchievementGrid{
+ grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:5px!important;
+ margin-top:8px!important;align-items:start!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementGrid .emblem{
+ width:100%!important;max-width:72px!important;min-width:0!important;
+ height:auto!important;aspect-ratio:1/1.12!important;
+ font-size:clamp(1.35rem,3.3vw,2.4rem)!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementGrid > *{
+ min-width:0!important;align-self:start!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-content{
+ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)!important;
+ gap:10px!important;align-items:center!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal .emblem{
+ width:clamp(62px,9.5vw,100px)!important;
+ height:clamp(70px,10.5vw,110px)!important;
+ font-size:clamp(2rem,3.5vw,3.3rem)!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal strong{
+ font-size:clamp(.58rem,1.15vw,.85rem)!important;
+ padding:5px 7px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information{
+ padding-left:9px!important;
+}
+</style><style id="profile-featured-visible-fix-v7599">
+/* Ajuste do destaque no Android com site para computador: medalha grande,
+   descrição e botão ao lado, mantendo o fundo claro. */
+html.profile-desktop-on-phone #profile .profile-achievement-showcase{
+ grid-template-columns:minmax(0,1.65fr) minmax(0,1fr)!important;gap:8px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .profile-hero-badge{
+ padding:10px 9px!important;overflow:visible!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-section-heading{
+ font-size:clamp(.68rem,1.65vw,1rem)!important;
+ line-height:1.2!important;margin:0 0 9px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-content{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ align-items:center!important;gap:7px!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-width:0!important;padding:4px 0!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal .emblem{
+ width:min(100%,104px)!important;height:auto!important;aspect-ratio:1/1.13!important;
+ font-size:clamp(1.9rem,4vw,3.3rem)!important;
+ border:3px solid #d5a342!important;
+ filter:drop-shadow(0 0 5px #e6af65a0)!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal strong{
+ font-size:clamp(.49rem,1.22vw,.78rem)!important;line-height:1.15!important;
+ padding:5px 4px!important;min-width:0!important;max-width:100%!important;
+ margin-top:-8px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information{
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+ align-items:stretch!important;min-width:0!important;gap:7px!important;
+ border-left:1px solid #c6b2e2!important;padding-left:8px!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-description,
+html.profile-desktop-on-phone #profile .profile-featured-standalone #profileFeaturedHint{
+ font-size:clamp(.47rem,1.1vw,.72rem)!important;line-height:1.35!important;
+ margin:0!important;overflow-wrap:break-word!important;
+}
+html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-change-button{
+ font-size:clamp(.48rem,1.12vw,.75rem)!important;line-height:1.2!important;
+ padding:7px 4px!important;min-width:0!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ display:flex!important;flex-direction:row!important;align-items:start!important;
+ justify-content:space-between!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress{
+ width:34%!important;max-width:34%!important;flex:0 0 34%!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-label{
+ font-size:clamp(.47rem,1.08vw,.7rem)!important;white-space:normal!important;
+ text-align:right!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-track{
+ width:100%!important;
+}
+</style><style id="profile-achievement-progress-right-alignment">
+/* Barra de conquistas à direita do cabeçalho, como na referência. */
+@media (min-width: 901px) {
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  display:flex!important;flex-direction:row!important;align-items:flex-start!important;
+  justify-content:space-between!important;gap:10px!important;width:100%!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading > div:first-child{
+  flex:1 1 auto!important;min-width:0!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievement-progress{
+  position:static!important;flex:0 0 31%!important;width:31%!important;
+  max-width:31%!important;min-width:0!important;margin:0 0 0 auto!important;
+  padding:0!important;align-self:flex-start!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievement-progress-label{
+  width:100%!important;max-width:100%!important;text-align:right!important;
+  white-space:normal!important;line-height:1.25!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievement-progress-track{
+  width:100%!important;max-width:100%!important;margin-top:5px!important;
+ }
+}
+</style><style id="profile-progress-desktop-phone-final">
+/* Corrige especificamente o modo computador do Android, mesmo com viewport CSS abaixo de 901px. */
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(115px,33%)!important;
+ align-items:start!important;column-gap:8px!important;width:100%!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > div:first-child{
+ grid-column:1!important;grid-row:1!important;min-width:0!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;display:flex!important;
+ flex-direction:column!important;align-items:stretch!important;
+ justify-self:end!important;align-self:start!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ margin:0!important;padding:0!important;gap:4px!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel #profileAchievementSummary{
+ display:block!important;width:100%!important;text-align:right!important;
+ font-size:clamp(.48rem,1vw,.7rem)!important;line-height:1.2!important;
+ white-space:normal!important;overflow-wrap:normal!important;
+}
+html.profile-desktop-on-phone #profile #profileAchievementsPanel .profile-achievement-progress-track{
+ display:block!important;width:100%!important;max-width:none!important;margin:0!important;
+}
+</style><style id="profile-achievement-progress-right-v7578">
+/* Indicador compacto no canto direito do cabeçalho, inclusive no modo desktop do Android. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) minmax(125px,32%)!important;
+ align-items:start!important;gap:8px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > div:first-child{
+ grid-column:1!important;grid-row:1!important;min-width:0!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;position:static!important;
+ justify-self:end!important;align-self:start!important;
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+ min-width:0!important;flex:none!important;margin:0!important;padding:0!important;gap:5px!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-label,
+#profile #profileAchievementsPanel #profileAchievementSummary{
+ position:static!important;display:block!important;box-sizing:border-box!important;
+ width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;
+ text-align:right!important;white-space:normal!important;overflow-wrap:anywhere!important;
+ font-size:clamp(.6rem,.85vw,.8rem)!important;line-height:1.25!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-track{
+ position:static!important;display:block!important;box-sizing:border-box!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ margin:0!important;padding:0!important;align-self:stretch!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  grid-template-columns:minmax(0,1fr) minmax(110px,34%)!important;
+ }
+}
+</style><style id="profile-achievement-progress-compact-v7579">
+/* Progresso compacto alinhado à direita, sem modificar cores ou dados. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ grid-template-columns:minmax(0,1fr) minmax(135px,29%)!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ width:100%!important;max-width:175px!important;justify-self:end!important;
+ align-items:flex-end!important;
+}
+#profile #profileAchievementsPanel #profileAchievementSummary{
+ width:100%!important;text-align:right!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-track{
+ width:100%!important;max-width:175px!important;align-self:flex-end!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  grid-template-columns:minmax(0,1fr) minmax(110px,30%)!important;
+ }
+}
+</style><style id="profile-achievement-progress-final-fix">
+/* Forçar a barra a ficar logo abaixo do contador, sem ocupar a largura do cartão. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) 150px!important;
+ align-items:start!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;
+ position:relative!important;
+ width:150px!important;max-width:150px!important;min-width:0!important;
+ justify-self:end!important;align-self:start!important;
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+}
+#profile #profileAchievementsPanel #profileAchievementSummary{
+ width:150px!important;max-width:150px!important;text-align:right!important;
+}
+#profile #profileAchievementsPanel .profile-achievement-progress-track{
+ width:150px!important;max-width:150px!important;min-width:0!important;
+ flex:0 0 6px!important;align-self:flex-end!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  grid-template-columns:minmax(0,1fr) 125px!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading > .profile-achievement-progress,
+ #profile #profileAchievementsPanel #profileAchievementSummary,
+ #profile #profileAchievementsPanel .profile-achievement-progress-track{
+  width:125px!important;max-width:125px!important;
+ }
+}
+</style><style id="achievement-counter-right-anchored-v2">
+/* Contador e barra curta, presos ao canto superior direito do cartão. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ position:relative!important;display:block!important;
+ padding-right:0!important;min-height:64px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+ width:100%!important;max-width:100%!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+ position:absolute!important;top:0!important;right:0!important;left:auto!important;
+ display:flex!important;flex-direction:column!important;align-items:flex-end!important;
+ width:140px!important;min-width:140px!important;max-width:140px!important;
+ height:auto!important;flex:none!important;grid-column:auto!important;
+ margin:0!important;padding:0!important;gap:4px!important;
+ transform:none!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary{
+ position:static!important;display:block!important;
+ width:140px!important;min-width:0!important;max-width:140px!important;
+ margin:0!important;padding:0!important;text-align:right!important;
+ font-size:9px!important;line-height:1.2!important;white-space:normal!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+ position:relative!important;display:block!important;
+ width:140px!important;min-width:140px!important;max-width:140px!important;
+ height:6px!important;flex:none!important;align-self:flex-end!important;
+ margin:0!important;padding:0!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading{
+  min-height:62px!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+  width:112px!important;min-width:112px!important;max-width:112px!important;
+ }
+ #profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary,
+ #profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+  width:112px!important;min-width:112px!important;max-width:112px!important;
+ }
+}
+</style><style id="achievement-counter-text-position-v3">
+/* O contador deve permanecer imediatamente acima da barra curta, à direita. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ position:relative!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+ top:3px!important;right:4px!important;left:auto!important;
+ z-index:2!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary{
+ position:static!important;inset:auto!important;transform:none!important;
+ display:block!important;visibility:visible!important;
+ text-align:right!important;line-height:1.2!important;
+ font-size:9px!important;white-space:normal!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+ margin-top:3px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+ padding-right:120px!important;box-sizing:border-box!important;
+}
+@media(max-width:600px){
+ #profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+  padding-right:116px!important;
+ }
+}
+</style><style id="achievement-heading-final-layout-v4">
+/* Título à esquerda, contador e barra à direita: sem sobreposição. */
+#profile #profileAchievementsPanel .profile-achievements-heading{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) 118px!important;
+ grid-template-rows:auto!important;
+ align-items:start!important;
+ column-gap:8px!important;
+ position:relative!important;
+ min-height:0!important;
+ padding:0!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>div:first-child{
+ grid-column:1!important;grid-row:1!important;
+ padding:0!important;margin:0!important;
+ width:auto!important;min-width:0!important;max-width:100%!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress{
+ grid-column:2!important;grid-row:1!important;
+ position:static!important;inset:auto!important;transform:none!important;
+ width:118px!important;min-width:0!important;max-width:118px!important;
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ justify-self:end!important;align-self:start!important;
+ margin:0!important;padding:0!important;gap:4px!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress #profileAchievementSummary{
+ position:static!important;inset:auto!important;transform:none!important;
+ width:118px!important;max-width:118px!important;
+ margin:0!important;padding:0!important;
+ text-align:right!important;white-space:normal!important;
+ font-size:9px!important;line-height:1.25!important;
+}
+#profile #profileAchievementsPanel .profile-achievements-heading>.profile-achievement-progress .profile-achievement-progress-track{
+ position:relative!important;inset:auto!important;
+ width:118px!important;min-width:0!important;max-width:118px!important;
+ height:6px!important;flex:0 0 6px!important;
+ margin:0!important;padding:0!important;align-self:stretch!important;
+}
+</style><style id="featured-card-side-by-side-v7600">
+/* Aproxima a organização da referência, preservando a paleta clara e as funções. */
+@media (min-width:601px) {
+ #profile .profile-featured-standalone .featured-content,
+ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-content {
+  display:grid!important;grid-template-columns:minmax(0,45%) minmax(0,55%)!important;
+  align-items:center!important;gap:0!important;width:100%!important;
+ }
+ #profile .profile-featured-standalone .featured-medal,
+ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal {
+  grid-column:1!important;min-width:0!important;align-self:center!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  justify-content:center!important;padding:4px 6px!important;
+ }
+ #profile .profile-featured-standalone .featured-medal .emblem,
+ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-medal .emblem {
+  width:clamp(65px,9vw,140px)!important;height:clamp(70px,10vw,150px)!important;
+  max-width:100%!important;margin:0 auto!important;
+ }
+ #profile .profile-featured-standalone .featured-information,
+ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information {
+  grid-column:2!important;min-width:0!important;display:flex!important;
+  flex-direction:column!important;justify-content:center!important;gap:7px!important;
+  border-left:2px solid #d5c4eb!important;padding:6px 0 6px 12px!important;
+  text-align:left!important;
+ }
+ #profile .profile-featured-standalone .featured-information p,
+ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-information p {
+  margin:0!important;overflow-wrap:break-word!important;
+ }
+ #profile .profile-featured-standalone .featured-change-button,
+ html.profile-desktop-on-phone #profile .profile-featured-standalone .featured-change-button {
+  width:100%!important;max-width:100%!important;margin:3px 0 0!important;
+ }
+}
+</style><style id="profile-mobile-achievements-readable-v7601">
+/* Chrome Android normal: medalhas legíveis, sem cartões esticados nem botões no rodapé.
+   Não altera o modo 'site para computador', as cores ou as conquistas. */
+@media(max-width:600px){
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementsPanel{
+  height:auto!important;min-height:0!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementGrid{
+  display:flex!important;flex-wrap:nowrap!important;grid-template-columns:none!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  gap:8px!important;align-items:flex-start!important;align-content:start!important;
+  height:auto!important;min-height:0!important;
+  margin:10px 0 0!important;padding:3px 2px 10px!important;
+  scroll-snap-type:x proximity!important;-webkit-overflow-scrolling:touch;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementGrid .profile-achievement-item{
+  flex:0 0 92px!important;width:92px!important;min-width:92px!important;
+  max-width:92px!important;height:auto!important;min-height:0!important;
+  display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+  align-items:center!important;align-self:flex-start!important;
+  gap:5px!important;padding:5px 3px!important;box-sizing:border-box!important;
+  scroll-snap-align:start!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementGrid .profile-achievement-emoji,
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementGrid .emblem{
+  width:68px!important;max-width:68px!important;min-width:0!important;
+  height:76px!important;max-height:76px!important;
+  font-size:2rem!important;flex-shrink:0!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementGrid .profile-achievement-item strong{
+  font-size:11px!important;line-height:1.25!important;text-align:center!important;
+  overflow-wrap:break-word!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementGrid .profile-achievement-item button{
+  position:static!important;margin:3px 0 0!important;
+  width:100%!important;max-width:100%!important;
+  min-height:0!important;height:auto!important;padding:6px 3px!important;
+  font-size:10px!important;line-height:1.2!important;white-space:normal!important;
+ }
+ html:not(.profile-desktop-on-phone) #profile #profileAchievementGrid .profile-achievement-item > *{
+  margin-bottom:0!important;
+ }
+}
+</style><style id="profile-camera-polish-v7603">
+/* Apenas o botão de trocar foto: visual do protótipo, sem alterar os selos. */
+#profile .profile-avatar-wrap .profile-camera-button{
+ position:absolute!important;right:-17px!important;bottom:1px!important;
+ width:35px!important;height:35px!important;min-width:35px!important;min-height:35px!important;
+ padding:6px!important;display:grid!important;place-items:center!important;
+ border:3px solid #aa72ff!important;border-radius:50%!important;
+ background:linear-gradient(145deg,#fff,#f4eaff)!important;color:#6d27c9!important;
+ box-shadow:0 0 0 2px #ffffff80,0 0 13px #ae68ffb8,0 4px 12px #14052c70!important;
+ z-index:5!important;cursor:pointer!important;
+}
+#profile .profile-avatar-wrap .profile-camera-button svg{
+ display:block!important;width:19px!important;height:19px!important;flex-shrink:0!important;
+}
+#profile .profile-avatar-wrap .profile-camera-button:focus-visible{
+ outline:3px solid #f5c96a!important;outline-offset:3px!important;
+}
+@media(max-width:600px){
+ #profile .profile-avatar-wrap .profile-camera-button{
+  right:-5px!important;bottom:-7px!important;width:30px!important;height:30px!important;
+  min-width:30px!important;min-height:30px!important;padding:5px!important;
+ }
+ #profile .profile-avatar-wrap .profile-camera-button svg{width:16px!important;height:16px!important}
+}
+</style><style id="profile-camera-left-edge-v7605">
+/* Alteração isolada: somente a câmera, no limite esquerdo do cartão. */
+@media(max-width:600px){
+ #profile .profile-avatar-wrap .profile-camera-button{
+  left:-18px!important;right:auto!important;bottom:-42px!important;top:auto!important;
+ }
+}
+</style>
+<style id="profile-seals-mobile-size-v75-78">
+/* Aumentar somente os cinco icones de Meus selos no Android, sem alterar as colunas ou a camera. */
+@media screen and (max-width:600px){
+ #profile .profile-hero-seal-icons{gap:3px!important;flex-wrap:nowrap!important;justify-content:center!important;max-width:100%!important;min-width:0!important}
+ #profile .profile-hero-seal-icons .hero-seal-symbol,
+ #profile .profile-hero-seal-icons .hero-seal-shortcut{width:clamp(21px,4.2vw,27px)!important;height:clamp(25px,4.8vw,31px)!important;flex:0 1 clamp(21px,4.2vw,27px)!important;font-size:clamp(.82rem,2.4vw,1rem)!important;min-width:0!important}
+}
+</style>
+
+<style id="profile-seals-size-v75-78">
+/* Ajuste pontual: ampliar somente os cinco ícones da área Meus selos. */
+@media (max-width: 767px) {
+  #profile .profile-hero-seal-icons { gap: 3px !important; }
+  #profile .profile-hero-seal-icons .hero-seal-symbol,
+  #profile .profile-hero-seal-icons .hero-seal-shortcut {
+    width: 30px !important;
+    height: 34px !important;
+    flex: 0 1 30px !important;
+    font-size: 1rem !important;
+    min-width: 0 !important;
+  }
+}
+</style>
+
+<style id="profile-android-notebook-palette-final">
+/* Paleta do notebook para perfil mobile. Posicionado no fim para prevalecer sobre estilos legados. */
+@media screen and (max-width:700px){
+ body #profile .profile-hero{background:radial-gradient(ellipse at 53% 45%,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important}
+ body #profile .profile-premium-tabs button,body #profile > .profile-premium-tabs button{background:linear-gradient(110deg,#5368ce,#343e96)!important;border-color:#8190d5!important;box-shadow:0 3px 10px #293e8a24!important;color:#fff!important}
+ body #profile .profile-achievement-showcase #profileAchievementsPanel,body #profile #profileAchievementsPanel,body #profile .profile-achievement-showcase .profile-featured-standalone,body #profile .profile-featured-standalone,body #profile .profile-featured-standalone .profile-hero-badge{background:#fff!important;background-image:none!important;color:#252b52!important;border-color:#e1e4f0!important}
+ body #profile .profile-achievements-heading h2,body #profile .featured-section-heading{color:#292f60!important}
+ body #profile .profile-achievements-heading p,body #profile .featured-description,body #profile #profileFeaturedHint{color:#616981!important}
+ body #profile #profileAchievementsPanel .profile-achievement-item strong,body #profile #profileAchievementsPanel .profile-achievement-item small{color:#343a62!important}
+ body #profile .profile-achievement-progress-label{color:#30365f!important}
+ body #profile .featured-change-button{background:linear-gradient(110deg,#5364c5,#353d91)!important;color:#fff!important}
+ body #profile .profile-achievement-stats-strip{background:#fff!important;color:#292344!important;border-color:#e5e7eb!important}
+ body #profile .profile-achievement-stats-strip small{color:#6b7280!important}
+}
+</style>
+
+<style id="profile-mobile-contrast-fix-v1">
+/* Contraste em cartões claros do perfil Android; sem alterar layout ou funcionalidades. */
+@media screen and (max-width:700px){
+ body #profile #profileAchievementsPanel .profile-achievement-progress-label,
+ body #profile #profileAchievementsPanel .profile-achievement-progress-label *,
+ body #profile .profile-achievement-showcase .profile-achievement-progress-label,
+ body #profile .profile-achievement-showcase .profile-achievement-progress-label *{color:#30365f!important;text-shadow:none!important}
+ body #profile .profile-achievement-stats-strip strong,
+ body #profile .profile-achievement-stats-strip span,
+ body #profile .profile-achievement-stats-strip b{color:#292d50!important;text-shadow:none!important}
+ body #profile .profile-achievement-stats-strip small{color:#5f657b!important}
+ body #profile .profile-featured-standalone .featured-description,
+ body #profile .profile-featured-standalone #profileFeaturedHint,
+ body #profile .profile-featured-standalone .featured-information,
+ body #profile .profile-featured-standalone .featured-information p{color:#535b75!important;text-shadow:none!important}
+}
+</style>
+
+<style id="profile-achievements-neutral-frame-mobile-v1">
+/* Apenas bordas e sombras da seção Minhas conquistas no Android, iguais ao aspecto neutro do notebook. */
+@media screen and (max-width:700px){
+ body #profile .profile-achievement-showcase #profileAchievementsPanel,
+ body #profile #profileAchievementsPanel{
+  border-color:#e4e5ed!important;
+  box-shadow:0 4px 16px rgba(32,43,74,.08)!important;
+  outline-color:transparent!important;
+  filter:none!important;
+ }
+ body #profile .profile-achievement-showcase .profile-featured-standalone,
+ body #profile .profile-achievement-showcase .profile-featured-standalone .profile-hero-badge{
+  border-color:#e4e5ed!important;
+  box-shadow:0 4px 16px rgba(32,43,74,.08)!important;
+  outline-color:transparent!important;
+  filter:none!important;
+ }
+}
+</style>
+<style id="profile-achievement-medal-colors-mobile-v1">
+/* Somente fundo dos hexagonos Android: mesmo azul do cartao superior do perfil.
+   Nao altera emoji, bordas, tamanho, formato, layout ou estados. */
+@media screen and (max-width:700px){
+ body #profile #profileAchievementGrid .profile-achievement-item:not(.is-locked) .profile-achievement-emoji,
+ body #profile .profile-featured-standalone #profileFeaturedEmblem{
+  background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+ }
+}
+</style>
+<style id="profile-achievement-buttons-blue-mobile-v2">
+/* Android: mesma paleta azul do topo do perfil para os botoes de conquistas.
+   Altera apenas fundo e borda, sem tocar em layout, texto ou funcionalidade. */
+@media screen and (max-width:700px){
+ body #profile #profileAchievementGrid .profile-achievement-item button,
+ body #profile .profile-featured-standalone .featured-change-button{
+  background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+  border-color:#8190d5!important;
+  color:#fff!important;
+ }
+}
+</style>
+<style id="profile-hero-seals-blue-background-v1">
+/* Apenas o fundo dos cinco simbolos de Meus selos; manter estado, formato e layout. */
+#profile .profile-hero-seals .profile-hero-seal-icons .hero-seal-symbol,
+#profile .profile-hero-seals .profile-hero-seal-icons .hero-seal-shortcut,
+#profile .profile-hero-seals .profile-hero-seal-icons .hero-seal-shortcut:hover{
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+}
+/* O botao + mantinha borda roxa herdada do estilo original. */
+#profile #profileHeroSealShortcut,
+#profile #profileHeroSealShortcut:hover,
+#profile #profileHeroSealShortcut:focus-visible{
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+ border-color:#8190d5!important;
+ color:#dce7ff!important;
+ text-shadow:none!important;
+ box-shadow:none!important;
+}
+</style>
+<style id="profile-xp-blue-palette-v1">
+/* Paleta azul apenas no cartao de nivel; XP, layout e textos intactos. */
+#profile #profileXpPanel{
+ background:linear-gradient(145deg,#263b85,#171f4d)!important;
+ border-color:#8190d5!important;
+ box-shadow:inset 0 0 10px #8190d522!important;
+}
+#profile #profileXpPanel #profileLevelNumber{
+ background:linear-gradient(120deg,#596bd6,#394ba6)!important;
+ color:#fff!important;
+}
+#profile #profileXpPanel .profile-level-signal i{
+ background:#c6d7ff!important;
+ box-shadow:0 0 7px #91b1ff55!important;
+}
+#profile #profileXpPanel .profile-xp-track{
+ background:#8b9bc466!important;
+}
+#profile #profileXpPanel .profile-xp-track span{
+ background:linear-gradient(90deg,#8daaff,#dbe8ff)!important;
+}
+#profile #profileXpPanel #profileXpValue,
+#profile #profileXpPanel .profile-level-title{color:#e0e9ff!important}
+</style>
+<style id="profile-founder-avatar-emblem-blue-v1">
+/* Apenas a plaquinha com losango abaixo da foto do perfil: menor e azul. */
+#profile .profile-avatar-wrap.has-official-founder .official-seal-crown{
+ width:15px!important;
+ height:14px!important;
+ font-size:.53rem!important;
+ bottom:-2px!important;
+ border:1px solid #f9ce69!important;
+ border-radius:5px!important;
+ background:linear-gradient(145deg,#596bd6,#1b214d)!important;
+ color:#ffe19b!important;
+ box-shadow:0 2px 6px #111a3f66!important;
+}
+
+/* Afinar somente o aro dourado ao redor da foto, sem mudar a borda escolhida. */
+#profile .profile-hero-main .profile-avatar-wrap.has-official-founder #profileAvatar{
+ border-width:2px!important;
+ box-shadow:0 0 5px 1px #c98bff55!important;
+}
+</style>
+<style id="profile-lower-progress-blue-v1">
+/* Apenas cores dos dois cartoes inferiores; progresso e layout preservados. */
+#profile #profileAchievementNext{
+ background:linear-gradient(115deg,#fff,#f4f7ff)!important;
+ border-color:#cbd6f2!important;
+}
+#profile #profileAchievementNext::before{
+ background:linear-gradient(145deg,#596bd6,#1b214d)!important;
+ box-shadow:0 4px 12px #1b214d24!important;
+}
+#profile #profileAchievementNext .next-achievement-track{
+ background:#dce5fa!important;
+}
+#profile #profileAchievementNext .next-achievement-fill{
+ background:linear-gradient(90deg,#596bd6,#8daaff)!important;
+}
+#profile .profile-bottom-panels .panel:first-child{
+ border-color:#d5def3!important;
+}
+#profile .profile-bottom-panels .panel:first-child h3 svg rect:nth-child(1){fill:#8daaff!important}
+#profile .profile-bottom-panels .panel:first-child h3 svg rect:nth-child(2){fill:#596bd6!important}
+#profile .profile-bottom-panels .panel:first-child h3 svg rect:nth-child(3){fill:#394ba6!important}
+#profile .profile-bottom-panels .panel:first-child .profile-xp-track{
+ background:#dce5fa!important;
+}
+#profile .profile-bottom-panels .panel:first-child #profileXpBarSecondary{
+ background:linear-gradient(90deg,#596bd6,#8daaff)!important;
+}
+#profile .profile-bottom-panels .panel:first-child #profileLevelSecondary{
+ background:#e0e9ff!important;
+ color:#394ba6!important;
+}
+</style>
+<style id="profile-next-achievement-actual-meter-blue-v2">
+/* A barra real usa profile-achievement-meter, nao apenas next-achievement-fill. */
+#profile #profileAchievementNext,
+#profile #profileAchievementNext *,
+#profile #profileAchievementNext .next-achievement-title,
+#profile #profileAchievementNext .next-achievement-count{
+ color:#263b75!important;
+}
+#profile #profileAchievementNext .profile-achievement-meter,
+#profile #profileAchievementNext .next-achievement-track{
+ background:#dce5fa!important;
+}
+#profile #profileAchievementNext .profile-achievement-meter span,
+#profile #profileAchievementNext .next-achievement-fill{
+ background:linear-gradient(90deg,#596bd6,#8daaff)!important;
+}
+</style>
+<style id="profile-border-choice-blue-v1">
+/* Somente a aparencia das opcoes de borda; selecao e permissao intactas. */
+#profile #profileBorderSelector{
+ background:#f5f8ff!important;
+ border-color:#cbd6f2!important;
+}
+#profile #profileBorderSelector .profile-border-options label{
+ border-color:#cbd6f2!important;
+ color:#263b75!important;
+}
+#profile #profileBorderSelector .profile-border-options label:has(input:checked){
+ border-color:#596bd6!important;
+ background:#e0e9ff!important;
+ box-shadow:0 0 0 1px #596bd6!important;
+ color:#263b75!important;
+}
+#profile #profileBorderSelector .profile-border-options input{
+ accent-color:#394ba6!important;
+}
+</style>
+<style id="profile-name-pencil-blue-v1">
+/* Apenas cor do lápis de edição ao lado do nome; tamanho e clique preservados. */
+#profile .profile-name-line #profileEditShortcut.profile-name-pencil,
+#profile .profile-name-line #profileEditShortcut.profile-name-pencil:hover,
+#profile .profile-name-line #profileEditShortcut.profile-name-pencil:focus-visible{
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+ color:#e4edff!important;
+ box-shadow:0 3px 10px #111a3f55!important;
+}
+</style>
+<style id="profile-name-pencil-proportional-v2">
+/* Dimensoes compactas e proporcionais ao nome, sem alterar o clique. */
+#profile .profile-name-line #profileEditShortcut.profile-name-pencil{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:19px!important;height:19px!important;
+ min-width:19px!important;max-width:19px!important;
+ min-height:19px!important;max-height:19px!important;
+ flex:0 0 19px!important;aspect-ratio:1!important;
+ font-size:12px!important;line-height:1!important;
+ padding:0!important;margin:0!important;
+ border-radius:50%!important;
+}
+@media(max-width:700px){
+ #profile .profile-name-line #profileEditShortcut.profile-name-pencil{
+ width:16px!important;height:16px!important;
+ min-width:16px!important;max-width:16px!important;
+ min-height:16px!important;max-height:16px!important;
+ flex:0 0 16px!important;font-size:10px!important;
+ }
+}
+</style>
+<style id="profile-camera-single-thin-border-v1">
+/* Uma unica borda fina na camera, sem aneis ou brilhos adicionais. */
+#profile .profile-avatar-wrap .profile-camera-button,
+#profile .profile-avatar-wrap .profile-camera-button:hover{
+ border:1px solid #8190d5!important;
+ outline:none!important;
+ box-shadow:none!important;
+ background:#f8faff!important;
+ color:#394ba6!important;
+}
+#profile .profile-avatar-wrap .profile-camera-button:focus-visible{
+ border:1px solid #8190d5!important;
+ outline:1px solid #8190d5!important;
+ outline-offset:1px!important;
+ box-shadow:none!important;
+}
+</style>
+<style id="header-android-blue-brand-v1">
+/* Cabeçalho do aplicativo: mesma identidade azul do perfil; sem alterar layout. */
+header{
+ background:linear-gradient(110deg,#1b214d 0%,#263b85 55%,#1b214d 100%)!important;
+}
+header .home-account-actions .support-bell,
+header .home-account-actions .brain.profile-button{
+ background:linear-gradient(145deg,#394ba6,#1b214d)!important;
+ border:1px solid #8190d5!important;
+ box-shadow:0 0 0 1px #8190d522!important;
+}
+header .home-account-actions .support-bell:hover,
+header .home-account-actions .brain.profile-button:hover{
+ box-shadow:0 0 0 2px #8daaff66!important;
+}
+header .home-account-actions #homeProfileAvatar{
+ background:#394ba6!important;
+}
+header .home-account-menu button:hover{
+ background:#e0e9ff!important;
+}
+</style>
+
+<style id="profile-desktop-phone-hero-blue-v1">
+/* Chrome Android com 'Site para computador': somente o fundo do cartão
+   principal do perfil. Não altera tamanho, posicionamento ou funções. */
+html.profile-desktop-on-phone body #profile .profile-hero{
+ background:radial-gradient(ellipse at 53% 45%,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+}
+html.profile-desktop-on-phone body #profile .profile-hero::before{
+ background:none!important;
+ opacity:0!important;
+}
+</style>
+<style id="profile-desktop-phone-tabs-blue-v1">
+/* Somente os quatro botoes abaixo do perfil no Chrome Android
+   com 'Site para computador' ativado. Sem mudar geometria ou acoes. */
+html.profile-desktop-on-phone body #profile > .profile-premium-tabs button,
+html.profile-desktop-on-phone body #profile .profile-premium-tabs button{
+ background:linear-gradient(110deg,#5368ce 0%,#394ba6 60%,#263b85 100%)!important;
+ border-color:#8190d5!important;
+ box-shadow:0 3px 10px #293e8a24!important;
+ color:#fff!important;
+}
+</style>
+<style id="profile-desktop-phone-achievement-progress-blue-v1">
+/* Apenas contador e barra das conquistas no Chrome Android em modo desktop. */
+html.profile-desktop-on-phone body #profile .profile-achievement-showcase .profile-achievement-progress-label,
+html.profile-desktop-on-phone body #profile .profile-achievement-showcase .profile-achievement-progress-label *,
+html.profile-desktop-on-phone body #profile #profileAchievementsPanel .profile-achievement-progress-label,
+html.profile-desktop-on-phone body #profile #profileAchievementsPanel .profile-achievement-progress-label *{
+ color:#263b75!important;
+ text-shadow:none!important;
+}
+html.profile-desktop-on-phone body #profile .profile-achievement-progress-track{
+ background:#dce5fa!important;
+}
+html.profile-desktop-on-phone body #profile .profile-achievement-progress-fill{
+ background:linear-gradient(90deg,#596bd6,#8daaff)!important;
+}
+</style>
+<style id="profile-desktop-phone-medals-blue-v1">
+/* Apenas cores das medalhas e botoes em Minhas conquistas,
+   Chrome Android com 'Site para computador'. Bloqueadas seguem cinzas. */
+html.profile-desktop-on-phone body #profile #profileAchievementGrid .profile-achievement-item:not(.is-locked) .profile-achievement-emoji,
+html.profile-desktop-on-phone body #profile #profileAchievementGrid .profile-achievement-item:not(.is-locked) .emblem{
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+}
+html.profile-desktop-on-phone body #profile #profileAchievementGrid .profile-achievement-item button{
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+ border-color:#8190d5!important;
+ color:#fff!important;
+}
+html.profile-desktop-on-phone body #profile #profileAchievementGrid .profile-achievement-item button:disabled{
+ background:linear-gradient(145deg,#a5b4d8,#7e8bac)!important;
+ border-color:#b8c5e0!important;
+ color:#fff!important;
+}
+html.profile-desktop-on-phone body #profile #profileAchievementGrid .profile-achievement-item .is-featured,
+html.profile-desktop-on-phone body #profile #profileAchievementGrid .profile-achievement-item.is-selected{
+ border-color:#d7ae55!important;
+}
+</style>
+<style id="profile-desktop-phone-featured-blue-v1">
+/* Chrome Android em Site para computador: somente medalha e botao da conquista em destaque. */
+html.profile-desktop-on-phone body #profile .profile-featured-standalone #profileFeaturedEmblem{
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+}
+html.profile-desktop-on-phone body #profile .profile-featured-standalone .featured-change-button{
+ background:linear-gradient(145deg,#596bd6 0%,#394ba6 43%,#1b214d 90%)!important;
+ border-color:#8190d5!important;
+ color:#fff!important;
+}
+</style>
+<style id="profile-desktop-phone-special-seals-blue-v1">
+/* Apenas Android Chrome em Site para computador; sem mudar icones ou funcoes. */
+html.profile-desktop-on-phone body #profile .profile-special-seal .profile-seal-visibility-control{color:#263b75!important}
+html.profile-desktop-on-phone body #profile .profile-special-seal .profile-seal-visibility-control input{accent-color:#394ba6!important}
+html.profile-desktop-on-phone body #profile .profile-special-seal.is-hidden-seal{background:#f5f8ff!important;border-color:#cbd6f2!important}
+html.profile-desktop-on-phone body #profile #profileBorderSelector{background:#f5f8ff!important;border-color:#cbd6f2!important}
+html.profile-desktop-on-phone body #profile #profileBorderSelector .profile-border-options label{border-color:#cbd6f2!important;color:#263b75!important}
+html.profile-desktop-on-phone body #profile #profileBorderSelector .profile-border-options label:has(input:checked){border-color:#596bd6!important;background:#e0e9ff!important;box-shadow:0 0 0 1px #596bd6!important}
+html.profile-desktop-on-phone body #profile #profileBorderSelector .profile-border-options input{accent-color:#394ba6!important}
+</style>
+<style id="profile-desktop-phone-selected-achievement-outline-blue-v1">
+/* Android Chrome em Site para computador: retirar aro roxo do card selecionado,
+   mantendo contorno dourado e indicador verde de conquista. */
+html.profile-desktop-on-phone body #profile #profileAchievementGrid .profile-achievement-item.is-selected{
+ border-color:#d7ae55!important;
+ outline:2px solid #e8bd58!important;
+ outline-offset:0!important;
+ box-shadow:inset 0 0 0 2px #596bd6,0 3px 10px #394ba625!important;
+}
+</style>
+</body>
 </html>
