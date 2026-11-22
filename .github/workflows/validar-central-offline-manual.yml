@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/preparar-pacote-revisao.py'
       - 'scripts/comparar-pareceres.py'
+      - 'scripts/coordenador-tres-ias.py'
+      - 'tests/test_coordenador_tres_ias.py'
       - 'tests/test_comparar_pareceres.py'
       - 'scripts/central-mensagens-offline.py'
       - 'scripts/coletar-issue10-publica.py'
@@ -89,3 +91,7 @@ jobs:
         run: |
           python -m py_compile scripts/comparar-pareceres.py tests/test_comparar_pareceres.py
           python -m unittest discover -s tests -p 'test_comparar_pareceres.py' -v
+      - name: Validar coordenador gratuito offline
+        run: |
+          python -m py_compile scripts/coordenador-tres-ias.py tests/test_coordenador_tres_ias.py
+          python -m unittest discover -s tests -p 'test_coordenador_tres_ias.py' -v
