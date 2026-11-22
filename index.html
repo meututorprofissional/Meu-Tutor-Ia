@@ -606,6 +606,15 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 #profile #profileIdentityBadges .profile-admin-authority-tag[hidden]{display:none!important}
 #profile #profileIdentityBadges .profile-admin-authority-tag{font-size:.7rem;padding:4px 7px}
 </style>
+
+<style id="profile-mobile-badges-alignment-20261122">
+/* Identidades oficiais abaixo do nome em telas estreitas, sem alterar concessões. */
+@media screen and (max-width:700px){
+ #profile #profileIdentityBadges{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;justify-content:flex-start!important;gap:4px!important;max-width:100%!important;width:auto!important;margin:4px 0 5px!important}
+ #profile #profileIdentityBadges .profile-founder-identity-tag,
+ #profile #profileIdentityBadges .profile-admin-authority-tag{margin:0!important;max-width:100%!important}
+}
+</style>
 </head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
@@ -1777,7 +1786,7 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 <script src="ai-client.js?v=45"></script>
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="profile.js?v=75.46"></script>
+<script src="profile.js?v=75.57"></script>
 <script src="settings.js?v=2"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="feedback.js?v=5"></script>
