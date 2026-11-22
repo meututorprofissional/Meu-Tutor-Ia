@@ -7,7 +7,7 @@ from pathlib import Path
 
 AGENTS = {"ChatGPT", "Gemini/Antigravity", "Claude", "Fundador"}
 HEADER = re.compile(r"^\[AGENTE:\s*([^\]\n]+)\]", re.MULTILINE)
-SHA = re.compile(r"\b[0-9a-f]{40}\b")
+FORWARDED_HEADER = re.compile(r"^\[AGENTE:\s*(ChatGPT|Gemini/Antigravity|Claude|Fundador)\s*[—–-]\s*([^\]\n]+)\]", re.MULTILINE)\nSHA = re.compile(r"\b[0-9a-f]{40}\b")
 MAX_COMMENTS = 100
 MAX_BODY = 12000
 
@@ -33,7 +33,7 @@ def build_report(payload):
         if declared not in AGENTS:
             declared = "nao verificado"
         author = (c.get("user") or {}).get("login") or "desconhecido"
-        forwarded = "ENCAMINHADO" in body.upper() or "encaminhado pelo fundador" in body.lower()
+        forwarded = bool(forwarded_header and "ENCAMINHAD" in forwarded_header.group(2).upper()) or "ENCAMINHADO" in body.upper() or "encaminhado pelo fundador" in body.lower()
         rows.append({
             "id": cid, "github_author": author, "declared_agent": declared,
             "forwarded_hint": forwarded, "sha_mentions": sorted(set(SHA.findall(body))),
