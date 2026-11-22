@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 2
       - name: Preparar Python
         uses: actions/setup-python@v5
         with:
