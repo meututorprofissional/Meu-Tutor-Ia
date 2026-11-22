@@ -1,0 +1,79 @@
+name: Gemini - teste manual controlado (sem producao)
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: 'dry_run (sem rede) ou live (uma chamada real)'
+        required: true
+        default: dry_run
+        type: choice
+        options:
+          - dry_run
+          - live
+      confirmar_gratuito:
+        description: 'Para live, digite CONFIRMO_GRATUITO apos verificar faturamento desativado no Google AI Studio'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gemini-teste-manual-unico
+  cancel-in-progress: false
+
+jobs:
+  testar-gemini:
+    if: github.ref == 'refs/heads/desenvolvimento-responsivo'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout isolado
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Teste controlado
+        env:
+          MODO: ${{ inputs.modo }}
+          CONFIRMACAO: ${{ inputs.confirmar_gratuito }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import json
+          import os
+          import subprocess
+          import tempfile
+          from pathlib import Path
+
+          mode = os.environ.get("MODO")
+          if mode not in ("dry_run", "live"):
+              raise SystemExit("Modo invalido")
+          if mode == "live" and os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
+              raise SystemExit("Bloqueado: confirme nivel gratuito no provedor")
+          sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          mission = {"commit_sha": sha, "missao": "Teste minimo de conectividade: responda apenas OK. Nao revise arquivos nem execute acoes."}
+          spec = importlib.util.spec_from_file_location("gemini", "scripts/conectar-gemini-local.py")
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          try:
+              result = module.request_once(
+                  mission,
+                  live=(mode == "live"),
+                  confirm_free_tier=(mode == "live" and os.environ.get("CONFIRMACAO") == "CONFIRMO_GRATUITO"),
+                  api_key=os.environ.get("GEMINI_API_KEY") if mode == "live" else None
+              )
+          except Exception:
+              print("Teste nao concluido; nenhum segredo ou corpo de resposta sera exibido.")
+              raise SystemExit(1)
+          # Nunca publicar conteudo de resposta, headers, tokens ou payload nos logs.
+          print("Modo:", mode)
+          print("Chamada real realizada:", bool(result.get("api_chamada", False)))
+          print("Resposta de texto recebida:", bool(result.get("texto_nao_confiavel")))
+          print("SHA testado:", sha)
+          PY
