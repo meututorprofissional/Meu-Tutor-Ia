@@ -6,7 +6,7 @@ import urllib.request
 from pathlib import Path
 
 API = "https://api.github.com/repos/meututorprofissional/Meu-Tutor-Ia"
-MAX_PAGES = 5
+MAX_PAGES = 2
 
 def fetch_json(url):
     req = urllib.request.Request(url, headers={
@@ -25,17 +25,14 @@ def collect():
         batch = fetch_json(API + f"/issues/10/comments?per_page=100&page={page}")
         if not isinstance(batch, list):
             raise ValueError("Resposta inesperada de comentarios")
-        comments.extend({
+        if page == 2:\n            if batch:\n                raise ValueError("Mais de 100 comentarios: exportacao incompleta")\n            break\n        comments.extend({
             "id": item["id"],
             "user": {"login": item["user"]["login"]},
             "body": item.get("body") or "",
         } for item in batch)
         if len(batch) < 100:
             break
-    else:
-        raise ValueError("Limite de paginacao atingido: exportacao incompleta")
-    if len(comments) > 100:
-        raise ValueError("Parser atual suporta no maximo 100 comentarios")
+
     return {"issue": {"number": 10}, "comments": comments}
 
 def main():
