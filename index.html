@@ -503,6 +503,98 @@ header nav button:focus-visible{outline:2px solid #c4b5fd;outline-offset:-2px}
 #home .home-actions .action-card span:not(.emoji){color:#475569}
 #home .home-actions .action-card:focus-visible{outline:3px solid #818cf8;outline-offset:2px}
 </style>
+<script id="profile-desktop-on-phone-detection-v7584">
+(function(){
+ function update(){
+   // A viewport do Chrome Android em modo desktop pode reportar screen.width=980;
+   // por isso não depender de screen.width para reconhecer o aparelho.
+   var ua=navigator.userAgent||'';
+   var isAndroid=/Android/i.test(ua);
+   // Chrome Android em "Site para computador" pode ocultar Android do userAgent.
+   // Detectar também viewport desktop em aparelho touch compacto.
+   var isTouch=(navigator.maxTouchPoints||0)>0;
+   var compactScreen=Math.min(screen.width,screen.height)<=700;
+   var androidDesktopFallback=isTouch&&compactScreen&&/Chrome|CriOS/i.test(ua);
+   var desktopViewport=document.documentElement.clientWidth>=701;
+   document.documentElement.classList.toggle('profile-desktop-on-phone',
+     desktopViewport&&(isAndroid||androidDesktopFallback));
+ }
+ update();
+ window.addEventListener('resize',update,{passive:true});
+})();
+</script>
+<style id="android-desktop-home-readability-20261122">
+/* Etapa 4, teste 1: leitura da pagina inicial apenas no Android em modo computador. */
+@media (min-width:701px){
+ html.profile-desktop-on-phone #home .home-layout{gap:18px}
+ html.profile-desktop-on-phone #home .home-actions{gap:12px}
+ html.profile-desktop-on-phone #home .home-actions .action-card{padding:18px;min-height:132px}
+ html.profile-desktop-on-phone #home .home-actions .action-card strong{font-size:1.05rem;line-height:1.35}
+ html.profile-desktop-on-phone #home .home-actions .action-card span:not(.emoji){font-size:.96rem;line-height:1.5}
+ html.profile-desktop-on-phone #home .home-left>.panel h2,
+ html.profile-desktop-on-phone #home .home-right>.panel h2{font-size:1.22rem}
+ html.profile-desktop-on-phone #home .home-right .hero p{font-size:1rem;line-height:1.6}
+ html.profile-desktop-on-phone #home .home-right .hero button{font-size:1rem;min-height:42px}
+}
+</style>
+<style id="android-desktop-home-readability-pass2-20261122">
+/* Etapa 4, teste 2: ampliar a leitura sem trocar as duas colunas. */
+@media (min-width:701px){
+ html.profile-desktop-on-phone #home .home-layout{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+ html.profile-desktop-on-phone #home .home-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ html.profile-desktop-on-phone #home .home-actions .action-card{padding:18px;min-height:150px}
+ html.profile-desktop-on-phone #home .home-actions .action-card strong{font-size:1.2rem;line-height:1.4}
+ html.profile-desktop-on-phone #home .home-actions .action-card span:not(.emoji){font-size:1.1rem;line-height:1.5;overflow-wrap:break-word}
+ html.profile-desktop-on-phone #home .home-actions .action-card .emoji{width:46px;height:46px}
+ html.profile-desktop-on-phone #home .home-left>.panel h2,
+ html.profile-desktop-on-phone #home .home-right>.panel h2{font-size:1.4rem}
+ html.profile-desktop-on-phone #home .home-left>.panel p,
+ html.profile-desktop-on-phone #home .home-right>.panel p{font-size:1.05rem;line-height:1.55}
+ html.profile-desktop-on-phone #home .home-right .hero h2{font-size:2rem;line-height:1.2}
+ html.profile-desktop-on-phone #home .home-right .hero p{font-size:1.14rem;line-height:1.55}
+ html.profile-desktop-on-phone #home .home-right .hero button{font-size:1.12rem;min-height:46px}
+}
+</style>
+<style id="android-desktop-home-readability-pass3-20261122">
+/* Etapa 4, teste 3: textos pequenos do metodo e menu no Android desktop. */
+@media (min-width:701px){
+ html.profile-desktop-on-phone header nav button{
+  font-size:1.12rem;line-height:1.35;min-height:44px;padding:9px 13px;
+ }
+ html.profile-desktop-on-phone #home .home-right .panel .muted{
+  font-size:1.18rem;line-height:1.65;color:#475569;
+ }
+ html.profile-desktop-on-phone #home .home-right .panel .notice{
+  font-size:1.14rem;line-height:1.6;color:#854d0e;
+  padding:16px 18px;overflow-wrap:break-word;
+ }
+ html.profile-desktop-on-phone #home #homeReviews{
+  font-size:1.14rem;line-height:1.6;
+ }
+}
+</style>
+<style id="android-desktop-home-readability-pass4-20261122">
+/* Etapa 4, teste 4: tipografia pequena da pagina inicial no Android desktop. */
+@media (min-width:701px){
+ html.profile-desktop-on-phone header .brand h1{font-size:1.45rem;line-height:1.3}
+ html.profile-desktop-on-phone header .brand p{font-size:1rem;line-height:1.45}
+ html.profile-desktop-on-phone #home .overline{font-size:.98rem;letter-spacing:.07em}
+ html.profile-desktop-on-phone #home .welcome h2{font-size:2.05rem;line-height:1.25}
+ html.profile-desktop-on-phone #home .section-intro{font-size:1.16rem;line-height:1.55}
+ html.profile-desktop-on-phone #home .home-left>.panel h2{font-size:1.5rem;line-height:1.35}
+ html.profile-desktop-on-phone #home .home-actions .action-card strong{font-size:1.27rem;line-height:1.35}
+ html.profile-desktop-on-phone #home .home-actions .action-card span:not(.emoji){font-size:1.16rem;line-height:1.5}
+}
+</style>
+<style id="android-desktop-home-scale-pass5-20261122">
+/* Etapa 4, teste 5: zoom moderado e reversivel, so na pagina inicial do Android em modo computador. */
+@media (min-width:701px){
+ html.profile-desktop-on-phone #home .home-layout{
+  zoom:1.07;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+}
+</style>
 </head>
 <body>
 <header><div class="brand"><img src="icon-192.png" alt="Ícone do Meu Tutor IA"><div><h1>Meu Tutor IA</h1><p>Aprenda de verdade, um passo de cada vez.</p></div><div class="home-account-actions"><div class="support-bell-wrap"><button id="supportBell" class="support-bell" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="supportNotifications">🔔<span id="supportBellCount" class="support-bell-count" hidden>0</span></button><div id="supportNotifications" class="support-notifications" hidden><div class="support-notifications-head"><strong>🔔 Notificações</strong><button id="supportNotificationsClose" type="button">Fechar</button></div><div id="supportNotificationEntries"></div><button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="document.querySelector('nav [data-screen=tickets]').click();document.getElementById('supportNotifications').hidden=true">Ver todos em Meus chamados</button></div></div><div class="account-menu-wrap"><button class="brain profile-button" id="homeProfileButton" type="button" aria-label="Abrir menu da conta" aria-haspopup="true" aria-expanded="false" aria-controls="homeAccountMenu"><span id="homeProfileAvatar">👤</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div id="homeAccountMenu" class="home-account-menu" hidden><button type="button" data-account-action="profile">👤 <span>Meu perfil</span></button><button type="button" data-account-action="notifications">🔔 <span>Notificações</span><span class="account-menu-count" id="accountMenuUnread" hidden></span></button><button type="button" data-account-action="settings">⚙️ <span>Configurações do perfil</span></button><button type="button" data-account-action="logout">🚪 <span>Sair</span></button></div></div></div></div><nav aria-label="Menu principal"><button class="active" data-screen="home">⌂ &nbsp;Início</button><button data-screen="study">📚 &nbsp;Meu estudo</button><button data-screen="cards">🗂️ &nbsp;Flashcards</button><button data-screen="quiz">✓ &nbsp;Teste</button><button data-screen="progress">▥ &nbsp;Progresso</button><button data-screen="feedback">💬 &nbsp;Ajuda e feedback</button><button data-screen="support">🎧 &nbsp;Central de atendimento</button><button data-screen="tickets">📨 &nbsp;Meus chamados</button><button id="adminSupportNav" data-screen="admin-support" style="display:none">🛡️ &nbsp;Painel de suporte</button></nav></header>
