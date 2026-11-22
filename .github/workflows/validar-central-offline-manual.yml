@@ -5,6 +5,8 @@ on:
       - desenvolvimento-responsivo
     paths:
       - 'scripts/preparar-pacote-revisao.py'
+      - 'scripts/comparar-pareceres.py'
+      - 'tests/test_comparar_pareceres.py'
       - 'scripts/central-mensagens-offline.py'
       - 'scripts/coletar-issue10-publica.py'
       - 'tests/test_central_mensagens.py'
@@ -83,3 +85,7 @@ jobs:
               assert data["arquivos"] and data["diff_nao_confiavel"]
               print("Pacote real gerado e validado localmente, sem publicacao.")
           PY
+      - name: Validar comparacao supervisionada dos tres pareceres
+        run: |
+          python -m py_compile scripts/comparar-pareceres.py tests/test_comparar_pareceres.py
+          python -m unittest discover -s tests -p 'test_comparar_pareceres.py' -v
