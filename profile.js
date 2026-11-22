@@ -222,6 +222,41 @@
         nameLine.appendChild(founderTag);
       }
       founderTag.hidden = !visible.founder;
+      // Agrupar as identidades oficiais em uma linha compacta abaixo do nome.
+      let identityBadges = el('profileIdentityBadges');
+      if (!identityBadges) {
+        identityBadges = document.createElement('div');
+        identityBadges.id = 'profileIdentityBadges';
+        identityBadges.className = 'profile-identity-badges';
+        nameLine.insertAdjacentElement('afterend', identityBadges);
+      }
+      identityBadges.appendChild(founderTag);
+      identityBadges.appendChild(admTag);
+      // Forçar uma única linha mesmo quando estilos responsivos antigos competirem.
+      const forceBadgeStyle = (node, properties) => {
+        Object.entries(properties).forEach(([property, value]) =>
+          node.style.setProperty(property, value, 'important'));
+      };
+      forceBadgeStyle(identityBadges, {
+        display: 'flex', 'flex-direction': 'row', 'flex-wrap': 'nowrap',
+        'align-items': 'center', 'justify-content': 'flex-start',
+        gap: '4px', width: 'max-content', 'max-width': '100%',
+        margin: '3px 0', padding: '0'
+      });
+      [founderTag, admTag].forEach(tag => {
+        forceBadgeStyle(tag, {
+          display: tag.hidden ? 'none' : 'inline-flex',
+          'align-items': 'center', 'justify-content': 'center',
+          'flex-direction': 'row', 'flex-wrap': 'nowrap', 'flex-shrink': '0',
+          width: 'auto', height: '20px', 'min-height': '20px',
+          margin: '0', padding: '2px 5px', gap: '3px',
+          'font-size': '10px', 'line-height': '1',
+          'white-space': 'nowrap', 'border-radius': '999px',
+          'box-sizing': 'border-box'
+        });
+        const icon = tag.querySelector('span');
+        if (icon) forceBadgeStyle(icon, {'font-size': '11px', 'line-height': '1'});
+      });
     }
     for (const [type, enabled] of Object.entries(owned)) {
       const suffix = type === 'founder' ? 'Founder' : type === 'admin' ? 'Admin' : type === 'beta' ? 'Beta' : 'Vip';
