@@ -2,6 +2,7 @@
 """Compare three manually supplied review opinions; never authenticate agent identity."""
 import argparse
 import json
+import html
 from pathlib import Path
 
 AGENTS = ("ChatGPT", "Gemini/Antigravity", "Claude")
@@ -22,9 +23,11 @@ def compare(payload):
         if not isinstance(review, dict) or set(review) != {"agente", "commit_sha", "parecer", "evidencias", "riscos", "limitacoes"}:
             raise ValueError("Parecer incompleto")
         agent = review["agente"]
+        if not isinstance(agent, str):
+            raise ValueError("Agente deve ser texto")
         if agent not in AGENTS or agent in found:
             raise ValueError("Agente desconhecido ou duplicado")
-        if review["commit_sha"] != sha or review["parecer"] not in VERDICTS:
+        if not isinstance(review["parecer"], str) or review["commit_sha"] != sha or review["parecer"] not in VERDICTS:
             raise ValueError("SHA divergente ou veredito invalido")
         for field in ("evidencias", "riscos", "limitacoes"):
             if not isinstance(review[field], list) or len(review[field]) > 20 or any(
@@ -46,9 +49,11 @@ def compare(payload):
                 lines.append(f"{field.capitalize()} ({len(review[field])}):")
                 for value in review[field]:
                     # Neutralize Markdown/HTML and any pasted formatting; display as untrusted quoted data.
-                    safe = value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                    safe = safe.replace("\\", "\\\\").replace("`", "\\`")
-                    lines.append("- " + safe.replace("\n", " "))
+                    safe = html.escape(value, quote=True)
+                    # Render user text in a fenced code block, never as active Markdown.
+                    # The fence length exceeds any consecutive backtick sequence in the text.
+                    fence = "`" * (max((len(x) for x in __import__("re").findall(r"`+", safe)), default=0) + 3)
+                    lines.extend([fence + "text", safe.replace("\r", " "), fence])
         lines.append("")
     return "\n".join(lines)
 
