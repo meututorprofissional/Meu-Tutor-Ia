@@ -1,0 +1,28 @@
+name: Validar central offline (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  testes-offline:
+    if: github.ref == 'refs/heads/desenvolvimento-responsivo'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout da branch de testes
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validar sintaxe dos arquivos
+        run: |
+          python -m py_compile scripts/central-mensagens-offline.py scripts/coletar-issue10-publica.py tests/test_central_mensagens.py tests/test_coletar_issue10.py tests/test_integracao_issue10.py
+      - name: Executar 16 testes offline
+        run: |
+          python -m unittest discover -s tests -p 'test_*issue10.py' -v
+          python -m unittest discover -s tests -p 'test_central_mensagens.py' -v
