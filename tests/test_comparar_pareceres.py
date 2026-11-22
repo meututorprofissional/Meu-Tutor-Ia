@@ -38,5 +38,22 @@ class ComparatorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             mod.compare({"commit_sha": SHA, "pareceres": [review("Claude", "publicar main")]})
 
+    def test_markdown_link_is_inert(self):
+        x = review("Claude")
+        x["riscos"] = ["[clique](https://example.com) ![img](https://example.com/x)"]
+        result = mod.compare({"commit_sha": SHA, "pareceres": [x]})
+        self.assertIn("```text", result)
+        self.assertIn("[clique](https://example.com)", result)
+    def test_fence_breakout_is_blocked(self):
+        x = review("Claude")
+        x["riscos"] = ["```\n![image](https://example.com)"]
+        result = mod.compare({"commit_sha": SHA, "pareceres": [x]})
+        self.assertIn("````text", result)
+    def test_invalid_agent_type(self):
+        x = review("Claude")
+        x["agente"] = ["Claude"]
+        with self.assertRaises(ValueError):
+            mod.compare({"commit_sha": SHA, "pareceres": [x]})
+
 if __name__ == "__main__":
     unittest.main()
