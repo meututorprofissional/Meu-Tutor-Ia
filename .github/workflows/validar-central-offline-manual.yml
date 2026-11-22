@@ -8,6 +8,8 @@ on:
       - 'scripts/comparar-pareceres.py'
       - 'scripts/coordenador-tres-ias.py'
       - 'scripts/preparar-gemini-gratis.py'
+      - 'scripts/simular-fluxo-gemini.py'
+      - 'tests/test_simular_fluxo_gemini.py'
       - 'tests/test_preparar_gemini_gratis.py'
       - 'tests/test_coordenador_tres_ias.py'
       - 'tests/test_comparar_pareceres.py'
@@ -101,3 +103,7 @@ jobs:
         run: |
           python -m py_compile scripts/preparar-gemini-gratis.py tests/test_preparar_gemini_gratis.py
           python -m unittest discover -s tests -p 'test_preparar_gemini_gratis.py' -v
+      - name: Validar fluxo integrado Gemini sem chamadas reais
+        run: |
+          python -m py_compile scripts/simular-fluxo-gemini.py tests/test_simular_fluxo_gemini.py
+          python -m unittest discover -s tests -p 'test_simular_fluxo_gemini.py' -v
