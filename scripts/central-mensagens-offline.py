@@ -30,11 +30,24 @@ def build_report(payload):
         seen.add(cid)
         body = str(c.get("body") or "")[:MAX_BODY]
         match = HEADER.search(body)
+        forwarded_header = FORWARDED_HEADER.search(body)
+        first_line = body.splitlines()[0] if body else ""
+        wrapper = (first_line.startswith("[REGISTRO DE ENCAMINHAMENTO")
+                   and "PELO CLAUDE" in first_line.upper())
+        embedded_claude = bool(re.search(r"\\*\\*\\[AGENTE:\\s*Claude\\]", body))
         declared = match.group(1).strip() if match else "nao declarado"
         if declared not in AGENTS:
-            declared = "nao verificado"
+            if forwarded_header and "ENCAMINHAD" in forwarded_header.group(2).upper():
+                declared = forwarded_header.group(1)
+            elif wrapper and embedded_claude:
+                declared = "Claude"
+            else:
+                declared = "nao verificado"
         author = (c.get("user") or {}).get("login") or "desconhecido"
-        forwarded = forwarded_wrapper or bool(forwarded_header and "ENCAMINHAD" in forwarded_header.group(2).upper()) or "ENCAMINHADO" in body.upper() or "encaminhado pelo fundador" in body.lower()
+        forwarded = (wrapper or bool(forwarded_header and
+                     "ENCAMINHAD" in forwarded_header.group(2).upper())
+                     or "ENCAMINHADO" in body.upper()
+                     or "encaminhado pelo fundador" in body.lower())
         rows.append({
             "id": cid, "github_author": author, "declared_agent": declared,
             "forwarded_hint": forwarded, "sha_mentions": sorted(set(SHA.findall(body))),
