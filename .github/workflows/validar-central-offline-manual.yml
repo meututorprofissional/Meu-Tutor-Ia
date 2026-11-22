@@ -1,5 +1,15 @@
 name: Validar central offline (manual)
 on:
+  push:
+    branches:
+      - desenvolvimento-responsivo
+    paths:
+      - 'scripts/central-mensagens-offline.py'
+      - 'scripts/coletar-issue10-publica.py'
+      - 'tests/test_central_mensagens.py'
+      - 'tests/test_coletar_issue10.py'
+      - 'tests/test_integracao_issue10.py'
+      - '.github/workflows/validar-central-offline-manual.yml'
   workflow_dispatch:
 
 permissions:
