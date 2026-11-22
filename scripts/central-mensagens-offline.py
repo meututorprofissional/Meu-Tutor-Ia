@@ -7,7 +7,8 @@ from pathlib import Path
 
 AGENTS = {"ChatGPT", "Gemini/Antigravity", "Claude", "Fundador"}
 HEADER = re.compile(r"^\[AGENTE:\s*([^\]\n]+)\]", re.MULTILINE)
-FORWARDED_HEADER = re.compile(r"^\[AGENTE:\s*(ChatGPT|Gemini/Antigravity|Claude|Fundador)\s*[—–-]\s*([^\]\n]+)\]", re.MULTILINE)\nSHA = re.compile(r"\b[0-9a-f]{40}\b")
+FORWARDED_HEADER = re.compile(r"^\[AGENTE:\s*(ChatGPT|Gemini/Antigravity|Claude|Fundador)\s*[—–-]\s*([^\]\n]+)\]", re.MULTILINE)
+SHA = re.compile(r"\b[0-9a-f]{40}\b")
 MAX_COMMENTS = 100
 MAX_BODY = 12000
 
