@@ -34,7 +34,7 @@ def build_report(payload):
         if declared not in AGENTS:
             declared = "nao verificado"
         author = (c.get("user") or {}).get("login") or "desconhecido"
-        forwarded = bool(forwarded_header and "ENCAMINHAD" in forwarded_header.group(2).upper()) or "ENCAMINHADO" in body.upper() or "encaminhado pelo fundador" in body.lower()
+        forwarded = forwarded_wrapper or bool(forwarded_header and "ENCAMINHAD" in forwarded_header.group(2).upper()) or "ENCAMINHADO" in body.upper() or "encaminhado pelo fundador" in body.lower()
         rows.append({
             "id": cid, "github_author": author, "declared_agent": declared,
             "forwarded_hint": forwarded, "sha_mentions": sorted(set(SHA.findall(body))),
