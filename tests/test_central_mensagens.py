@@ -41,12 +41,12 @@ class CentralTests(unittest.TestCase):
 
     def test_quoted_agent_does_not_impersonate_author(self):
         report = central.build_report({"issue": {"number": 10}, "comments": [
-            {"id": 21, "body": "Texto explicativo sobre o protocolo\\n[AGENTE: ChatGPT]"}]})
-        self.assertIn("Agente declarado (nao autenticado): nao verificado", report)
+            {"id": 21, "body": "Texto explicativo sobre o protocolo\n[AGENTE: ChatGPT]"}]})
+        self.assertIn("Agente declarado (nao autenticado): nao declarado", report)
 
     def test_mention_of_forwarded_is_not_forwarded(self):
         report = central.build_report({"issue": {"number": 10}, "comments": [
-            {"id": 22, "body": "[AGENTE: ChatGPT]\\nO parecer encaminhado do Claude foi lido."}]})
+            {"id": 22, "body": "[AGENTE: ChatGPT]\nO parecer encaminhado do Claude foi lido."}]})
         self.assertIn("Indicacao textual de encaminhamento: nao", report)
 
     def test_malformed_comment_rejected(self):
