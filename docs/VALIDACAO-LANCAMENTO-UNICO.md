@@ -25,7 +25,13 @@ URL: https://936a7e34.meu-tutor-ia-teste-android.pages.dev
 ## Verificação estática adicional (22/11/2026)
 
 - `index.html` da candidata possui 333 atributos `id`, sem valores duplicados na inspeção estática.
-- 17 scripts externos/locais são referenciados; a checagem de presença e execução de todos eles ainda não foi concluída.
+- 17 scripts externos/locais são referenciados; os 15 scripts locais foram encontrados no repositório; execução completa ainda não foi validada.
 - `profile.js?v=75.80` está referenciado no HTML da candidata.
 - O rótulo visível de versão é `Versão v75.77`; comentários internos de teste permanecem no CSS, sem impacto direto no texto da interface.
 - Nenhuma alteração em `main`, Supabase ou dados de usuários foi realizada por esta verificação.
+
+## Integridade de arquivos (22/11/2026)
+
+- Confirmada a existência dos 15 scripts locais referenciados pelo `index.html` (app, guide, quiz-ai, updates, ai-config, ai-client, auth-config, profile, settings, feedback, tickets, support-notifications, support-chat, human-support e admin-support).
+- `manifest.json` também está presente.
+- Scripts externos (Supabase CDN e Cloudflare Turnstile) não foram validados nesta checagem.
