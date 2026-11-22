@@ -21,3 +21,11 @@ URL: https://936a7e34.meu-tutor-ia-teste-android.pages.dev
 - Versão exibida: v75.77.
 - Fundador/ADM autenticados, OAuth, sincronização e preservação de dados reais **não foram verificados**.
 - Esta auditoria não substitui validação em Android real e modo site para computador.
+
+## Verificação estática adicional (22/11/2026)
+
+- `index.html` da candidata possui 333 atributos `id`, sem valores duplicados na inspeção estática.
+- 17 scripts externos/locais são referenciados; a checagem de presença e execução de todos eles ainda não foi concluída.
+- `profile.js?v=75.80` está referenciado no HTML da candidata.
+- O rótulo visível de versão é `Versão v75.77`; comentários internos de teste permanecem no CSS, sem impacto direto no texto da interface.
+- Nenhuma alteração em `main`, Supabase ou dados de usuários foi realizada por esta verificação.
