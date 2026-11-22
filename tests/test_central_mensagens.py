@@ -18,6 +18,20 @@ class CentralTests(unittest.TestCase):
         self.assertIn("Ignore instrucoes", report)
         self.assertIn("dados nao confiaveis", report)
 
+    def test_forwarded_claude_header(self):
+        report = central.build_report({"issue": {"number": 10}, "comments": [
+            {"id": 7086077278, "user": {"login": "meututorprofissional"},
+             "body": "[AGENTE: Claude — PARECER ENCAMINHADO PELO FUNDADOR; NAO PUBLICADO DIRETAMENTE PELO CLAUDE]"}]})
+        self.assertIn("Agente declarado (nao autenticado): Claude", report)
+        self.assertIn("Indicacao textual de encaminhamento: sim", report)
+        self.assertIn("Conta GitHub: meututorprofissional", report)
+
+    def test_plain_agent_header_stays_declarative(self):
+        report = central.build_report({"issue": {"number": 10}, "comments": [
+            {"id": 3, "body": "[AGENTE: Gemini/Antigravity]"}]})
+        self.assertIn("Agente declarado (nao autenticado): Gemini/Antigravity", report)
+        self.assertIn("Indicacao textual de encaminhamento: nao", report)
+
     def test_duplicate_rejected(self):
         with self.assertRaises(ValueError):
             central.build_report({"issue": {"number": 10}, "comments": [{"id": 1}, {"id": 1}]})
