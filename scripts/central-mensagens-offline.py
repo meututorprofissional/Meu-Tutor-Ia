@@ -34,7 +34,9 @@ def build_report(payload):
         if not isinstance(cid, int) or cid <= 0 or cid in seen:
             raise ValueError("ID de comentario invalido ou duplicado")
         seen.add(cid)
-        body = str(c.get("body") or "")[:MAX_BODY]
+        body = str(c.get("body") or "")
+        if len(body) > MAX_BODY:
+            raise ValueError("corpo excede 12000 caracteres: relatorio incompleto")
         match = HEADER.match(body)
         forwarded_header = FORWARDED_HEADER.match(body)
         first_line = body.splitlines()[0] if body else ""
