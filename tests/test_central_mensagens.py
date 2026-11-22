@@ -42,7 +42,7 @@ class CentralTests(unittest.TestCase):
     def test_quoted_agent_does_not_impersonate_author(self):
         report = central.build_report({"issue": {"number": 10}, "comments": [
             {"id": 21, "body": "Texto explicativo sobre o protocolo\n[AGENTE: ChatGPT]"}]})
-        self.assertIn("Agente declarado (nao autenticado): nao declarado", report)
+        self.assertIn("Agente declarado (nao autenticado): nao verificado", report)
 
     def test_mention_of_forwarded_is_not_forwarded(self):
         report = central.build_report({"issue": {"number": 10}, "comments": [
