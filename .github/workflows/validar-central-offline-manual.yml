@@ -1,4 +1,4 @@
-name: Validar central offline (manual)
+name: Validar central Issue 10 (testes e leitura publica)
 on:
   push:
     branches:
@@ -36,3 +36,23 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_*issue10.py' -v
           python -m unittest discover -s tests -p 'test_central_mensagens.py' -v
+      - name: Validar coleta real publica da Issue 10
+        run: |
+          mkdir -p /tmp/central-issue10
+          python scripts/coletar-issue10-publica.py --output /tmp/central-issue10/comentarios.json
+          python scripts/central-mensagens-offline.py /tmp/central-issue10/comentarios.json --output /tmp/central-issue10/relatorio.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base = Path("/tmp/central-issue10")
+          data = json.loads((base / "comentarios.json").read_text(encoding="utf-8"))
+          report = (base / "relatorio.md").read_text(encoding="utf-8")
+          comments = data["comments"]
+          expected = {7085980047, 7086077278, 7086085183, 7086127779,
+                      7086163745, 7086198092, 7086213934}
+          ids = {c["id"] for c in comments}
+          assert expected <= ids, "Comentarios originais da Issue 10 ausentes"
+          assert report.count("## Comentario ") == len(comments), "Relatorio incompleto"
+          assert report.count("Indicacao textual de encaminhamento: sim") >= 2
+          print(f"Coleta real aprovada: {len(comments)} comentarios; relatorio completo.")
+          PY
