@@ -1,0 +1,87 @@
+name: Meu Tutor IA - Validacao visual do menu
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/validar-menu-responsivo.yml'
+      - 'index.html'
+
+permissions:
+  contents: read
+
+jobs:
+  previa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Obter versao em desenvolvimento
+        uses: actions/checkout@v4
+      - name: Preparar ambiente
+        run: |
+          python3 -m pip install --user playwright==1.56.0
+          python3 -m playwright install --with-deps chromium
+      - name: Capturar somente primeira tela antes e depois nos tres formatos
+        env:
+          APP_URL: http://127.0.0.1:8765/
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/meu-tutor-http.log 2>&1 &
+          mkdir -p evidencias
+          cat > /tmp/capturar.py <<'PY'
+          import asyncio, os
+          from playwright.async_api import async_playwright
+
+          async def main():
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch()
+                  modos = [
+                      ("android-normal", {"width": 393, "height": 852}, True),
+                      # Aproximacao do modo "Site para computador": viewport desktop reduzido na tela do celular.
+                      ("android-site-desktop-simulado", {"width": 980, "height": 852}, True),
+                      ("desktop", {"width": 1365, "height": 900}, False),
+                  ]
+                  for versao, url in [("antes", "https://meututorprofissional.github.io/Meu-Tutor-Ia/"), ("depois", os.environ["APP_URL"])]:
+                    for nome, viewport, mobile in modos:
+                      page = await browser.new_page(
+                          viewport=viewport,
+                          device_scale_factor=1,
+                          is_mobile=mobile,
+                          has_touch=mobile,
+                      )
+                      response = await page.goto(url, wait_until="domcontentloaded", timeout=45000)
+                      if not response or response.status >= 400:
+                          raise RuntimeError(f"Pagina indisponivel: {nome}")
+                      await page.evaluate("window.scrollTo(0, 0)")
+                      await page.wait_for_timeout(300)
+                      cabecalho = await page.locator("header").first.bounding_box()
+                      if not cabecalho or abs(cabecalho["y"]) > 5:
+                          raise RuntimeError(f"Cabecalho deslocado: {versao}-{nome}: {cabecalho}")
+                      await page.screenshot(path=f"evidencias/{versao}-{nome}-primeira-tela.png", full_page=False, animations="disabled")
+                      await page.close()
+                  await browser.close()
+                  relatorio = [
+                      "# Comparacao visual — Meu Tutor IA",
+                      "",
+                      "ANTES: versao publicada no GitHub Pages",
+                      "DEPOIS: codigo desta branch de desenvolvimento",
+                      "",
+                      "Arquivos incluidos: somente primeira tela, antes/depois, em tres formatos.",
+                      "O modo site desktop no Android e uma simulacao, nao um teste em aparelho fisico.",
+                      "As capturas nao validam interacoes nem garantem ausencia de problemas visuais.",
+                      "",
+                  ]
+                  for nome, viewport, _ in modos:
+                      relatorio.append(f"- {nome}: primeira tela {viewport['width']}x{viewport['height']} (antes e depois)")
+                  with open("evidencias/RELATORIO.md", "w", encoding="utf-8") as arquivo:
+                      arquivo.write("\\n".join(relatorio) + "\\n")
+
+          asyncio.run(main())
+          PY
+          python3 /tmp/capturar.py
+      - name: Disponibilizar imagens para revisao humana
+        uses: actions/upload-artifact@v4
+        with:
+          name: menu-responsivo-antes-depois
+          path: evidencias/
+          retention-days: 7
+          if-no-files-found: error
