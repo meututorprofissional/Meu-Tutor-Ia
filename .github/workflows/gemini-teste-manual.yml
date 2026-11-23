@@ -109,7 +109,40 @@ jobs:
               with urllib.request.urlopen(request, timeout=20) as response:
                   data = response.read(20001)
           except urllib.error.HTTPError as error:
-              print("Falha HTTP:", error.code)
+              # Nunca imprimir corpo bruto, mensagem da API ou credenciais.
+              # Somente status e motivos de um conjunto publico e fixo.
+              allowed_status = {
+                  "NOT_FOUND", "INVALID_ARGUMENT", "PERMISSION_DENIED",
+                  "UNAUTHENTICATED", "RESOURCE_EXHAUSTED", "FAILED_PRECONDITION",
+                  "UNAVAILABLE", "INTERNAL", "DEADLINE_EXCEEDED"
+              }
+              allowed_reasons = {
+                  "API_KEY_INVALID", "API_KEY_SERVICE_BLOCKED",
+                  "API_KEY_HTTP_REFERRER_BLOCKED", "API_KEY_IP_ADDRESS_BLOCKED",
+                  "SERVICE_DISABLED", "ACCESS_TOKEN_SCOPE_INSUFFICIENT",
+                  "RATE_LIMIT_EXCEEDED", "QUOTA_EXCEEDED",
+                  "CONSUMER_INVALID", "BILLING_DISABLED", "MODEL_NOT_FOUND"
+              }
+              status = "NAO_IDENTIFICADO"
+              reasons = set()
+              try:
+                  raw = error.read(8192)
+                  parsed = json.loads(raw)
+                  details = parsed.get("error", {})
+                  if isinstance(details, dict):
+                      candidate = details.get("status")
+                      if isinstance(candidate, str) and candidate in allowed_status:
+                          status = candidate
+                      for item in details.get("details", [])[:10]:
+                          if isinstance(item, dict):
+                              candidate = item.get("reason")
+                              if isinstance(candidate, str) and candidate in allowed_reasons:
+                                  reasons.add(candidate)
+              except (ValueError, TypeError, AttributeError, OSError):
+                  pass
+              print("Falha HTTP:", error.code, "status:", status,
+                    "motivos permitidos:", ",".join(sorted(reasons)) or "nenhum")
+              print("Nenhum corpo bruto da API foi registrado.")
               raise SystemExit(1)
           except urllib.error.URLError:
               raise SystemExit("Falha de rede.")
