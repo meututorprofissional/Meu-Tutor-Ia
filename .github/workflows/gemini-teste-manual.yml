@@ -129,6 +129,7 @@ jobs:
               }
               status = "NAO_IDENTIFICADO"
               reasons = set()
+              message_category = "NAO_RECONHECIDA"
               try:
                   raw = error.read(8192)
                   parsed = json.loads(raw)
@@ -137,6 +138,21 @@ jobs:
                       candidate = details.get("status")
                       if isinstance(candidate, str) and candidate in allowed_status:
                           status = candidate
+                      # Nao registrar error.message. Categorias fixas, sem ecoar
+                      # qualquer trecho do conteudo retornado pela API.
+                      message = details.get("message")
+                      if isinstance(message, str):
+                          normalized = message.lower()[:4096]
+                          if "not supported for generatecontent" in normalized or "not supported for this api version" in normalized:
+                              message_category = "MODELO_METODO_OU_VERSAO_INCOMPATIVEL"
+                          elif "model" in normalized and "not found" in normalized:
+                              message_category = "MODELO_NAO_ENCONTRADO"
+                          elif "permission" in normalized or "not authorized" in normalized or "access denied" in normalized:
+                              message_category = "PERMISSAO_OU_ACESSO"
+                          elif "quota" in normalized or "rate limit" in normalized:
+                              message_category = "COTA_OU_LIMITE"
+                          elif "billing" in normalized:
+                              message_category = "FATURAMENTO_MENCIONADO"
                       for item in details.get("details", [])[:10]:
                           if isinstance(item, dict):
                               candidate = item.get("reason")
@@ -146,7 +162,8 @@ jobs:
                   pass
               print("Falha HTTP:", error.code, "status:", status,
                     "motivos permitidos:", ",".join(sorted(reasons)) or "nenhum")
-              print("Nenhum corpo bruto da API foi registrado.")
+              print("Categoria segura da mensagem:", message_category)
+              print("Nenhum corpo bruto ou mensagem original da API foi registrado.")
               raise SystemExit(1)
           except urllib.error.URLError:
               raise SystemExit("Falha de rede.")
