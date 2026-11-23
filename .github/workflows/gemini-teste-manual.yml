@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       modo:
-        description: 'dry_run sem rede; diagnostico lista; detalhe consulta modelo; live v1beta; live_v1 v1'
+        description: 'dry_run sem rede; diagnostico lista; detalhe consulta modelo; live v1beta; live_v1 v1; ultima_tentativa 3.5 Lite'
         type: choice
-        options: [dry_run, diagnostico, detalhe, live, live_v1]
+        options: [dry_run, diagnostico, detalhe, live, live_v1, ultima_tentativa]
         default: dry_run
         required: true
       confirmar_gratuito:
@@ -36,7 +36,7 @@ jobs:
           if mode == "dry_run":
               print("DRY RUN: nenhuma chamada feita.")
               raise SystemExit(0)
-          if mode not in ("live", "live_v1", "diagnostico", "detalhe") or os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
+          if mode not in ("live", "live_v1", "ultima_tentativa", "diagnostico", "detalhe") or os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
               raise SystemExit("Bloqueado: modo ou confirmacao invalida.")
           key = os.environ.get("GEMINI_API_KEY")
           if not key:
@@ -101,14 +101,15 @@ jobs:
               print("Consulta de metadados finalizada. Nenhuma geracao realizada.")
               raise SystemExit(0)
           # Escolha explicita: nenhum fallback automatico nem segunda geracao.
-          api_version = "v1" if mode == "live_v1" else "v1beta"
+          api_version = "v1beta" if mode == "ultima_tentativa" else ("v1" if mode == "live_v1" else "v1beta")
+          model = "gemini-3.5-flash-lite" if mode == "ultima_tentativa" else "gemini-2.5-flash-lite"
           url = ("https://generativelanguage.googleapis.com/" + api_version
-                 + "/models/gemini-2.5-flash-lite:generateContent")
+                 + "/models/" + model + ":generateContent")
           body = json.dumps({"contents":[{"parts":[{"text":"Responda somente OK."}]}],
-                             "generationConfig":{"temperature":0,"maxOutputTokens":16}}).encode()
+                             "generationConfig":{"maxOutputTokens":32}}).encode()
           request = urllib.request.Request(url, data=body, method="POST",
                     headers={"Content-Type":"application/json","x-goog-api-key":key})
-          print("Versao da API para geracao:", api_version)
+          print("Versao da API para geracao:", api_version, "modelo:", model)
           try:
               with urllib.request.urlopen(request, timeout=20) as response:
                   data = response.read(20001)
