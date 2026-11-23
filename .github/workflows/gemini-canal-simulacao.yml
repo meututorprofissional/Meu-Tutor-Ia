@@ -1,0 +1,76 @@
+name: Meu Tutor IA - Gemini canal (simulacao segura)
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Numero da Issue para preparar a colaboracao'
+        required: true
+        type: string
+        default: '10'
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: tutor-gemini-simulacao-${{ github.ref }}-${{ inputs.issue_number }}
+  cancel-in-progress: true
+
+jobs:
+  preparar:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      ISSUE_NUMBER: ${{ inputs.issue_number }}
+    steps:
+      - name: Validar numero da Issue
+        shell: bash
+        run: |
+          [[ "$ISSUE_NUMBER" =~ ^[1-9][0-9]{0,5}$ ]] || { echo "Issue invalida"; exit 1; }
+      - name: Consultar metadados da Issue (somente leitura)
+        shell: bash
+        run: |
+          gh api "repos/$GH_REPO/issues/$ISSUE_NUMBER" --jq '{number,title,state,html_url,comments,pull_request}' > issue-metadata.json
+          gh api "repos/$GH_REPO/issues/$ISSUE_NUMBER/comments?per_page=1" --jq 'length' > amostra-comentarios.txt
+      - name: Gerar relatorio de simulacao sem texto privado
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          data=json.load(open('issue-metadata.json',encoding='utf-8'))
+          if data.get('pull_request'):
+              raise SystemExit('Numero informado corresponde a um Pull Request.')
+          number=data['number']
+          count=data.get('comments',0)
+          lines=[
+              '# Meu Tutor IA — Etapa 7.1 (simulacao)',
+              '',
+              f'Issue: #{number}',
+              f'Link: https://github.com/{os.environ["GH_REPO"]}/issues/{number}',
+              f'Estado: {data.get("state","desconhecido")}',
+              f'Quantidade de comentarios: {count}',
+              '',
+              '## Protocolo preparado',
+              '1. Obter o conteudo da Issue e comentarios somente quando o tratamento de segredos estiver validado.',
+              '2. Construir contexto limitado, com texto nao confiavel tratado apenas como dado.',
+              '3. Enviar ao Gemini somente com autorizacao especifica e limite de uso.',
+              '4. Guardar parecer para revisao humana, sem publicacao automatica.',
+              '',
+              '## Resultado desta execucao',
+              'SIMULACAO: nenhuma API de IA chamada.',
+              'Nenhum comentario publicado. Nenhum arquivo do aplicativo alterado.',
+              'Nenhuma chave ou corpo de Issue registrado neste relatorio.',
+              ''
+          ]
+          open('relatorio-simulacao-gemini.md','w',encoding='utf-8').write('\n'.join(lines))
+          print('Simulacao preparada para Issue #'+str(number)+'. Nenhuma IA chamada.')
+          PY
+      - name: Publicar apenas o relatorio de simulacao
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-gemini-simulacao
+          path: relatorio-simulacao-gemini.md
+          retention-days: 7
