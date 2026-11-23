@@ -16,7 +16,7 @@ on:
           - analisar
         default: simular
       confirmacao:
-        description: 'Para analisar digite CONFIRMO_UMA_CHAMADA'
+        description: 'Para analisar digite CONFIRMO_UMA_CHAMADA (ate 2 tentativas apenas em HTTP 503)'
         required: false
         type: string
         default: ''
@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, os, re, subprocess, urllib.request, urllib.error
+          import json, os, re, subprocess, urllib.request, urllib.error, time
           from pathlib import Path
           mode=os.environ.get("MODO","")
           number=os.environ.get("ISSUE_NUMBER","")
@@ -97,14 +97,22 @@ jobs:
                   data=body,method="POST",
                   headers={"Content-Type":"application/json",
                            "x-goog-api-key":os.environ["GEMINI_API_KEY"]})
-              try:
-                  with urllib.request.urlopen(req,timeout=25) as response:
-                      raw=response.read(16001)
-              except urllib.error.HTTPError as error:
-                  print("Falha HTTP:",error.code)
-                  raise SystemExit(1)
-              except urllib.error.URLError:
-                  raise SystemExit("Falha de rede.")
+              # No maximo 2 tentativas totais; repetir somente HTTP 503.
+              # Nenhuma repeticao para 400/401/403/404/429 ou erros de rede.
+              for tentativa in range(2):
+                  try:
+                      with urllib.request.urlopen(req,timeout=25) as response:
+                          raw=response.read(16001)
+                      break
+                  except urllib.error.HTTPError as error:
+                      print("Falha HTTP:",error.code,"tentativa:",tentativa+1)
+                      if error.code == 503 and tentativa == 0:
+                          print("Servico temporariamente indisponivel; uma nova tentativa em 3 segundos.")
+                          time.sleep(3)
+                          continue
+                      raise SystemExit("Gemini indisponivel ou rejeitou a solicitacao; sem novas tentativas.")
+                  except urllib.error.URLError:
+                      raise SystemExit("Falha de rede; sem novas tentativas.")
               if len(raw)>16000:
                   raise SystemExit("Resposta excessiva.")
               try:
