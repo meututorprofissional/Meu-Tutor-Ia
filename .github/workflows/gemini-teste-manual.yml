@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       modo:
-        description: 'dry_run sem rede; diagnostico lista; detalhe consulta modelo; live gera'
+        description: 'dry_run sem rede; diagnostico lista; detalhe consulta modelo; live v1beta; live_v1 v1'
         type: choice
-        options: [dry_run, diagnostico, detalhe, live]
+        options: [dry_run, diagnostico, detalhe, live, live_v1]
         default: dry_run
         required: true
       confirmar_gratuito:
@@ -36,7 +36,7 @@ jobs:
           if mode == "dry_run":
               print("DRY RUN: nenhuma chamada feita.")
               raise SystemExit(0)
-          if mode not in ("live", "diagnostico", "detalhe") or os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
+          if mode not in ("live", "live_v1", "diagnostico", "detalhe") or os.environ.get("CONFIRMACAO") != "CONFIRMO_GRATUITO":
               raise SystemExit("Bloqueado: modo ou confirmacao invalida.")
           key = os.environ.get("GEMINI_API_KEY")
           if not key:
@@ -100,11 +100,15 @@ jobs:
                       print("GET modelo", api_version, "formato inesperado")
               print("Consulta de metadados finalizada. Nenhuma geracao realizada.")
               raise SystemExit(0)
-          url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
+          # Escolha explicita: nenhum fallback automatico nem segunda geracao.
+          api_version = "v1" if mode == "live_v1" else "v1beta"
+          url = ("https://generativelanguage.googleapis.com/" + api_version
+                 + "/models/gemini-2.5-flash-lite:generateContent")
           body = json.dumps({"contents":[{"parts":[{"text":"Responda somente OK."}]}],
                              "generationConfig":{"temperature":0,"maxOutputTokens":16}}).encode()
           request = urllib.request.Request(url, data=body, method="POST",
                     headers={"Content-Type":"application/json","x-goog-api-key":key})
+          print("Versao da API para geracao:", api_version)
           try:
               with urllib.request.urlopen(request, timeout=20) as response:
                   data = response.read(20001)
